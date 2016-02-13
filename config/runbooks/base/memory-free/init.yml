@@ -1,0 +1,18 @@
+name: System Memory Usage
+schedule: */2 * * * *
+checks:
+  mem_free:
+    plugin: systems/mem_free.py --threshold-perc=20
+  swap_used:
+    plugin: systems/swap_used.py --threshold-perc=20
+  oom_finder:
+    plugin: systems/log_scraper.py --search-string="oom-kill" --diff-file=/var/tmp/oom-finder.diff
+actions:
+  notify:
+    trigger: 0
+    frequency: 600
+    plugin: notify/syslog.py --message="Found System Memory usage is above threshold" --server-details
+  capture_memusage:
+    trigger: 0
+    frequency: 0
+    cmd: ps -eo rss,size,pid,ppid,cmd,user > /var/tmp/mem-usage-capture.out
