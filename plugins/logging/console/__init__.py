@@ -11,6 +11,6 @@ class Logger(BaseLogging):
         ''' Setup logging handler '''
         lh = logging.StreamHandler()
         lh.setLevel(logging.DEBUG)
-        lf = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        lf = logging.Formatter("%(asctime)s - %(name)s[%(process)d] - %(levelname)s - %(message)s")
         lh.setFormatter(lf)
         return lh

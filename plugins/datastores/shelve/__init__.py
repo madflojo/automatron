@@ -41,6 +41,15 @@ class Datastore(BaseDatastore):
         if "targets" not in self.dbc.keys():
             self.dbc['targets'] = {}
 
+        # Possible Targets queue
+        if "possible_targets" not in self.dbc.keys():
+            self.dbc['possible_targets'] = []
+
+        return True
+
+    def new_target(self, ip=None):
+        ''' Add new IP to target list '''
+        self.dbc['possible_targets'].append(ip)
         return True
 
     def save_target(self, target=None):
