@@ -26,7 +26,10 @@ class Discover(BaseDiscover):
                 if "up" in scanned_host.status and scanned_host.address not in up:
                     up.append(scanned_host.address)
                     logger.info("Found new host: {0}".format(scanned_host.address))
-                    self.dbc.new_target(ip=scanned_host.address)
+                    if self.dbc.new_discovery(ip=scanned_host.address):
+                        logger.debug("Added host {0} to discovery queue".format(scanned_host.address))
+                    else:
+                        logger.debug("Failed to add host {0} to discovery queue".format(scanned_host.address))
             logger.debug("Scanned {0} hosts, {1} found up".format(
                 len(nmap_report.hosts), len(up)))
             time.sleep(self.config['discovery']['plugins']['nmap']['interval'])
