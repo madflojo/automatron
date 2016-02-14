@@ -21,6 +21,19 @@ class BaseDatastore(object):
         ''' Subscribe to an event queue '''
         pass
 
+    # Targets
+    def new_target(self, ip=None):
+        ''' Add new target ip to queue '''
+        pass
+
+    def save_target(self, target=None):
+        ''' Save a new target '''
+        pass
+
+    def get_target(self, target_id=None):
+        ''' Pull Details of Targets '''
+        pass
+
     # Runbooks
     def get_runbook(self, id=None):
         ''' Pull all Runbooks from datastore '''

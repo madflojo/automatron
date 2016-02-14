@@ -15,7 +15,8 @@ import core.common
 import core.logs
 import sys
 import time
-import threading
+import multiprocessing
+import signal
 
 def run_plugin(plugin_name, config, dbc):
     ''' Kick off a thread to perform plugin actions '''
@@ -28,8 +29,17 @@ def run_plugin(plugin_name, config, dbc):
         logger.error("Got an exception from discovery plugin: {0} - {1}".format(
             plugin_name, e.message))
     return False
-    
 
+def shutdown(signum, frame):
+    ''' Shutdown this process '''
+    if signum == 15 or signum == 2:
+        logger.info("Received signal {0} shutting down".format(signum))
+        sys.exit(0)
+    elif signum == 0:
+        sys.exit(1)
+    else:
+        logger.info("Received signal {0} shutting down".format(signum))
+        sys.exit(1)
 
 if __name__ == "__main__":
     config = core.common.get_config(description="Runbook: Discovery")
@@ -41,6 +51,10 @@ if __name__ == "__main__":
     logs = core.logs.Logger(config=config, proc_name="discovery")
     logger = logs.getLogger()
 
+    # Listen for signals
+    signal.signal(signal.SIGTERM, shutdown)
+    signal.signal(signal.SIGINT, shutdown)
+
     # Open Datastore Connection
     logger.info("Importing datastore {0}".format(config['datastore']['engine']))
     db = __import__("plugins.datastores." + config['datastore']['engine'], globals(), locals(),
@@ -48,17 +62,18 @@ if __name__ == "__main__":
     dbc = db.Datastore(config=config)
     if dbc.connect() is False:
         logger.error("Failed to connect to datastore")
-        sys.exit(1)
+        shutdown(0, None)
 
     threads = []
     for plugin_name in config['discovery']['plugins'].keys():
-        t = threading.Thread(target=run_plugin, args=(plugin_name, config, dbc), name=plugin_name)
+        t = multiprocessing.Process(target=run_plugin, args=(plugin_name, config, dbc), name=plugin_name)
         threads.append(t)
         t.start()
 
     while True:
       for thread in threads:
-          if thread.isAlive() is False:
-              logger.debug("Thread for {0} has exited".format(t.name))
-              sys.exit(1)
+          if thread.is_alive() is False:
+              logger.debug("Thread for {0} has exited, shutting down".format(t.name))
+              core.common.kill_threads(threads)
+              shutdown(0, None)
       time.sleep(.5)

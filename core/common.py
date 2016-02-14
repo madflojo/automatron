@@ -8,6 +8,7 @@ import argparse
 import os
 import sys
 import yaml
+import signal
 
 def get_opts(description):
     ''' Parse command line arguments '''
@@ -37,6 +38,14 @@ def get_config(description=None):
         return False
     else:
         return config
+
+def kill_threads(threads):
+    ''' Used to kill of multi process threads '''
+    for thread in threads:
+        try:
+            os.kill(thread.pid, signal.SIGTERM)
+        except OSError:
+            pass
 
 if __name__ == '__main__':
     pass
