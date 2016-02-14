@@ -30,7 +30,7 @@ class BaseDatastore(object):
         ''' Save a new target '''
         pass
 
-    def get_target(self, target_id=None):
+    def get_target(self, target_id=None, ip=None):
         ''' Pull Details of Targets '''
         pass
 
