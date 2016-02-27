@@ -14,6 +14,7 @@ Runbook: Discovery
 import core.common
 import core.logs
 import core.fab
+import core.db
 import fabric.api
 import sys
 import time
@@ -36,11 +37,12 @@ def run_plugin(plugin_name, config, dbc):
 def vet_targets(config, dbc):
     ''' Get new targets and gather facts about them '''
     while True:
-        logger.debug(dbc.discovery_queue())
+        logger.debug("{0} Items in discovery queue".format(len(dbc.discovery_queue())))
         for host in dbc.discovery_queue():
             lookup = dbc.get_target(ip=host)
-            if lookup is not False:
-                logger.debug("Target {0} already found as {1}".format(lookup['ip'], lookup['hostname']))
+            if lookup:
+                logger.debug("Target {0} already found as {1}".format(
+                    lookup['ip'], lookup['hostname']))
                 dbc.pop_discovery(ip=host)
             else:
                 logger.debug("Attempting to gather facts on host {0}".format(host))
@@ -51,17 +53,18 @@ def vet_targets(config, dbc):
                     try:
                         fabric.api.put('fact_finder.py', finder_upload)
                         results = fabric.api.run("python " + finder_upload)
+                        if results.succeeded:
+                            try:
+                                system_info = json.loads(results)
+                            except Exception as e:
+                                logger.debug("Could not parse fact finder output: {0}".format(
+                                    e.message))
+                            system_info['ip'] = host
+                            if dbc.save_target(target=system_info):
+                                dbc.pop_discovery(ip=host)
                     except Exception as e:
                         logger.debug("Could not login to discovered host {0} - {1}".format(
                             host, e.message))
-                if results.succeeded:
-                    try:
-                        system_info = json.loads(results)
-                    except Exception as e:
-                        logger.debug("Could not parse fact finder output: {0}".format(e.message))
-                    system_info['ip'] = host
-                    if dbc.save_target(target=system_info):
-                        dbc.pop_discovery(ip=host)
         time.sleep(config['discovery']['vetting_interval'])
 
 
@@ -74,10 +77,11 @@ def shutdown(signum, frame):
     elif signum == 0:
         sys.exit(1)
     else:
-        logger.info("Received signal {0} shutting down".format(signum))
+        logger.error("Received signal {0} shutting down".format(signum))
         sys.exit(1)
 
 if __name__ == "__main__":
+    # pylint: disable=C0103
     config = core.common.get_config(description="Runbook: Discovery")
     if config is False:
         print "Could not get configuration"
@@ -92,18 +96,18 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, shutdown)
 
     # Open Datastore Connection
-    logger.info("Importing datastore {0}".format(config['datastore']['engine']))
-    db = __import__("plugins.datastores." + config['datastore']['engine'], globals(), locals(),
-                    ['Datastore'], -1)
-    dbc = db.Datastore(config=config)
-    if dbc.connect() is False:
-        logger.error("Failed to connect to datastore")
+    db = core.db.SetupDatastore(config=config)
+    try:
+        dbc = db.get_dbc()
+    except Exception as e:
+        logger.error("Failed to connect to datastore: {0}".format(e.message))
         shutdown(0, None)
 
     threads = []
     # Start plugin threads
     for plugin_name in config['discovery']['plugins'].keys():
-        t = multiprocessing.Process(target=run_plugin, args=(plugin_name, config, dbc), name=plugin_name)
+        t = multiprocessing.Process(
+            target=run_plugin, args=(plugin_name, config, dbc), name=plugin_name)
         threads.append(t)
         t.start()
 
@@ -113,9 +117,9 @@ if __name__ == "__main__":
     t.start()
 
     while True:
-      for thread in threads:
-          if thread.is_alive() is False:
-              logger.debug("Thread for {0} has exited, shutting down".format(t.name))
-              core.common.kill_threads(threads)
-              shutdown(0, None)
-      time.sleep(.5)
+        for thread in threads:
+            if thread.is_alive() is False:
+                logger.debug("Thread for {0} has exited, shutting down".format(t.name))
+                core.common.kill_threads(threads)
+                shutdown(0, None)
+        time.sleep(.5)

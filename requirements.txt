@@ -1,2 +1,5 @@
 # Nmap module
 python-libnmap
+gevent-websocket
+redis
+apscheduler
