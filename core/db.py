@@ -12,6 +12,13 @@ class BaseDatastore(object):
         ''' Connect to database '''
         pass
 
+    def disconnect(self):
+        ''' Disconnect from DB '''
+        pass
+
+    def initialize_db(self):
+        ''' Initialize the datastore ''' 
+
     # Events
     def publish_event(self, event=None):
         ''' Publish an event to the event stream '''
@@ -42,3 +49,23 @@ class BaseDatastore(object):
     def store_runbook(self, runbook=None):
         ''' Store dictionary object into datastore '''
         pass
+
+
+class SetupDatastore(object):
+    ''' Helper class to setup datastore '''
+
+    def __init__(self, config=None):
+        ''' Initializing the helper class'''
+        self.config = config
+        self.dbc = None
+
+    def get_dbc(self):
+        ''' Get the dbc object '''
+        db = __import__("plugins.datastores." + self.config['datastore']['engine'], globals(), locals(),
+                        ['Datastore'], -1)
+        dbc = db.Datastore(config=self.config)
+        if dbc:
+            dbc.connect()
+            return dbc
+        else:
+            raise Exception("Could not load DB module")

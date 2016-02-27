@@ -18,7 +18,7 @@ class Datastore(BaseDatastore):
             except:
                 raise Exception("Failed to create file path {0}".format(path))
         try:
-            self.dbc = shelve.open(self.config['datastore']['plugins']['shelve']['filename'], writeback=True)
+            self.dbc = shelve.open(self.config['datastore']['plugins']['shelve']['filename'])
         except:
             raise Exception("Failed to open database file".format(
                 self.config['datastore']['plugins']['shelve']['filename']))
@@ -51,7 +51,9 @@ class Datastore(BaseDatastore):
 
     def new_discovery(self, ip=None):
         ''' Add new IP to target list '''
-        self.dbc['discovered'].append(ip)
+        data = self.dbc['discovered']
+        data.append(ip)
+        self.dbc['discovered'] = data
         self.dbc.sync()
         return True
 
@@ -63,12 +65,13 @@ class Datastore(BaseDatastore):
         ''' Pop IP off target list '''
         if ip is None:
             return False
-
+        data = self.dbc['discovered']
         try:
-            self.dbc['discovered'].remove(ip)
+            data.remove(ip)
         except Exception:
             return False
 
+        self.dbc['discovered'] = data
         self.dbc.sync()
         return True
 
@@ -99,3 +102,16 @@ class Datastore(BaseDatastore):
             return False
 
         return False
+
+    def pop_target(self, target_id=None):
+        ''' Grab a dictionary of targets, then clear it '''
+        targets = self.get_target(target_id=target_id)
+        if target_id:
+            try:
+                del self.dbc['targets'][target_id]
+            except KeyError:
+                pass
+        else:
+            self.dbc['targets'] = {}
+        self.dbc.sync()
+        return targets
