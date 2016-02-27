@@ -34,7 +34,6 @@ class Logger(BaseLogging):
             logger.addHandler(lh.setup())
 
         return logger
-    
 
     def clean_handlers(self, logger):
         ''' Remove handlers from logger for threads '''
