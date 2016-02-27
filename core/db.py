@@ -17,7 +17,7 @@ class BaseDatastore(object):
         pass
 
     def initialize_db(self):
-        ''' Initialize the datastore ''' 
+        ''' Initialize the datastore '''
 
     # Events
     def publish_event(self, event=None):
@@ -61,7 +61,9 @@ class SetupDatastore(object):
 
     def get_dbc(self):
         ''' Get the dbc object '''
-        db = __import__("plugins.datastores." + self.config['datastore']['engine'], globals(), locals(),
+        db = __import__("plugins.datastores." + self.config['datastore']['engine'],
+                        globals(),
+                        locals(),
                         ['Datastore'], -1)
         dbc = db.Datastore(config=self.config)
         if dbc:
