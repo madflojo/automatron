@@ -16,8 +16,11 @@ class Discover(BaseDiscover):
         logger = logs.getLogger()
         logger = logs.clean_handlers(logger)
         logger.info("Starting scan of environment")
-        nmap = NmapProcess(self.config['discovery']['plugins']['nmap']['target'],
-                           options=self.config['discovery']['plugins']['nmap']['flags'])
+        try:
+            nmap = NmapProcess(self.config['discovery']['plugins']['nmap']['target'],
+                               options=self.config['discovery']['plugins']['nmap']['flags'])
+        except Exception as e:
+            raise Exception("Failed to execute nmap process: {0}".format(e.message))
         up = []
         while True:
             nmap.run()
