@@ -1,32 +1,18 @@
 name: System Memory Usage
 schedule: "* * * * *"
 nodes:
-  - "*vagrant*"
+  - "*"
 checks:
   mem_free:
     type: plugin
     plugin: systems/mem_free.py
     args: --threshold-perc=20
-#  swap_used:
-#    type: plugin
-#    plugin: systems/swap_used.py
-#    args: --threshold-perc=20
-#  oom_finder:
-#    type: plugin
-#    plugin: systems/log_scraper.py
-#    args: --search-string="oom-kill" --diff-file=/var/tmp/oom-finder.diff
-  grep_syslog:
-    type: cmd
-    cmd: grep -q "pooop" /var/log/sysl
 actions:
-  notify:
-    trigger: 0
-    frequency: 600
-    policy: any
-    type: plugin
-    plugin: notify/syslog.py --message="Found System Memory usage is above threshold" --server-details
   capture_memusage:
     trigger: 0
-    run_once: True
+    frequency: 100
+    call_on:
+      - WARNING
+      - CRITICAL
     type: cmd
     cmd: ps -eo rss,size,pid,ppid,cmd,user > /var/tmp/mem-usage-capture.out

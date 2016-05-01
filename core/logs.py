@@ -24,7 +24,10 @@ class Logger(BaseLogging):
         ''' Initialize and load log handlers '''
 
         logger = logging.getLogger(self.proc_name)
-        logger.setLevel(logging.DEBUG)
+        logger.setLevel(logging.INFO)
+        if "debug" in self.config['logging']:
+            if self.config['logging']['debug']:
+                logger.setLevel(logging.DEBUG)
 
         # Load and add a handler for each logging mechanism
         for loghandler in self.config['logging']['plugins'].keys():

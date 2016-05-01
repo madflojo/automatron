@@ -3,3 +3,5 @@ python-libnmap
 gevent-websocket
 redis
 apscheduler
+fabric
+pyYAML
