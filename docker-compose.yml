@@ -1,0 +1,8 @@
+version: '2'
+services:
+  core:
+    build: .
+    depends_on:
+      - redis
+  redis:
+    image: redis
