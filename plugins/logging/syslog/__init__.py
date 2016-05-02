@@ -1,9 +1,9 @@
 ''' Syslog logging handler '''
 
-from core.logs import BaseLogging
 import logging
 import logging.handlers
 import sys
+from core.logs import BaseLogging
 
 class Logger(BaseLogging):
     ''' Handler class for Syslog Logging '''

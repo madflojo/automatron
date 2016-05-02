@@ -58,30 +58,35 @@ def vet_targets(config, dbc):
                 }
                 for local in plugins['remote']:
                     logger.debug("Executing vetting plugin (local): {0}".format(local))
-                    local_cmd = "{0}/vetting/remote/{1} {2}".format(config['plugin_path'], local, host)
+                    local_cmd = "{0}/vetting/remote/{1} {2}".format(
+                        config['plugin_path'], local, host)
                     with fabric.api.hide('output', 'running', 'warnings'):
                         try:
                             results = fabric.api.local(local_cmd, capture=True)
                             if results.succeeded:
                                 try:
                                     facts_by_plugin[local] = json.loads(results)
-                                    logger.debug("Found facts: {0}".format(len(facts_by_plugin[local])))
-                                except:
+                                    logger.debug("Found facts: {0}".format(
+                                        len(facts_by_plugin[local])))
+                                except Exception as e:
                                     logger.debug("Could not parse output" + \
                                                  " from vetting plugin {0}".format(local))
                         except Exception as e:
                             logger.debug("Could not execute local vetting" + \
-                                         " plugin {0} against host {1}: {2}".format(local_cmd, host, e.message))
+                                         " plugin {0} against host {1}: {2}".format(
+                                             local_cmd, host, e.message))
                 for ontarget in plugins['ontarget']:
                     logger.debug("Executing vetting plugin (ontarget): {0}".format(ontarget))
                     fabric.api.env = core.fab.set_env(config, fabric.api.env)
                     fabric.api.env.host_string = host
                     dest_name = next(tempfile._get_candidate_names())
                     destination = "{0}/{1}".format(config['discovery']['upload_path'], dest_name)
-                    ontarget_plugin = "{0}/vetting/ontarget/{1}".format(config['plugin_path'], ontarget)
+                    ontarget_plugin = "{0}/vetting/ontarget/{1}".format(
+                        config['plugin_path'], ontarget)
                     with fabric.api.hide('output', 'running', 'warnings'):
                         try:
-                            logger.debug("Uploading vetting plugin on target: {0}".format(destination))
+                            logger.debug("Uploading vetting plugin on target: {0}".format(
+                                destination))
                             upload_results = fabric.api.put(ontarget_plugin, destination)
                             if upload_results.succeeded:
                                 logger.debug("Executing {0} on target".format(destination))
@@ -89,25 +94,26 @@ def vet_targets(config, dbc):
                                 if results.succeeded:
                                     try:
                                         facts_by_plugin[ontarget] = json.loads(results)
-                                        logger.debug("Found facts: {0}".format(len(facts_by_plugin[ontarget])))
-                                    except:
+                                        logger.debug("Found facts: {0}".format(
+                                            len(facts_by_plugin[ontarget])))
+                                    except Exception as e:
                                         logger.debug("Could not parse output" + \
-                                                     " from vetting plugin {0}".format(local))
+                                                     " from vetting plugin {0}".format(ontarget))
                         except Exception as e:
                             logger.debug("Could not login to discovered host {0} - {1}".format(
                                 host, e.message))
                 # Save gathered facts
-                system_info = { 'facts' : {}}
+                system_info = {'facts':{}}
                 for item in facts_by_plugin.keys():
                     logger.debug("Appending facts: {0}".format(facts_by_plugin[item]))
                     system_info['facts'].update(facts_by_plugin[item])
                 system_info['ip'] = host
                 if "hostname" not in system_info:
                     try:
-                        hostname = socket.gethostbyaddr(host)[0]
                         system_info["hostname"] = socket.gethostbyaddr(host)[0]
                     except Exception as e:
-                        logger.debug("Exception while looking up target hostname: {0}".format(e.message))
+                        logger.debug("Exception while looking up target hostname: {0}".format(
+                            e.message))
                         system_info["hostname"] = host
                 if dbc.save_target(target=system_info):
                     dbc.pop_discovery(ip=host)

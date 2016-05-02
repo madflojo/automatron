@@ -1,8 +1,8 @@
 ''' Console Logging Handler '''
 
-from core.logs import BaseLogging
 import logging
 import logging.handlers
+from core.logs import BaseLogging
 
 class Logger(BaseLogging):
     ''' Logging Class '''
