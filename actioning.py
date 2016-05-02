@@ -44,7 +44,7 @@ def listen(config, dbc, logger):
                     target['runbooks'][item['runbook']]['status'][status], status)
             logger.info(log_string)
             runbooks = get_runbooks_to_exec(item, target, logger)
-            logger.debug("Identified {0} runbook actions".format(len(runbooks)))
+            logger.debug("Identified {0} runbook with actions".format(len(runbooks)))
             for runbook in runbooks:
                 for action in runbooks[runbook]:
                     logger.info("Executing action {0} from runbook {1}".format(
@@ -120,23 +120,36 @@ def execute_runbook(action, target, config, logger):
         plugin_file = '{0}/actions/{1}'.format(config['plugin_path'], plugin_file)
         dest_name = next(tempfile._get_candidate_names())
         destination = "{0}/{1}".format(config['actioning']['upload_path'], dest_name)
-        logger.debug("Placing plugin script into {0}".format(destination))
         with fabric.api.hide('output', 'running', 'warnings'):
             try:
-                fabric.api.put(plugin_file, destination)
-                fabric.api.run("chmod 700 {0}".format(destination))
-                cmd = "{0} {1}".format(destination, action['args'])
-                results = fabric.api.run(cmd)
-                fabric.api.run("rm {0}".format(destination))
+                if action['execute_from'] == "ontarget":
+                    logger.debug("Placing plugin script into {0}".format(destination))
+                    fabric.api.put(plugin_file, destination)
+                    fabric.api.run("chmod 700 {0}".format(destination))
+                    cmd = "{0} {1}".format(destination, action['args'])
+                    results = fabric.api.run(cmd)
+                    fabric.api.run("rm {0}".format(destination))
+                elif action['execute_from'] == "remote":
+                    cmd = "{0} {1}".format(plugin_file, action['args'])
+                    results = fabric.api.local(cmd, capture=True)
+                else:
+                    logger.warn('Unknown "execute_from" specified in action')
+                    return False
             except Exception as e:
-                logger.debug("Could not put plugin file {0} on remote host {1}".format(
+                logger.debug("Could not execute plugin {0} for target {1}".format(
                     plugin_file, target['ip']))
     else:
         cmd = action['cmd']
         # Perform Check
         with fabric.api.hide('output', 'running', 'warnings'):
             try:
-                results = fabric.api.run(cmd)
+                if action['execute_from'] == "ontarget":
+                    results = fabric.api.run(cmd)
+                elif action['execute_from'] == "remote":
+                    results = fabric.api.local(cmd, capture=True)
+                else:
+                    logger.warn('Unknown "execute_from" specified in action')
+                    return False
             except Exception as e:
                 logger.debug("Could not execute command {0}".format(cmd))
     return results.succeeded

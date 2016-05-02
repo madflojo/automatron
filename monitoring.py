@@ -51,14 +51,21 @@ def monitor(runbook, target, config, dbc, logger):
             plugin_file = '{0}/checks/{1}'.format(config['plugin_path'], plugin_file)
             dest_name = next(tempfile._get_candidate_names())
             destination = "{0}/{1}".format(config['monitoring']['upload_path'], dest_name)
-            logger.debug("Placing plugin script into {0}".format(destination))
             with fabric.api.hide('output', 'running', 'warnings'):
                 try:
-                    fabric.api.put(plugin_file, destination)
-                    fabric.api.run("chmod 700 {0}".format(destination))
-                    cmd = "{0} {1}".format(destination, check['args'])
-                    results = fabric.api.run(cmd)
-                    fabric.api.run("rm {0}".format(destination))
+                    if check["execute_from"] == "ontarget":
+                        logger.debug("Placing plugin script into {0}".format(destination))
+                        fabric.api.put(plugin_file, destination)
+                        fabric.api.run("chmod 700 {0}".format(destination))
+                        cmd = "{0} {1}".format(destination, check['args'])
+                        results = fabric.api.run(cmd)
+                        fabric.api.run("rm {0}".format(destination))
+                    elif check["execute_from"] == "remote":
+                        cmd = "{0} {1}".format(plugin_file, check['args'])
+                        results = fabric.api.local(cmd, capture=True)
+                    else:
+                        logger.warn('Unknown "execute_from" specified in check')
+                        return False
                 except Exception as e:
                     logger.debug("Could not put plugin file {0} on remote host {1}".format(
                         plugin_file, target['ip']))
@@ -67,7 +74,13 @@ def monitor(runbook, target, config, dbc, logger):
             # Perform Check
             with fabric.api.hide('output', 'running', 'warnings'):
                 try:
-                    results = fabric.api.run(cmd)
+                    if check["execute_from"] == "ontarget":
+                        results = fabric.api.run(cmd)
+                    elif check["execute_from"] == "remote":
+                        results = fabric.api.local(cmd, capture=True)
+                    else:
+                        logger.warn('Unknown "execute_from" specified in check')
+                        return False
                 except Exception as e:
                     logger.debug("Could not execute command {0}".format(cmd))
         if results.return_code == 0:

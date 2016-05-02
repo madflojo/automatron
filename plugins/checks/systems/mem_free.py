@@ -1,3 +1,4 @@
-#!/bin/bash
+#!/usr/bin/python
 
-exit 1
+import sys
+sys.exit(1)
