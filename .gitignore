@@ -63,3 +63,4 @@ target/
 
 # Config
 config/config.yml
+cache/*
