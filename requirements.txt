@@ -5,3 +5,4 @@ redis
 apscheduler
 fabric
 pyYAML
+jinja2

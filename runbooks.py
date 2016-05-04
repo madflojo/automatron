@@ -19,6 +19,7 @@ import signal
 import time
 import yaml
 import json
+from jinja2 import Template
 import core.common
 import core.logs
 import core.db
@@ -34,8 +35,8 @@ def rediscover(config, dbc):
             count = count + 1
     return count
 
-def process_runbooks(config, dbc):
-    ''' Open, read a`nd process runbooks '''
+def cache_runbooks(config, dbc):
+    ''' Open, read and cache runbooks '''
     all_books = {}
     if os.path.isfile(config['runbook_path'] + "/init.yml"):
         with open(config['runbook_path'] + "/init.yml") as fh:
@@ -51,8 +52,14 @@ def process_runbooks(config, dbc):
                     logger.warn("Runbook File Error: {0} is not a file".format(book_path))
                 else:
                     with open(book_path) as bh:
-                        all_books[target][books] = yaml.safe_load(bh)
+                        all_books[target][books] = bh.read()
     return all_books
+
+def render_runbooks(runbook, facts):
+    ''' Render a runbook with given facts and return dictionary '''
+    template = Template(runbook)
+    yml = template.render(facts=facts)
+    return yaml.load(yml)
 
 def apply_to_targets(runbooks, config, dbc):
     ''' Match hosts with runbooks '''
@@ -69,7 +76,9 @@ def apply_to_targets(runbooks, config, dbc):
                 for runbook in runbooks[matcher].keys():
                     logger.debug("Checking if {0} is already applied".format(runbook))
                     if runbook not in targets[target]['runbooks'].keys():
-                        targets[target]['runbooks'][runbook] = runbooks[matcher][runbook]
+                        targets[target]['runbooks'][runbook] = render_runbooks(
+                            runbooks[matcher][runbook],
+                            targets[target]['facts'])
                         dbc.save_target(target=targets[target])
                         msg = {
                             'msg_type' : 'runbook_add',
@@ -125,7 +134,7 @@ if __name__ == "__main__":
 
     # Get Runbooks from filesystem
     logger.info("Starting runbook processing")
-    runbooks = process_runbooks(config, dbc)
+    runbooks = cache_runbooks(config, dbc)
     logger.debug("Finished processing runbooks")
 
     while True:
