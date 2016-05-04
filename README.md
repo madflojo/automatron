@@ -4,9 +4,9 @@
 
 ## TODO before official PR
 
-* Add Jinja parsing of runbooks
-* Pylint score of 8 or higher
-* Change Discovery plugins to be executables
+* Add Jinja parsing of runbooks - Done
+* Pylint score of 8 or higher - Done
+* Change Discovery plugins to be executables - Or should it be?
 * Add ontarget and remote option for actioning and monitoring - Done (untested)
 * Unit, Integration and Functional tests exist
 * Setup Travis CI build

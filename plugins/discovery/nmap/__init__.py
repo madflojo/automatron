@@ -1,8 +1,8 @@
 ''' nmap discovery plugin '''
 
+import time
 from core.discover import BaseDiscover
 import core.logs
-import time
 
 from libnmap.process import NmapProcess
 from libnmap.parser import NmapParser
@@ -30,9 +30,11 @@ class Discover(BaseDiscover):
                     up.append(scanned_host.address)
                     logger.info("Found new host: {0}".format(scanned_host.address))
                     if self.dbc.new_discovery(ip=scanned_host.address):
-                        logger.debug("Added host {0} to discovery queue".format(scanned_host.address))
+                        logger.debug("Added host {0} to discovery queue".format(
+                            scanned_host.address))
                     else:
-                        logger.debug("Failed to add host {0} to discovery queue".format(scanned_host.address))
+                        logger.debug("Failed to add host {0} to discovery queue".format(
+                            scanned_host.address))
             logger.debug("Scanned {0} hosts, {1} found up".format(
                 len(nmap_report.hosts), len(up)))
             time.sleep(self.config['discovery']['plugins']['nmap']['interval'])
