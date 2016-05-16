@@ -1,6 +1,6 @@
 '''
 
-Runbook: Monitoring
+Automatron: Monitoring
 
   * Get all Targets and Runbooks
     * Schedule Checks
@@ -179,7 +179,7 @@ def shutdown(signum, frame):
         sys.exit(1)
 
 if __name__ == "__main__":
-    config = core.common.get_config(description="Runbook: Monitoring")
+    config = core.common.get_config(description="Automatron: Monitoring")
     if config is False:
         print "Could not get configuration"
         sys.exit(1)

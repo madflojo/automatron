@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 '''
-Runbook: Fact Finder
+Automatron: Fact Finder
 
 Identify facts about a specified host
 

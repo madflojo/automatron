@@ -1,6 +1,6 @@
 '''
 
-Runbook: Actioning
+Automatron: Actioning
 
   * Subscribe to Health Check Status queue
   * Execute (in a thread) applicable runbooks
@@ -167,7 +167,7 @@ def shutdown(signum, frame):
         sys.exit(1)
 
 if __name__ == "__main__":
-    config = core.common.get_config(description="Runbook: Actioning")
+    config = core.common.get_config(description="Automatron: Actioning")
     if config is False:
         print "Could not get configuration"
         sys.exit(1)
