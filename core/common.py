@@ -1,6 +1,6 @@
 '''
 
-Runbook: Module for common tasks
+Automatron: Module for common tasks
 
 '''
 

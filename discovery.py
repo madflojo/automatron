@@ -1,5 +1,5 @@
 '''
-Runbook: Discovery
+Automatron: Discovery
 
 * Launch sub processes to perform discovery
 * Poll process for JSON list of new targets
@@ -134,7 +134,7 @@ def shutdown(signum, frame):
 
 if __name__ == "__main__":
     # pylint: disable=C0103
-    config = core.common.get_config(description="Runbook: Discovery")
+    config = core.common.get_config(description="Automatron: Discovery")
     if config is False:
         print "Could not get configuration"
         sys.exit(1)

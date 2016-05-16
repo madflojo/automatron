@@ -6,3 +6,4 @@ apscheduler
 fabric
 pyYAML
 jinja2
+mock==1.0.1

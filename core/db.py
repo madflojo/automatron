@@ -1,4 +1,4 @@
-''' Base datastore class for Runbook '''
+''' Base datastore class for Automatron '''
 
 class BaseDatastore(object):
     ''' Base class for Runbook datastore plugins to import '''
