@@ -24,35 +24,40 @@ import core.common
 import core.logs
 import core.db
 
-def rediscover(config, dbc):
+def rediscover(config, dbc, logger):
     ''' Clear out target database and rediscover new hosts '''
     targets = dbc.pop_target()
     count = 0
     if targets:
         for target in targets.keys():
-            dbc.new_discovery(ip=targets[target]['ip'])
-            logger.info("Added target {0} to rediscovery queue".format(targets[target]['ip']))
-            count = count + 1
+            try:
+                dbc.new_discovery(ip=targets[target]['ip'])
+                logger.info("Added target {0} to rediscovery queue".format(targets[target]['ip']))
+                count = count + 1
+            except Exception as e:
+                logger.error("Failed to add target {0} to rediscovery queue - {1}".format(
+                    targets[target]['ip'], e.message))
     return count
 
-def cache_runbooks(config, dbc):
+def cache_runbooks(config, logger):
     ''' Open, read and cache runbooks '''
     all_books = {}
     if os.path.isfile(config['runbook_path'] + "/init.yml"):
         with open(config['runbook_path'] + "/init.yml") as fh:
             runbooks = yaml.safe_load(fh)
-        for target in runbooks:
-            all_books[target] = {}
-            for books in runbooks[target]:
-                logger.debug("Processing book: {0}".format(books))
-                book_path = "{0}/{1}".format(config['runbook_path'], books)
-                if os.path.isdir(book_path):
-                    book_path = book_path + "/init.yml"
-                if os.path.isfile(book_path) is False:
-                    logger.warn("Runbook File Error: {0} is not a file".format(book_path))
-                else:
-                    with open(book_path) as bh:
-                        all_books[target][books] = bh.read()
+        if runbooks:
+            for target in runbooks:
+                all_books[target] = {}
+                for books in runbooks[target]:
+                    logger.debug("Processing book: {0}".format(books))
+                    book_path = "{0}/{1}".format(config['runbook_path'], books)
+                    if os.path.isdir(book_path):
+                        book_path = book_path + "/init.yml"
+                    if os.path.isfile(book_path) is False:
+                        logger.warn("Runbook File Error: {0} is not a file".format(book_path))
+                    else:
+                        with open(book_path) as bh:
+                            all_books[target][books] = bh.read()
     return all_books
 
 def render_runbooks(runbook, facts):
@@ -129,12 +134,12 @@ if __name__ == "__main__":
 
     # Rediscover existing hosts
     logger.info("Starting target rediscovery")
-    results = rediscover(config, dbc)
+    results = rediscover(config, dbc, logger)
     logger.debug("Rediscovery complete: {0} targets rediscovered".format(results))
 
     # Get Runbooks from filesystem
     logger.info("Starting runbook processing")
-    runbooks = cache_runbooks(config, dbc)
+    runbooks = cache_runbooks(config, logger)
     logger.debug("Finished processing runbooks")
 
     while True:
