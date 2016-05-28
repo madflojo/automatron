@@ -2,7 +2,7 @@
 
 Automatron **(Ah-Tom-a-tron)** is an open source framework designed to detect and remediate IT systems issues.
 
-[![Build Status]](https://travis-ci.org/madflojo/automatron.svg?branch=develop) [![Coverage Status](https://coveralls.io/repos/github/madflojo/automatron/badge.svg?branch=develop)](https://coveralls.io/github/madflojo/automatron?branch=develop)
+[![Build Status](https://travis-ci.org/madflojo/automatron.svg?branch=develop)](https://travis-ci.org/madflojo/automatron) [![Coverage Status](https://coveralls.io/repos/github/madflojo/automatron/badge.svg?branch=develop)](https://coveralls.io/github/madflojo/automatron?branch=develop)
 
 
 ## Overview
