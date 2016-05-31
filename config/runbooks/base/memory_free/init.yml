@@ -4,10 +4,11 @@ nodes:
   - "*"
 checks:
   mem_free:
+    # Check for the % of memory free create warning with 20% free and critical for 10% free
     execute_from: ontarget
     type: plugin
     plugin: systems/mem_free.py
-    args: --threshold-perc=20
+    args: --warn=20 --critical=10
 actions:
   capture_memusage:
     execute_from: ontarget
