@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 ## Basic memory free health check for Automatron
 
 
