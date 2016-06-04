@@ -12,8 +12,8 @@ With a **pluggable** architecture everything from Health Checks to Datastores ca
 Automatron can be broken down into 4 main components:
 
 * **Discovery**, Automated discovery of new systems
-* **Runbooks**, Hostname based "runbooks" with Jinja2 template support.
+* **Runbooks**, Monitor and Action policies that support Jinja2 templates, and hostname globs.
 * **Monitoring**, Agent-less monitoring via Nagios compliant scripts or command execution
-* **Actioning**, Using rules from **Runbooks** to execute both on target and remote scripts/commands
+* **Actioning**, Using Actions defined within **Runbooks** to execute both on target and remote scripts/commands
 
 With Automatron you can simple fire it up and watch as it autonomously discovers new hosts, performs health checks on them, and remediates issues it finds. All, out of the box.

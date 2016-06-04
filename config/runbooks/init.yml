@@ -1,2 +1,4 @@
 '*':
-  - base/memory_free
+  {% if "Linux" in facts['os'] %}
+  - base/disk_free
+  {% endif %}
