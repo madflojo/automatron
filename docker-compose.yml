@@ -1,8 +1,11 @@
 version: '2'
 services:
-  core:
+  automatron:
     build: .
     depends_on:
       - redis
   redis:
     image: redis
+  test:
+    build: .
+    command: python /tests.py
