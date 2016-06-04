@@ -1,4 +1,4 @@
+{% if True %}
 '*':
-  {% if "Linux" in facts['os'] %}
   - base/disk_free
-  {% endif %}
+{% endif %}

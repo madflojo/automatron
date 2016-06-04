@@ -42,9 +42,12 @@ def rediscover(config, dbc, logger):
 def cache_runbooks(config, logger):
     ''' Open, read and cache runbooks '''
     all_books = {}
+    runbooks = None
     if os.path.isfile(config['runbook_path'] + "/init.yml"):
         with open(config['runbook_path'] + "/init.yml") as fh:
-            runbooks = yaml.safe_load(fh)
+            template = Template(fh.read())
+            yml = template.render()
+            runbooks = yaml.load(yml)
         if runbooks:
             for target in runbooks:
                 all_books[target] = {}
