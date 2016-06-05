@@ -96,12 +96,12 @@ def get_runbooks_to_exec(item, target, logger):
         # see if we are beyond or equal to trigger threshold
         for status in call_on:
             if trigger <= target['runbooks'][item['runbook']]['status'][status]:
-                logger.debug("True Action {0} has trigger of {1} and status has {2}".format(
+                logger.debug("Action {0} has trigger of {1} and status has {2}".format(
                     action, trigger,
                     target['runbooks'][item['runbook']]['status'][status]))
                 run_me = True # turn True
             else:
-                logger.debug("False Action {0} has trigger of {1} and status has {2}".format(
+                logger.debug("Action {0} has trigger of {1} and status has {2}".format(
                     action, trigger,
                     target['runbooks'][item['runbook']]['status'][status]))
         # see if we recently ran this action
