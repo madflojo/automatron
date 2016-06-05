@@ -25,6 +25,7 @@ def listen(config, dbc, logger):
     logger.info("Starting subscription to monitors channel")
     pubsub = dbc.subscribe("check:results")
     item = None
+    target = None
     for msg in pubsub.listen():
         logger.debug("Got message: {0}".format(msg))
         try:
@@ -35,7 +36,7 @@ def listen(config, dbc, logger):
             logger.debug("Found target: {0}".format(json.dumps(target)))
         except Exception as e:
             logger.warn("Unable to process message: {0}".format(e.message))
-        if item is not None:
+        if item and target:
             target = update_target_status(item, target)
             dbc.save_target(target=target)
             log_string = "{0} {1} returned:".format(item['runbook'], target['hostname'])
