@@ -116,6 +116,7 @@ def execute_runbook(action, target, config, logger):
     ''' Execute action against target '''
     fabric.api.env = core.fab.set_env(config, fabric.api.env)
     fabric.api.env.host_string = target['ip']
+    results = None
     if "plugin" in action['type']:
         plugin_file = action['plugin']
         plugin_file = '{0}/actions/{1}'.format(config['plugin_path'], plugin_file)
@@ -153,7 +154,13 @@ def execute_runbook(action, target, config, logger):
                     return False
             except Exception as e:
                 logger.debug("Could not execute command {0}".format(cmd))
-    return results.succeeded
+    if results:
+        if results.succeeded is True:
+            return True
+        else:
+            return False
+    else:
+        return False
 
 def shutdown(signum, frame):
     ''' Shutdown this process '''
