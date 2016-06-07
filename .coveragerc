@@ -1,2 +1,2 @@
 [run]
-omit = /usr/*
+omit = *site-packages*
