@@ -20,7 +20,7 @@ before_script:
 script:
   - docker ps
   - python tests.py
-  - coverage run tests.py --source="./*" --exclude="./plugins/actions/*,./plugins/checks/*,./plugins/vetting/*"
+  - coverage run tests.py
 
 after_success:
   coveralls
