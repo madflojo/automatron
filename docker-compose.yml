@@ -9,3 +9,6 @@ services:
   test:
     build: .
     command: python /tests.py
+  coverage:
+    build: .
+    command: coverage run tests.py && coverage report
