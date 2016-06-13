@@ -1,0 +1,49 @@
+# General
+config_path: config
+runbook_path: config/runbooks
+plugin_path: plugins/
+ssh: # SSH Configuration
+  user: root
+  gateway: False
+  key: |
+        -----BEGIN RSA PRIVATE KEY-----
+        fdlkfjasldjfsaldkjflkasjflkjaflsdlkfjs
+        -----END RSA PRIVATE KEY-----
+
+monitoring: # Monitoring configuration
+  upload_path: /tmp
+
+actioning: # Actioning configuration
+  upload_path: /tmp
+
+logging: # Logging Configurations
+  debug: True
+  plugins:
+    console: True
+    syslog:
+      facility: local0
+
+discovery: # Discovery Configurations
+  upload_path: /tmp/
+  vetting_interval: 30
+  plugins:
+    ## Start web service for HTTP GET or POST requests
+    webping:
+      ip: 0.0.0.0
+      port: 20000
+    ## Use NMAP to find new hosts
+    nmap:
+      target: 10.0.0.1/8
+      flags: -sP
+      interval: 40
+
+datastore: # Datastore Configurations
+  ## Default Datastore Engine
+  engine: redis
+  ## Datastore Specific configuration
+  plugins:
+    ## Redis
+    redis:
+      db: 0
+      host: redis
+      port: 6379
