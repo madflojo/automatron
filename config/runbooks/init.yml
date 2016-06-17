@@ -1,4 +1,2 @@
-{% if True %}
 '*':
   - base/disk_free
-{% endif %}
