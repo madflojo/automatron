@@ -125,6 +125,17 @@ actions:
 
 The above policy will run the `service nginx status` command every 5 minutes on any target that has a hostname that matches `*web*`. If that command fails after 2 occurrences the `restart_nginx` action will be "triggered" and executed on the target server.
 
+## Applying Runbooks to Target hosts
+
+Within the Runbook above we specified the target nodes that the runbook applies to. There is another level of targeting available within the `config/runbooks/init.yml` file. This provides additional granularity to the application of Runbooks.
+
+To get started we will replace the contents of this file with settings specific to our current task.
+
+```
+'*':
+  - base/check_nginx
+```
+
 ### Starting Automatron
 
 Once our configuration and runbook is defined we can startup Automatron and watch as our webservers are discovered and monitored autonamously.
