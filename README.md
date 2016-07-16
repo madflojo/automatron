@@ -2,7 +2,7 @@
 
 ![Automatron](docs/img/logo_huge.png)
 
-Automatron **(Ah-Tom-a-tron)** is an open source framework designed to detect and remediate IT systems issues. Meaning, it can be used to monitor systems and when it detects issues, correct them.
+Automatron **(Ah-Tom-a-tron)** is an open source framework designed to detect and remediate IT systems issues. Meaning, it can be used to monitor systems and when it detects issues; correct them.
 
 ## Features
 
