@@ -2,3 +2,5 @@
 ## Example Runbooks
 #  - examples/disk_free
 #  - examples/nginx
+#  - examples/docker
+#  - examples/docker/clear_dead_containers.yml
