@@ -1,0 +1,20 @@
+name: Clean up dangling images if they are found
+schedule: "*/2 * * * *"
+nodes:
+  - "*"
+checks:
+  find_danglers:
+    execute_from: ontarget
+    type: cmd
+    cmd: docker images -qf dangling=true | wc -l | grep -q 0
+actions:
+  remove_danglers:
+    execute_from: ontarget
+    trigger: 0
+    frequency: 0
+    call_on:
+      - WARNING
+      - CRITICAL
+      - UNKNOWN
+    type: cmd
+    cmd: docker images -qf dangling=true | xargs -n 1 docker rmi --force

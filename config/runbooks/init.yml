@@ -1,2 +1,11 @@
 '*':
-  - base/disk_free
+## Example Runbooks
+## ----------------
+#  - examples/disk_free
+#  - examples/nginx
+
+## Docker Examples
+## ----------------
+#  - examples/docker
+#  - examples/docker/clear_dead_containers.yml
+#  - examples/docker/clear_dangling_images.yml
