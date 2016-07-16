@@ -1,0 +1,20 @@
+name: Clean up dead containers if they are found
+schedule: "*/2 * * * *"
+nodes:
+  - "*"
+checks:
+  find_dead_containers:
+    execute_from: ontarget
+    type: cmd
+    cmd: docker ps -qf status="exited" | wc -l | grep -q 0
+actions:
+  remove_dead_containers:
+    execute_from: ontarget
+    trigger: 0
+    frequency: 0
+    call_on:
+      - WARNING
+      - CRITICAL
+      - UNKNOWN
+    type: cmd
+    cmd: docker ps -qf status="exited" | xargs -n 1 docker rm -f
