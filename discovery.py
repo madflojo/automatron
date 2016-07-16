@@ -38,7 +38,7 @@ def run_plugin(plugin_name, config, dbc):
             plugin_name, e.message))
     return False
 
-def vet_targets(config, dbc):
+def vet_targets(config, dbc, logger):
     ''' Get new targets and gather facts about them '''
     logger.debug("Starting Target Vetting process")
     while True:
@@ -53,8 +53,8 @@ def vet_targets(config, dbc):
             else:
                 logger.debug("Attempting to gather facts on host {0}".format(host))
                 plugins = {
-                    'remote' : os.listdir(config['plugin_path'] + "/vetting/remote"),
-                    'ontarget' : os.listdir(config['plugin_path'] + "/vetting/ontarget"),
+                    'remote' : os.listdir("{0}/vetting/remote".format(config['plugin_path'])),
+                    'ontarget' : os.listdir("{0}/vetting/ontarget".format(config['plugin_path']))
                 }
                 for local in plugins['remote']:
                     logger.debug("Executing vetting plugin (local): {0}".format(local))
@@ -164,7 +164,7 @@ if __name__ == "__main__":
         t.start()
 
     # Start vetting thread
-    t = multiprocessing.Process(target=vet_targets, args=(config, dbc), name="Target Vetting")
+    t = multiprocessing.Process(target=vet_targets, args=(config, dbc, logger), name="Target Vetting")
     threads.append(t)
     t.start()
 
