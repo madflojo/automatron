@@ -89,3 +89,7 @@ actions:
     cmd: /usr/local/etc/rc.d/nginx restart
     {% endif %}
 ```
+
+## Learning more about Automatron
+
+* Checkout our quick start guide: [Automatron in 10 minutes](docs/quick-start.md)

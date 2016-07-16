@@ -45,7 +45,7 @@ $ vi config/config.yml
 
 Automatron relies on SSH to perform both monitoring and actioning. To enable this a public SSH key must be deployed on all target servers and the private key stored within the `ssh` section of the configuration file.
 
-```
+```yaml
 ssh: # SSH Configuration
   user: root
   gateway: False
@@ -63,7 +63,7 @@ Automatron discovers new hosts via two default methods, the first is a web "ping
 
 The second method is a `nmap` scan. Within the config file you can specify a custom network subnet for Automatron to scan.
 
-```
+```yaml
 ## Use NMAP to find new hosts
 nmap:
   target: 10.0.0.1/8
@@ -86,7 +86,7 @@ $ vi config/runbooks/base/check_nginx/init.yml
 
 Once the file is open simply paste the following Runbook policy.
 
-```
+```yaml
 name: Verify nginx is running
 schedule: "*/5 * * * *"
 nodes:
@@ -117,7 +117,7 @@ Within the Runbook above we specified the target nodes that the runbook applies 
 
 To get started we will replace the contents of this file with settings specific to our current task.
 
-```
+```yaml
 '*':
   - base/check_nginx
 ```
