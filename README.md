@@ -2,13 +2,66 @@
 
 # Automatron
 
+![Automatron](docs/img/logo_huge.png)
+
 Automatron **(Ah-Tom-a-tron)** is an open source framework designed to detect and remediate IT systems issues. Meaning, it can be used to monitor systems and when it detects issues, correct them.
 
-This automated correction is driven by policies called **Runbooks**. These runbooks are used to define what health checks should be executed on a target host and what to do about those health checks when they fail.
+## Features
 
-### Runbook Example
+* Automatically detect and add new systems to monitor
+* Monitoring is executed over SSH and completely agent-less
+* Policy based Runbooks allow for monitoring policies rather than server specific configurations
+* Supports Nagios compliant health check scripts
+* Allows arbitrary shell commands for both checks and actions
+* Runbook flexibility with **Jinja2** templating support
+* Pluggable Architecture that simplifies customization
 
-```jinja
+## Runbooks
+
+Automatron's actions are driven by policies called **Runbooks**. These runbooks are used to define what health checks should be executed on a target host and what to do about those health checks when they fail.
+
+### A simple Runbook
+
+The below example is a Runbook that will execute a monitoring plugin to determine the amount of free space on `/var/log` and based on the results execute a corrective action.
+
+```yaml
+name: Verify /var/log
+schedule: "*/2 * * * *"
+nodes:
+  - "*"
+checks:
+  mem_free:
+    # Check for the % of disk free create warning with 20% free and critical for 10% free
+    execute_from: ontarget
+    type: plugin
+    plugin: systems/disk_free.py
+    args: --warn=20 --critical=10 --filesystem=/var/log
+actions:
+  logrotate_nicely:
+    execute_from: ontarget
+    trigger: 0
+    frequency: 300
+    call_on:
+      - WARNING
+    type: cmd
+    cmd: bash /etc/cron.daily/logrotate
+  logrotate_forced:
+    execute_from: ontarget
+    trigger: 5
+    frequency: 300
+    call_on:
+      - CRITICAL
+    type: cmd
+    cmd: bash /etc/cron.daily/logrotate --force
+```
+
+### A Runbook with Jinja2
+
+Jinja2 support was added to Runbooks to allow for extensive customization. The below example shows using Jinja2 to determine which `cmd` to execute based on Automatron's **facts** system.
+
+This example will detect if `nginx` is running and if not, restart it.
+
+```yaml
 name: Verify nginx is running
 schedule: "*/5 * * * *"
 nodes:
@@ -38,14 +91,3 @@ actions:
     cmd: /usr/local/etc/rc.d/nginx restart
     {% endif %}
 ```
-
-The above runbook can be used to monitor the status of **nginx** and during failure; restart it.
-
-## Design Principles
-
-* Automatically detect and add new systems to monitor
-* Provide Agent-less monitoring via SSH
-* Use policy based Runbooks rather than host specific configurations
-* Support Nagios compliant health check scripts
-* Allow arbitrary commands for both checks and actions
-* Provide user freedom with Jinja2 templating support for Runbooks
