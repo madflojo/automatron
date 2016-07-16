@@ -1,0 +1,14 @@
+version: '2'
+services:
+  automatron:
+    build: .
+    depends_on:
+      - redis
+  redis:
+    image: redis
+  test:
+    build: .
+    command: python /tests.py
+  coverage:
+    build: .
+    command: coverage run tests.py && coverage report
