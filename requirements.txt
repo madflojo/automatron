@@ -1,0 +1,11 @@
+# Nmap module
+python-libnmap
+gevent-websocket
+redis
+apscheduler
+fabric
+pyYAML
+jinja2
+mock
+six>=1.7
+coverage

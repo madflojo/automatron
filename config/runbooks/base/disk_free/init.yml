@@ -1,0 +1,28 @@
+name: Verify /var/log
+schedule: "*/2 * * * *"
+nodes:
+  - "*"
+checks:
+  mem_free:
+    # Check for the % of disk free create warning with 20% free and critical for 10% free
+    execute_from: ontarget
+    type: plugin
+    plugin: systems/disk_free.py
+    args: --warn=20 --critical=10 --filesystem=/var/log
+actions:
+  logrotate_nicely:
+    execute_from: ontarget
+    trigger: 0
+    frequency: 300
+    call_on:
+      - WARNING
+    type: cmd
+    cmd: bash /etc/cron.daily/logrotate
+  logrotate_forced:
+    execute_from: ontarget
+    trigger: 5
+    frequency: 300
+    call_on:
+      - CRITICAL
+    type: cmd
+    cmd: bash /etc/cron.daily/logrotate --force

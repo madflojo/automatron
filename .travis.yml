@@ -1,0 +1,26 @@
+language: python
+python:
+  - 2.7
+
+services:
+  - docker
+
+install:
+  - docker build -t automatron .
+  - docker run -d -p 127.0.0.1:6378:6378 --name redis redis
+  - docker run -d --link redis:redis --name automatron automatron
+
+before_script:
+  - pip install -r requirements.txt
+  - pip install mock
+  - pip install coverage
+  - pip install coveralls
+
+
+script:
+  - docker ps
+  - python tests.py
+  - coverage run tests.py
+
+after_success:
+  coveralls
