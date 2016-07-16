@@ -1,0 +1,28 @@
+name: Verify nginx is running
+schedule: "* * * * *"
+nodes:
+  - "*"
+checks:
+  nginx_is_running:
+    # Check if nginx is running
+    execute_from: ontarget
+    type: cmd
+    {% if "Linux" in facts['os'] %}
+    cmd: service nginx status
+    {% else %}
+    cmd: /usr/local/etc/rc.d/nginx status
+    {% endif %}
+actions:
+  restart_nginx:
+    execute_from: ontarget
+    trigger: 2
+    frequency: 300
+    call_on:
+      - WARNING
+      - CRITICAL
+    type: cmd
+    {% if "Linux" in facts['os'] %}
+    cmd: service nginx restart
+    {% else %}
+    cmd: /usr/local/etc/rc.d/nginx restart
+    {% endif %}
