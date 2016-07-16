@@ -1,2 +1,4 @@
 '*':
-  - base/disk_free
+## Example Runbooks
+#  - examples/disk_free
+#  - examples/nginx

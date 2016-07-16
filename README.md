@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/madflojo/automatron.svg?branch=develop)](https://travis-ci.org/madflojo/automatron) [![Coverage Status](https://coveralls.io/repos/github/madflojo/automatron/badge.svg?branch=develop)](https://coveralls.io/github/madflojo/automatron?branch=develop)
+[![Build Status](https://travis-ci.org/madflojo/automatron.svg?branch=master)](https://travis-ci.org/madflojo/automatron) [![Coverage Status](https://coveralls.io/repos/github/madflojo/automatron/badge.svg?branch=master)](https://coveralls.io/github/madflojo/automatron?branch=master)
 
 ![Automatron](docs/img/logo_huge.png)
 
