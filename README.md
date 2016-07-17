@@ -93,6 +93,6 @@ actions:
 ## Next Steps
 
 * Follow our quick start guide: [Automatron in 10 minutes](docs/quick-start.md)
-* Check out or [example Runbooks](config/runbooks/examples) for automating common tasks
-* Follow our Twitter account for the latest news: [![Twitter Follow](https://img.shields.io/twitter/follow/shields_io.svg?style=social&label=Follow&maxAge=2592000?style=flat-square)](https://twitter.com/automatronio)
-* Join us [![Gitter](https://badges.gitter.im/madflojo/automatron.svg)](https://gitter.im/madflojo/automatron?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+* Check out [example Runbooks](config/runbooks/examples) for automating common tasks
+* Follow [@Automatronio on Twitter](https://twitter.com/automatronio) to keep up to date
+* Join [#Automatron on Gitter](https://gitter.im/madflojo/automatron) for help or just to hang out
