@@ -90,6 +90,9 @@ actions:
     {% endif %}
 ```
 
-## Learning more about Automatron
+## Next Steps
 
-* Checkout our quick start guide: [Automatron in 10 minutes](docs/quick-start.md)
+* Follow our quick start guide: [Automatron in 10 minutes](docs/quick-start.md)
+* Check out [example Runbooks](config/runbooks/examples) for automating common tasks
+* Follow [@Automatronio on Twitter](https://twitter.com/automatronio) to keep up to date
+* Join [#Automatron on Gitter](https://gitter.im/madflojo/automatron) for help or just to hang out
