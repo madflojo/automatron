@@ -1,4 +1,4 @@
-# General
+## General
 config_path: config
 runbook_path: config/runbooks
 plugin_path: plugins/
@@ -27,20 +27,24 @@ discovery: # Discovery Configurations
   upload_path: /tmp/
   vetting_interval: 30
   plugins:
-    ## Start web service for HTTP GET or POST requests
+## Start web service for HTTP GET or POST requests
     webping:
       ip: 0.0.0.0
       port: 20000
-    ## Use NMAP to find new hosts
-    nmap:
-      target: 10.0.0.1/8
-      flags: -sP
-      interval: 40
+## Use NMAP to find new hosts
+#    nmap:
+#      target: 10.0.0.1/8
+#      flags: -sP
+#      interval: 40
+## Query DigitalOcean
+#    digitalocean:
+#      api_key: example
+#      interval: 60
 
 datastore: # Datastore Configurations
-  ## Default Datastore Engine
+## Default Datastore Engine
   engine: redis
-  ## Datastore Specific configuration
+## Datastore Specific configuration
   plugins:
     ## Redis
     redis:
