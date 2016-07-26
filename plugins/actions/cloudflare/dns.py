@@ -40,8 +40,9 @@ def get_zoneid(email, key, domain):
     except:
         return None
 
-def get_recs(email, key, zoneid, page=1, search={}):
+def get_recs(email, key, zoneid, page=1, search=None):
     ''' Return a dictionary of records that match searchstring or zoneid '''
+    search = search or {}
     return_data = {}
     headers = {
         'X-Auth-Email' : email,
