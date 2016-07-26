@@ -160,13 +160,6 @@ Remove DNS records that match specified search criteria.
         help="Remove DNS records",
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    remove_parser.add_argument(
-        "-s",
-        "--safe",
-        help="Do not remove records with only one entry",
-        action="store_true",
-        default=True
-    )
     group_remove_parser = remove_parser.add_argument_group(
         title="Matching criteria",
         description="""
@@ -181,12 +174,6 @@ Remove DNS records that match specified search criteria.
         1     www     10.0.0.1
         2     www     10.0.0.2
         3     ftp     10.0.0.1
-
-    Safety Switch
-
-    The -s or --safe flags are used to prevent the removal of records with only 1 entry. With the example above if -s is True
-    only record 1 would be removed as record 2 would remain. If -s is False, both records 1 and 2 would be removed. The default
-    value of --safe is True.
         """
     )
     remove_parser.add_argument("email", help="Email address for CloudFlare Authentication")
@@ -220,7 +207,6 @@ the 'old_content' field to search for DNS records to modify. If --name is used o
         help="New record content (example: 10.0.0.1 or cname.example.com.)"
     )
     modify_parser.add_argument("--name", help="Record name (example: www.example.com)")
-    modify_parser.add_argument("--ttl", help="TTL (default: 0)", type=int, default=0)
 
     # List Sub Parser
     list_parser = subparser.add_parser(
