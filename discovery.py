@@ -117,6 +117,8 @@ def vet_targets(config, dbc, logger):
                         system_info["hostname"] = host
                 if dbc.save_target(target=system_info):
                     dbc.pop_discovery(ip=host)
+        if "unit-testing" in config.keys():
+            break
         time.sleep(config['discovery']['vetting_interval'])
 
 
