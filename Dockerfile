@@ -4,7 +4,8 @@ RUN apt-get update --fix-missing && \
     apt-get -y install \
     python-pip \
     python-dev \
-    nmap
+    nmap \
+    curl
 ADD requirements.txt /
 RUN pip install --upgrade setuptools
 RUN pip install -r /requirements.txt
