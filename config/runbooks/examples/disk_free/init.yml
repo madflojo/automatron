@@ -3,7 +3,7 @@ schedule: "*/2 * * * *"
 nodes:
   - "*"
 checks:
-  mem_free:
+  disk_free:
     # Check for the % of disk free create warning with 20% free and critical for 10% free
     execute_from: ontarget
     type: plugin
