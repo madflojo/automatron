@@ -132,7 +132,8 @@ def execute_runbook(action, target, config, logger):
                     results = fabric.api.run(cmd)
                     fabric.api.run("rm {0}".format(destination))
                 elif action['execute_from'] == "remote":
-                    cmd = "{0} {1}".format(plugin_file, action['args'])
+                    # Move file to temporary location and execute
+                    cmd = "cp {0} /tmp/{1} && /tmp/{1} {2}".format(plugin_file, dest_name, action['args'])
                     results = fabric.api.local(cmd, capture=True)
                 else:
                     logger.warn('Unknown "execute_from" specified in action')
