@@ -139,8 +139,7 @@ def execute_runbook(action, target, config, logger):
                 elif action['execute_from'] == "remote":
                     # Move file to temporary location and execute
                     shutil.copyfile(plugin_file, "/tmp/{0}".format(dest_name))
-                    os.chmod("/tmp/{0}".format(dest_name), 0700)
-                    cmd = "/tmp/{0} {1}".format(plugin_file, action['args'])
+                    cmd = "chmod 700 /tmp/{0} && /tmp/{0} {1}".format(plugin_file, action['args'])
                     results = fabric.api.local(cmd, capture=True)
                     os.remove("/tmp/{0}".format(dest_name))
                 else:
