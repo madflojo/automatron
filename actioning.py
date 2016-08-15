@@ -48,8 +48,8 @@ def listen(config, dbc, logger):
             logger.debug("Identified {0} runbook with actions".format(len(runbooks)))
             for runbook in runbooks:
                 for action in runbooks[runbook]:
-                    logger.info("Executing action {0} from runbook {1}".format(
-                        action, runbook))
+                    logger.info("Executing action {0} from runbook {1} on target {2}".format(
+                        action, runbook, target['hostname']))
                     if execute_runbook(target['runbooks'][runbook]['actions'][action],
                                        target, config, logger):
                         logger.debug("Execution of action {0} on target {1} Successful".format(
@@ -107,6 +107,10 @@ def get_runbooks_to_exec(item, target, logger):
         # see if we recently ran this action
         if frequency > (time.time() - last_run):
             run_me = False # set to false
+
+        for check in item['checks'].keys():
+            if item['checks'][check] not in call_on:
+                run_me = False
 
         if run_me is True:
             run_these[item['runbook']].add(action)
