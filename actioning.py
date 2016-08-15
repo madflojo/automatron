@@ -12,6 +12,7 @@ import sys
 import signal
 import json
 import tempfile
+import shutil
 import fabric.api
 from sets import Set
 import time
@@ -137,8 +138,11 @@ def execute_runbook(action, target, config, logger):
                     fabric.api.run("rm {0}".format(destination))
                 elif action['execute_from'] == "remote":
                     # Move file to temporary location and execute
-                    cmd = "cp {0} /tmp/{1} && /tmp/{1} {2}".format(plugin_file, dest_name, action['args'])
+                    shutil.copyfile(plugin_file, "/tmp/{0}".format(dest_name))
+                    os.chmod("/tmp/{0}".format(dest_name), 0700)
+                    cmd = "/tmp/{0} {1}".format(plugin_file, action['args'])
                     results = fabric.api.local(cmd, capture=True)
+                    os.remove("/tmp/{0}".format(dest_name))
                 else:
                     logger.warn('Unknown "execute_from" specified in action')
                     return False
