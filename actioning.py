@@ -144,7 +144,7 @@ def execute_runbook(action, target, config, logger):
                     # Move file to temporary location and execute
                     shutil.copyfile(plugin_file, "/tmp/{0}".format(dest_name))
                     os.chmod("/tmp/{0}".format(dest_name), 0700)
-                    cmd = "/tmp/{0} {1}".format(plugin_file, action['args'])
+                    cmd = "/tmp/{0} {1}".format(dest_name, action['args'])
                     results = fabric.api.local(cmd, capture=True)
                     os.remove("/tmp/{0}".format(dest_name))
                 else:
