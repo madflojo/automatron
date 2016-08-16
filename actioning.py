@@ -14,6 +14,7 @@ import json
 import tempfile
 import shutil
 import fabric.api
+import os
 from sets import Set
 import time
 import core.common
@@ -57,6 +58,9 @@ def listen(config, dbc, logger):
                             action, target['hostname']))
                         target['runbooks'][runbook]['actions'][action]['last_run'] = time.time()
                         dbc.save_target(target=target)
+                    else:
+                        logger.debug("Execution of action {0} on target {1} Failed".format(
+                            action, target['hostname']))
 
 def update_target_status(item, target):
     ''' Update the target:runbook status counters '''
@@ -147,8 +151,8 @@ def execute_runbook(action, target, config, logger):
                     logger.warn('Unknown "execute_from" specified in action')
                     return False
             except Exception as e:
-                logger.debug("Could not execute plugin {0} for target {1}".format(
-                    plugin_file, target['ip']))
+                logger.debug("Could not execute plugin {0} for target {1}: {2}".format(
+                    plugin_file, target['ip'], e.message))
     else:
         cmd = action['cmd']
         # Perform Check
