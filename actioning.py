@@ -12,7 +12,9 @@ import sys
 import signal
 import json
 import tempfile
+import shutil
 import fabric.api
+import os
 from sets import Set
 import time
 import core.common
@@ -48,14 +50,17 @@ def listen(config, dbc, logger):
             logger.debug("Identified {0} runbook with actions".format(len(runbooks)))
             for runbook in runbooks:
                 for action in runbooks[runbook]:
-                    logger.info("Executing action {0} from runbook {1}".format(
-                        action, runbook))
+                    logger.info("Executing action {0} from runbook {1} on target {2}".format(
+                        action, runbook, target['hostname']))
                     if execute_runbook(target['runbooks'][runbook]['actions'][action],
                                        target, config, logger):
                         logger.debug("Execution of action {0} on target {1} Successful".format(
                             action, target['hostname']))
                         target['runbooks'][runbook]['actions'][action]['last_run'] = time.time()
                         dbc.save_target(target=target)
+                    else:
+                        logger.debug("Execution of action {0} on target {1} Failed".format(
+                            action, target['hostname']))
 
 def update_target_status(item, target):
     ''' Update the target:runbook status counters '''
@@ -108,6 +113,10 @@ def get_runbooks_to_exec(item, target, logger):
         if frequency > (time.time() - last_run):
             run_me = False # set to false
 
+        for check in item['checks'].keys():
+            if item['checks'][check] not in call_on:
+                run_me = False
+
         if run_me is True:
             run_these[item['runbook']].add(action)
     return run_these
@@ -132,14 +141,18 @@ def execute_runbook(action, target, config, logger):
                     results = fabric.api.run(cmd)
                     fabric.api.run("rm {0}".format(destination))
                 elif action['execute_from'] == "remote":
-                    cmd = "{0} {1}".format(plugin_file, action['args'])
+                    # Move file to temporary location and execute
+                    shutil.copyfile(plugin_file, "/tmp/{0}".format(dest_name))
+                    os.chmod("/tmp/{0}".format(dest_name), 0700)
+                    cmd = "/tmp/{0} {1}".format(dest_name, action['args'])
                     results = fabric.api.local(cmd, capture=True)
+                    os.remove("/tmp/{0}".format(dest_name))
                 else:
                     logger.warn('Unknown "execute_from" specified in action')
                     return False
             except Exception as e:
-                logger.debug("Could not execute plugin {0} for target {1}".format(
-                    plugin_file, target['ip']))
+                logger.debug("Could not execute plugin {0} for target {1}: {2}".format(
+                    plugin_file, target['ip'], e.message))
     else:
         cmd = action['cmd']
         # Perform Check

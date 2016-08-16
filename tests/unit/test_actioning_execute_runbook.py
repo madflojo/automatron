@@ -160,7 +160,10 @@ class TestPluginonTarget(ExecuteRunbooksTest):
     @mock.patch('actioning.fabric.api.local')
     @mock.patch('actioning.fabric.api.put')
     @mock.patch('actioning.fabric.api.run')
-    def runTest(self, mock_run, mock_put, mock_local, mock_hide, mock_env, mock_set_env):
+    @mock.patch('actioning.shutil.copyfile')
+    @mock.patch('actioning.os.chmod')
+    @mock.patch('actioning.os.remove')
+    def runTest(self, mock_remove, mock_chmod, mock_copyfile, mock_run, mock_put, mock_local, mock_hide, mock_env, mock_set_env):
         ''' Execute test '''
         # Set mock_env to empty dict
         mock_env = mock.MagicMock(spec={})
@@ -169,6 +172,9 @@ class TestPluginonTarget(ExecuteRunbooksTest):
         mock_run.return_value = mock.MagicMock(**{ 'succeeded': True})
         mock_put = True
         mock_hide = True
+        mock_remove = True
+        mock_chmod = True
+        mock_copyfile = True
         action = {
             'type' : 'plugin',
             'plugin' : 'yes.py',
@@ -197,7 +203,10 @@ class TestPluginBadTarget(ExecuteRunbooksTest):
     @mock.patch('actioning.fabric.api.local')
     @mock.patch('actioning.fabric.api.put')
     @mock.patch('actioning.fabric.api.run')
-    def runTest(self, mock_run, mock_put, mock_local, mock_hide, mock_env, mock_set_env):
+    @mock.patch('actioning.shutil.copyfile')
+    @mock.patch('actioning.os.chmod')
+    @mock.patch('actioning.os.remove')
+    def runTest(self, mock_remove, mock_chmod, mock_copyfile, mock_run, mock_put, mock_local, mock_hide, mock_env, mock_set_env):
         ''' Execute test '''
         # Set mock_env to empty dict
         mock_env = mock.MagicMock(spec={})
@@ -206,6 +215,9 @@ class TestPluginBadTarget(ExecuteRunbooksTest):
         mock_run.return_value = mock.MagicMock(**{ 'succeeded': True})
         mock_put = True
         mock_hide = True
+        mock_remove = True
+        mock_chmod = True
+        mock_copyfile = True
         action = {
             'type' : 'plugin',
             'plugin' : 'yes.py',
