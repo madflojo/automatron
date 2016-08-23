@@ -18,10 +18,9 @@ import re
 def get_linux_service_services():
     ''' Gather linux services information '''
     services = {}
-    results = subprocess.Popen(
-        "/usr/bin/service --status-all", shell=True,
+    results = subprocess.Popen("/usr/bin/service --status-all", shell=True,
         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    for readme in [ results.stdout, results.stderr ]:
+    for readme in [results.stdout, results.stderr]:
         for line in readme.readlines():
             service = line.split(" ")[5].rstrip("\n")
             try:
@@ -31,17 +30,16 @@ def get_linux_service_services():
                     services[service] = "running"
                 else:
                     services[service] = "stopped"
-            except Exception as e:
+            except Exception:
                 services[service] = "unknown"
     return services
 
 def get_linux_systemd_services():
     ''' Gather linux services information '''
     services = {}
-    results = subprocess.Popen(
-        "/usr/bin/systemctl --type service --all --no-pager", shell=True,
+    results = subprocess.Popen("/usr/bin/systemctl --type service --all --no-pager", shell=True,
         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    for readme in [ results.stdout, results.stderr ]:
+    for readme in [results.stdout, results.stderr]:
         for line in readme.readlines():
             if ".service" in line:
                 data = re.split(r'[ ]+', line)
@@ -62,5 +60,5 @@ if __name__ == "__main__":
         elif os.path.isfile("/usr/bin/systemctl"):
             services.update(get_linux_systemd_services())
 
-    output = { 'services' : services }
+    output = {'services' : services}
     print json.dumps(output)
