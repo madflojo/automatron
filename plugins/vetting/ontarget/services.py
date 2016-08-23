@@ -61,6 +61,6 @@ if __name__ == "__main__":
             services.update(get_linux_service_services())
         elif os.path.isfile("/usr/bin/systemctl"):
             services.update(get_linux_systemd_services())
-    output = { 'services' : services }
 
+    output = { 'services' : services }
     print json.dumps(output)
