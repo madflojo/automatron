@@ -94,5 +94,6 @@ actions:
 
 * Follow our quick start guide: [Automatron in 10 minutes](docs/quick-start.md)
 * Check out [example Runbooks](config/runbooks/examples) for automating common tasks
+* Read our [Runbook Reference](docs/runbooks/runbooks.md) documentation to better understand the anatomy of a Runbook
 * Follow [@Automatronio on Twitter](https://twitter.com/automatronio) to keep up to date
 * Join [#Automatron on Gitter](https://gitter.im/madflojo/automatron) for help or just to hang out
