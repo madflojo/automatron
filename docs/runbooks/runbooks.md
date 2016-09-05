@@ -46,15 +46,15 @@ key: value
 
 The below is a detailed reference for the available options within a Runbook.
 
-### name
+### `name`
 
 The `name` field is used to provide an arbitrary name to the Runbook. This field is a required field and must have some value.
 
-### schedule
+### `schedule`
 
 The `schedule` field is used to provide Automatron with a cron formatted time to execute the specified health checks. The specified cron schedule will be used to establish the frequency or the specified health check.
 
-### nodes
+### `nodes`
 
 The `nodes` field is a YAML list used to specify which target nodes this runbook should be applied to. This list is based on the hostname value of the nodes.
 
@@ -70,7 +70,7 @@ nodes:
   - "*caching*"
 ```
 
-### checks
+### `checks`
 
 The `checks` field is a YAML dictionary that contains the health checks to be executed against the specified nodes.
 
@@ -109,15 +109,15 @@ This health check will execute the `service nginx status` command and validate t
 
 With the `cmd` type health check there are 3 main options; `execute_from`, `type` and `cmd`.
 
-##### type
+##### `type`
 
 The `type` field is used to specify what type of health check this check is. Acceptable values are `cmd` or `plugin`. This field is required for all health checks.
 
-##### execute_from
+##### `execute_from`
 
 The `execute_from` field is used to specify where to run the health check. Acceptable values for this field are `ontarget` which is used to execute the health check on the node itself and `remote`. The `remote` setting will tell Automatron to execute the health check from the system running the `monitoring.py` service of Automatron.
 
-##### cmd
+##### `cmd`
 
 The `cmd` field is used to specify the shell command to execute. In the example above the command is simply `service nginx status` however, this field support much more complicated commands such as the below example.
 
@@ -149,21 +149,21 @@ This health check will login to the target node, upload the `systems/disk_free.p
 
 With `plugin` health checks there are 4 parameters to be set; `execute_from`, `type`, `plugin` and `args`.
 
-##### type
+##### `type`
 
 The `type` field is used to specify what type of health check this check is. Acceptable values are `cmd` or `plugin`. This field is required for all health checks.
 
-##### execute_from
+##### `execute_from`
 
 The `execute_from` field is used to specify where to run the health check. Acceptable values for this field are `ontarget` which is used to execute the health check on the node itself and `remote`. The `remote` setting will tell Automatron to execute the health check from the system running the `monitoring.py` service of Automatron.
 
-##### plugin
+##### `plugin`
 
 The `plugin` field is used to specify the location of the plugin file. This is a relative file path starting from the value of the `plugin_path` parameter.
 
 For example, a plugin located at `/path/to/plugins/checks/mycheck/mycheck.pl` would require the value of `mycheck/mycheck.pl`.
 
-##### args
+##### `args`
 
 The `args` field is used to specify the arguments to provide the plugin executable. In the example above the plugin will be executed as follows by Automatron
 
@@ -180,7 +180,7 @@ Automatron follows the **Nagios** model for health check exit codes. When a heal
   * `CRITICAL`: Is indicated by an exit code of `2`
   * `UNKNOWN`: Is indicated by any other exit code
 
-### actions
+### `actions`
 
 Like `checks` the `actions` field is a YAML dictionary that contains actions to be executed based on health check status. The `actions` field also follows a similar format to the `checks` field.
 
@@ -215,27 +215,27 @@ actions:
     cmd: service nginx restart
 ```
 
-##### execute_from
+##### `execute_from`
 
 The `execute_from` field is used to specify where to run the action. Acceptable values for this field are `ontarget` which is used to execute the health check on the node itself and `remote`. The `remote` setting will tell Automatron to execute the action from the system running the `actioning.py` service of Automatron.
 
-##### trigger
+##### `trigger`
 
 The `trigger` field is used to specify the number of times a health check returns the state specified within `call_on`. This number must be reached consecutively, if for example, the health check returns `WARNING` and then `OK` Automatron's internal counter will be reset.
 
-##### frequency
+##### `frequency`
 
 The `frequency` field is used to specify the time (in seconds) between action execution. In the above example the action will be executed every `300` seconds until either the `call_on` or `trigger` conditions are no longer met.
 
-##### call_on
+##### `call_on`
 
 The `call_on` field is a YAML list which is used to list the states that should trigger this action. Valid options are `OK`, `WARNING`, `CRITICAL` & `UNKNOWN`.
 
-##### type
+##### `type`
 
 The `type` field is used to specify what type of action this action is. Acceptable values are `cmd` or `plugin`. This field is required for all actions.
 
-##### cmd
+##### `cmd`
 
 The `cmd` field is used to specify the shell command to execute as part of thise action. In the example above the command is simply `service nginx restart`.
 
@@ -258,33 +258,33 @@ actions:
     args: add email@example.com api_key example.com www.example.com A 10.0.0.1
 ```
 
-##### execute_from
+##### `execute_from`
 
 The `execute_from` field is used to specify where to run the action. Acceptable values for this field are `ontarget` which is used to execute the health check on the node itself and `remote`. The `remote` setting will tell Automatron to execute the action from the system running the `actioning.py` service of Automatron.
 
-##### trigger
+##### `trigger`
 
 The `trigger` field is used to specify the number of times a health check returns the state specified within `call_on`. This number must be reached consecutively, if for example, the health check returns `WARNING` and then `OK` Automatron's internal counter will be reset.
 
-##### frequency
+##### `frequency`
 
 The `frequency` field is used to specify the time (in seconds) between action execution. In the above example the action will be executed every `300` seconds until either the `call_on` or `trigger` conditions are no longer met.
 
-##### call_on
+##### `call_on`
 
 The `call_on` field is a YAML list which is used to list the states that should trigger this action. Valid options are `OK`, `WARNING`, `CRITICAL` & `UNKNOWN`.
 
-##### type
+##### `type`
 
 The `type` field is used to specify what type of action this action is. Acceptable values are `cmd` or `plugin`. This field is required for all actions.
 
-##### plugin
+##### `plugin`
 
 The `plugin` field is used to specify the location of the plugin file. This is a relative file path starting from the value of the `plugin_path` parameter.
 
 For example, a plugin located at `/path/to/plugins/actions/myaction/myaction.pl` would require the value of `myaction/myaction.pl`.
 
-##### args
+##### `args`
 
 The `args` field is used to specify the arguments to provide the plugin executable. In the example above the plugin will be executed as follows by Automatron
 
