@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/madflojo/automatron.svg?branch=master)](https://travis-ci.org/madflojo/automatron) [![Coverage Status](https://coveralls.io/repos/github/madflojo/automatron/badge.svg?branch=master)](https://coveralls.io/github/madflojo/automatron?branch=master)
 
-![Automatron](docs/img/logo_huge.png)
+![Automatron](https://raw.githubusercontent.com/madflojo/automatron/master/docs/img/logo_huge.png)
 
 Automatron **(Ah-Tom-a-tron)** is an open source framework designed to detect and remediate IT systems issues. Meaning, it can be used to monitor systems and when it detects issues; correct them.
 
@@ -95,5 +95,6 @@ actions:
 * Follow our quick start guide: [Automatron in 10 minutes](docs/quick-start.md)
 * Check out [example Runbooks](config/runbooks/examples) for automating common tasks
 * Read our [Runbook Reference](docs/runbooks/runbooks.md) documentation to better understand the anatomy of a Runbook
+* Deploy a [Docker container](https://hub.docker.com/r/madflojo/automatron/) instance of Automatron
 * Follow [@Automatronio on Twitter](https://twitter.com/automatronio) to keep up to date
 * Join [#Automatron on Gitter](https://gitter.im/madflojo/automatron) for help or just to hang out
