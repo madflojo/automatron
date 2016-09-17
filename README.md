@@ -90,11 +90,25 @@ actions:
     {% endif %}
 ```
 
-## Next Steps
+For more examples and information on getting started checkout the Automatron [wiki](https://github.com/madflojo/automatron/wiki).
 
-* Follow our quick start guide: [Automatron in 10 minutes](docs/quick-start.md)
-* Check out [example Runbooks](config/runbooks/examples) for automating common tasks
-* Read our [Runbook Reference](docs/runbooks/runbooks.md) documentation to better understand the anatomy of a Runbook
-* Deploy a [Docker container](https://hub.docker.com/r/madflojo/automatron/) instance of Automatron
-* Follow [@Automatronio on Twitter](https://twitter.com/automatronio) to keep up to date
-* Join [#Automatron on Gitter](https://gitter.im/madflojo/automatron) for help or just to hang out
+## Stay in the loop
+
+Follow [@Automatronio on Twitter](https://twitter.com/automatronio) for the latest Automatron news and join the community in [#Automatron on Gitter](https://gitter.im/madflojo/automatron).
+
+## License
+
+
+   Copyright 2016 Benjamin Cane
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
