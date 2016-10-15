@@ -1,0 +1,12 @@
+site_name: Automatron
+site_url: http://www.automatron.io
+site_description: Autonomous IT Systems Monitoring and Remediation
+theme: readthedocs
+
+pages:
+- ['index.md', 'Overview']
+- ['automatron-in-10-minutes.md', 'Automatron in 10 Minutes']
+- ['deploying-with-docker.md', 'Deploying with Docker']
+- ['runbooks.md', 'Runbooks']
+- ['plugins.md', 'Plugins Index']
+- ['plugins/actions/cloudflare-dns.md', 'Actions', 'CloudFlare DNS']
