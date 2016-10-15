@@ -69,5 +69,4 @@ cache/*
 site/
 
 # mac
-
 *.DS_Store
