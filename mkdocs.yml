@@ -1,12 +1,23 @@
 site_name: Automatron
-site_url: http://www.automatron.io
+site_url: https://www.automatron.io
+repo_url: https://github.com/madflojo/automatron
 site_description: Autonomous IT Systems Monitoring and Remediation
+site_author: Benjamin Cane
+site_favicon: img/favicon.ico
 theme: readthedocs
 
 pages:
-- ['index.md', 'Overview']
-- ['automatron-in-10-minutes.md', 'Automatron in 10 Minutes']
-- ['deploying-with-docker.md', 'Deploying with Docker']
-- ['runbooks.md', 'Runbooks']
-- ['plugins.md', 'Plugins Index']
-- ['plugins/actions/cloudflare-dns.md', 'Actions', 'CloudFlare DNS']
+  - Overview: index.md
+  - Getting Started:
+    - Automatron in 10 Minutes: automatron-in-10-minutes.md
+    - Deploying with Docker: deploying-with-docker.md
+  - 'Runbooks': runbooks.md
+  - Plugins:
+    - Index: plugins.md
+    - Checks:
+      - Systems:
+        - Disk Free: plugins/checks/systems/disk_free.md
+        - Memory Free: plugins/checks/systems/mem_free.md
+    - Actions:
+      - CloudFlare:
+        - DNS: plugins/actions/cloudflare-dns.md
