@@ -30,10 +30,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-w", "--warn", type=float,
-        help="Warn if Free Memory is less than N percent", required=True)
+        help="Warn if Free Disk Space is less than N percent", required=True)
     parser.add_argument(
         "-c", "--critical", type=float,
-        help="Critical if Free Memory is less than N percent", required=True)
+        help="Critical if Free Disk Space is less than N percent", required=True)
     parser.add_argument(
         "-f", "--filesystem",
         help="Filesystem to check", required=True)

@@ -1,4 +1,3 @@
-
 This plugin provides the ability to `add`, `remove` and `modify` DNS records for CloudFlare protected domains.
 
 With this plugin you could change a DNS record to a failover IP, remove IP's for round-robin DNS load balancing or even add new systems to DNS if services are running.
