@@ -20,4 +20,6 @@ pages:
         - Memory Free: plugins/checks/systems/mem_free.md
     - Actions:
       - CloudFlare:
-        - DNS: plugins/actions/cloudflare-dns.md
+        - DNS: plugins/actions/cloudflare/dns.md
+      - Docker:
+        - Clean: plugins/actions/docker/clean.md
