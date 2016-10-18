@@ -23,6 +23,8 @@ Plugins used for Automatron actions.
     * [DNS](plugins/actions/cloudflare/dns) - Modify, Add or Delete CloudFlare hosted DNS entries
   * Docker
     * [Docker Clean](plugins/actions/docker/clean) - Remove all Docker containers and images
+  * Systems
+    * [Services](plugins/actions/systems/services) - Perform an action on a specified services
 
 ## Vetting
 
@@ -30,7 +32,7 @@ Gather information from targets to populate `facts` values.
 
   * On Target
     * [Services](plugins/vetting/ontarget/services) - Identify system services and their current state
-    * [System Info](plugins/vetting/ontarget/system_info) - Identify basic system information (i.e. Hostname, IP Address, etc.)
+    * [System Info](plugins/vetting/ontarget/system-info) - Identify basic system information (i.e. Hostname, IP Address, etc.)
   * Remote
     * [Ping](plugins/vetting/remote/ping) - True or False value to determine if system is ping-able
 

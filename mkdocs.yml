@@ -11,9 +11,15 @@ pages:
   - Getting Started:
     - Automatron in 10 Minutes: automatron-in-10-minutes.md
     - Deploying with Docker: deploying-with-docker.md
-  - 'Runbooks': runbooks.md
+  - Runbooks:
+    - Overview: runbooks.md
+    - Facts: facts.md
   - Plugins:
     - Index: plugins.md
+    - Discovery:
+      - nmap: plugins/discovery/nmap.md
+      - Web Ping: plugins/discovery/webping.md
+      - Digital Ocean: plugins/discovery/digitalocean.md
     - Checks:
       - Systems:
         - Disk Free: plugins/checks/systems/disk_free.md
@@ -23,3 +29,11 @@ pages:
         - DNS: plugins/actions/cloudflare/dns.md
       - Docker:
         - Clean: plugins/actions/docker/clean.md
+      - Systems:
+        - Services: plugins/actions/systems/services.md
+    - Vetting:
+      - On Target:
+        - Services: plugins/vetting/ontarget/services.md
+        - System Info: plugins/vetting/ontarget/system-info.md
+      - Remote:
+        - Ping: plugins/vetting/remote/ping.md
