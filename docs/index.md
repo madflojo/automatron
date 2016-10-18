@@ -57,7 +57,7 @@ Jinja2 support was added to Runbooks to allow for extensive customization. The b
 
 This example will detect if `nginx` is running and if not, restart it.
 
-```yaml
+```yaml+jinja
 name: Verify nginx is running
 schedule: "*/5 * * * *"
 nodes:
