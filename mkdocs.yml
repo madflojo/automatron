@@ -22,6 +22,7 @@ pages:
       - Digital Ocean: plugins/discovery/digitalocean.md
     - Checks:
       - MySQL:
+        - Available: plugins/checks/mysql/available.md
         - Status Metrics: plugins/checks/mysql/status_metrics.md
       - Systems:
         - Disk Free: plugins/checks/systems/disk_free.md
