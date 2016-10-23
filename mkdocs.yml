@@ -1,0 +1,42 @@
+site_name: Automatron
+site_url: https://www.automatron.io
+repo_url: https://github.com/madflojo/automatron
+site_description: Autonomous IT Systems Monitoring and Remediation
+site_author: Benjamin Cane
+site_favicon: img/favicon.ico
+theme: readthedocs
+
+pages:
+  - Overview: index.md
+  - Getting Started:
+    - Automatron in 10 Minutes: automatron-in-10-minutes.md
+    - Deploying with Docker: deploying-with-docker.md
+  - Runbooks:
+    - Overview: runbooks.md
+    - Facts: facts.md
+  - Plugins:
+    - Index: plugins.md
+    - Discovery:
+      - nmap: plugins/discovery/nmap.md
+      - Web Ping: plugins/discovery/webping.md
+      - Digital Ocean: plugins/discovery/digitalocean.md
+    - Checks:
+      - MySQL:
+        - Available: plugins/checks/mysql/available.md
+        - Status Metrics: plugins/checks/mysql/status_metrics.md
+      - Systems:
+        - Disk Free: plugins/checks/systems/disk_free.md
+        - Memory Free: plugins/checks/systems/mem_free.md
+    - Actions:
+      - CloudFlare:
+        - DNS: plugins/actions/cloudflare/dns.md
+      - Docker:
+        - Clean: plugins/actions/docker/clean.md
+      - Systems:
+        - Services: plugins/actions/systems/services.md
+    - Vetting:
+      - On Target:
+        - Services: plugins/vetting/ontarget/services.md
+        - System Info: plugins/vetting/ontarget/system-info.md
+      - Remote:
+        - Ping: plugins/vetting/remote/ping.md

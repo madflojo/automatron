@@ -64,3 +64,9 @@ target/
 # Config
 config/config.yml
 cache/*
+
+# mkdocs
+site/
+
+# mac
+*.DS_Store
