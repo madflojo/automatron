@@ -21,6 +21,8 @@ pages:
       - Web Ping: plugins/discovery/webping.md
       - Digital Ocean: plugins/discovery/digitalocean.md
     - Checks:
+      - MySQL:
+        - Status Metrics: plugins/checks/mysql/status_metrics.md
       - Systems:
         - Disk Free: plugins/checks/systems/disk_free.md
         - Memory Free: plugins/checks/systems/mem_free.md
