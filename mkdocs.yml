@@ -21,6 +21,8 @@ pages:
       - Web Ping: plugins/discovery/webping.md
       - Digital Ocean: plugins/discovery/digitalocean.md
     - Checks:
+      - Network:
+        - TCP Connection: plugins/checks/network/tcp_connect.md
       - MySQL:
         - Available: plugins/checks/mysql/available.md
         - Status Metrics: plugins/checks/mysql/status_metrics.md
