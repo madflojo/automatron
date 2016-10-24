@@ -9,15 +9,15 @@ checks:
   mysql_up:
     execute_from: ontarget
     type: plugin
-    plugin: mysql/available.py
+    plugin: network/tcp_connect.py
     args: --host=localhost --port 3306
 ```
 
-This plugin can be executed from either `ontarget` or `remote` depending on the MySQL service's configuration.
+This plugin can be executed from either `ontarget` or `remote` depending on the target being monitored.
 
 ### Required arguments
 
-The `mysql/available` plugin requires 2 arguments.
+The `network/tcp_connect` plugin requires 2 arguments.
 
 ```yaml
 args: -i <ip or hostname> -p <port> [-t <timeout value>]
