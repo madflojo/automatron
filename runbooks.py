@@ -78,7 +78,7 @@ def apply_to_targets(runbooks, config, dbc):
         if "runbooks" not in targets[target].keys():
             logger.debug("Creating runbook dictionary in target config")
             targets[target]['runbooks'] = {}
-        logger.info("Identifying runbooks for target {0}".format(target))
+        logger.debug("Identifying runbooks for target {0}".format(target))
         for matcher in runbooks.keys():
             if fnmatch.fnmatch(targets[target]['hostname'], matcher):
                 for runbook in runbooks[matcher].keys():
@@ -147,6 +147,6 @@ if __name__ == "__main__":
 
     while True:
         # Get new targets and apply runbooks to them
-        logger.info("Applying runbooks to targets")
+        logger.debug("Applying runbooks to targets")
         apply_to_targets(runbooks, config, dbc)
         time.sleep(20)
