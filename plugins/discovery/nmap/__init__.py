@@ -28,7 +28,7 @@ class Discover(BaseDiscover):
             for scanned_host in nmap_report.hosts:
                 if "up" in scanned_host.status and scanned_host.address not in up:
                     up.append(scanned_host.address)
-                    logger.info("Found new host: {0}".format(scanned_host.address))
+                    logger.debug("Found new host: {0}".format(scanned_host.address))
                     if self.dbc.new_discovery(ip=scanned_host.address):
                         logger.debug("Added host {0} to discovery queue".format(
                             scanned_host.address))
