@@ -17,7 +17,7 @@ class Discover(BaseDiscover):
         logger.info("Getting hosts from DigitalOcean")
 
         # Define DO information for API Request
-        url = "https://api.digitalocean.com/v2/droplets"
+        url = "{0}/droplets".format(self.config['discovery']['plugins']['digitalocean']['url'])
         headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer {0}'.format(
