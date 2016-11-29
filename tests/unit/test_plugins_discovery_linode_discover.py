@@ -13,7 +13,7 @@ class ResponseMock:
         self.text = text
         self.status_code = status_code
 
-        if errors == True:
+        if errors is True:
             raise Exception("Unit testing is good")
 
 def mocked_get_success(*args, **kwargs):
