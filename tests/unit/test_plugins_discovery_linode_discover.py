@@ -43,6 +43,18 @@ def mocked_get_success(*args, **kwargs):
     return_code = 200
     return ResponseMock(response, return_code)
 
+def mocked_get_success_no_data(*args, **kwargs):
+    ''' Run with example json from API docs '''
+    response = """
+        {
+           "ERRORARRAY":[],
+           "ACTION":"linode.ip.list",
+           "DATA":[]
+        }
+    """
+    return_code = 200
+    return ResponseMock(response, return_code)
+
 def mocked_get_bad_json(*args, **kwargs):
     ''' Run with bad json from API docs '''
     response = """
@@ -121,6 +133,18 @@ class RunwithValidReply(DiscoveryTest):
             2,
             "dbc.new_discovery call count is not 2: {0}".format(self.dbc.new_discovery.call_count)
         )
+
+class RunwithValidReplyNoData(DiscoveryTest):
+    ''' Test with valid reply '''
+    @mock.patch('plugins.discovery.linode.requests.get', side_effect=mocked_get_success_no_data)
+    def runTest(self, mock_get):
+        ''' Execute test '''
+        self.dbc = mock.MagicMock(**{
+            'new_discovery.return_value' : True
+        })
+        find = Discover(config=self.config, dbc=self.dbc)
+        self.assertTrue(find.start())
+        self.assertFalse(self.dbc.new_discovery.called, "dbc.new_discovery was called in error")
 
 class RunwithInValidJSON(DiscoveryTest):
     ''' Test with invalid JSON reply '''
