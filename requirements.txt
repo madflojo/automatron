@@ -9,3 +9,4 @@ jinja2
 mock
 six>=1.7
 coverage
+boto3
