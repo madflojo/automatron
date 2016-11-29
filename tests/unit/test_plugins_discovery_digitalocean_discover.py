@@ -156,7 +156,24 @@ class DiscoveryTest(unittest.TestCase):
 
     def setUp(self):
         ''' Setup mocked data '''
-        self.config = mock.Mock()
+        self.config = {
+            'discovery' : {
+                'plugins' : {
+                    'digitalocean' : {
+                        'url': 'https://example.com',
+                        'api_key': 'executing_unit_test',
+                        'interval': '1'
+                    }
+                }
+            },
+            'unit_testing': True,
+            'logging' : {
+                'debug' : True,
+                'plugins' : {
+                    'console' : True
+                }
+            }
+        }
         self.logger = mock.Mock(**{
             'info.return_value' : True,
             'debug.return_value' : True,
@@ -177,23 +194,6 @@ class RunwithValidReply(DiscoveryTest):
     @mock.patch('plugins.discovery.digitalocean.requests.get', side_effect=mocked_get_success)
     def runTest(self, mock_get):
         ''' Execute test '''
-        self.config = {
-            'discovery' : {
-                'plugins' : {
-                    'digitalocean' : {
-                        'api_key': 'executing_unit_test',
-                        'interval': '1'
-                    }
-                }
-            },
-            'unit_testing': True,
-            'logging' : {
-                'debug' : True,
-                'plugins' : {
-                    'console' : True
-                }
-            }
-        }
         self.dbc = mock.MagicMock(**{
             'new_discovery.return_value' : True
         })
@@ -211,23 +211,6 @@ class RunwithInValidJSON(DiscoveryTest):
     @mock.patch('plugins.discovery.digitalocean.requests.get', side_effect=mocked_get_bad_json)
     def runTest(self, mock_get):
         ''' Execute test '''
-        self.config = {
-            'discovery' : {
-                'plugins' : {
-                    'digitalocean' : {
-                        'api_key': 'executing_unit_test',
-                        'interval': '1'
-                    }
-                }
-            },
-            'unit_testing': True,
-            'logging' : {
-                'debug' : True,
-                'plugins' : {
-                    'console' : True
-                }
-            }
-        }
         self.dbc = mock.MagicMock(**{
             'new_discovery.return_value' : True
         })
@@ -240,23 +223,6 @@ class RunwithNoJSON(DiscoveryTest):
     @mock.patch('plugins.discovery.digitalocean.requests.get', side_effect=mocked_get_no_json)
     def runTest(self, mock_get):
         ''' Execute test '''
-        self.config = {
-            'discovery' : {
-                'plugins' : {
-                    'digitalocean' : {
-                        'api_key': 'executing_unit_test',
-                        'interval': '1'
-                    }
-                }
-            },
-            'unit_testing': True,
-            'logging' : {
-                'debug' : True,
-                'plugins' : {
-                    'console' : True
-                }
-            }
-        }
         self.dbc = mock.MagicMock(**{
             'new_discovery.return_value' : True
         })
@@ -269,23 +235,6 @@ class RunwithStatusError(DiscoveryTest):
     @mock.patch('plugins.discovery.digitalocean.requests.get', side_effect=mocked_get_status_error)
     def runTest(self, mock_get):
         ''' Execute test '''
-        self.config = {
-            'discovery' : {
-                'plugins' : {
-                    'digitalocean' : {
-                        'api_key': 'executing_unit_test',
-                        'interval': '1'
-                    }
-                }
-            },
-            'unit_testing': True,
-            'logging' : {
-                'debug' : True,
-                'plugins' : {
-                    'console' : True
-                }
-            }
-        }
         self.dbc = mock.MagicMock(**{
             'new_discovery.return_value' : True
         })
@@ -298,23 +247,6 @@ class RunwithException(DiscoveryTest):
     @mock.patch('plugins.discovery.digitalocean.requests.get', side_effect=mocked_get_raise)
     def runTest(self, mock_get):
         ''' Execute test '''
-        self.config = {
-            'discovery' : {
-                'plugins' : {
-                    'digitalocean' : {
-                        'api_key': 'executing_unit_test',
-                        'interval': '1'
-                    }
-                }
-            },
-            'unit_testing': True,
-            'logging' : {
-                'debug' : True,
-                'plugins' : {
-                    'console' : True
-                }
-            }
-        }
         self.dbc = mock.MagicMock(**{
             'new_discovery.return_value' : True
         })
