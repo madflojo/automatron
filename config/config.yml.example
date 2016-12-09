@@ -45,6 +45,11 @@ discovery: # Discovery Configurations
 #      filter:
 #        - PublicIpAddress
 #        - PrivateIpAddress
+#    linode:
+#      url: https://api.linode.com
+#      api_key: example
+#      interval: 60
+
 
 datastore: # Datastore Configurations
 ## Default Datastore Engine
