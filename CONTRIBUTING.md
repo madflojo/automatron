@@ -82,9 +82,15 @@ If you wish to execute tests you can do so by running the following `docker-comp
 $ sudo docker-compose up --build test
 ```
 
+To test documentation updates you can launch a `mkdocs` container as well.
+
+```console
+$ sudo docker-compose up --build mkdocs
+```
+
 To wipe and reset the `docker-compose` environment simply run the following.
 
 ```console
 $ sudo docker-compose kill automatron redis
-$ sudo docker-compose rm automatron redis tests
+$ sudo docker-compose rm automatron redis tests mkdocs
 ```

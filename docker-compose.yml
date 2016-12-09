@@ -9,6 +9,14 @@ services:
   test:
     build: .
     command: python /tests.py
+  mkdocs:
+    image: thinkcube/mkdocs
+    volumes:
+      - ./:/automatron
+    ports:
+      - 8000:8000
+    working_dir: /automatron
+    command: mkdocs serve -a 0.0.0.0:8000
   coverage:
     build: .
     command: coverage run tests.py && coverage report
