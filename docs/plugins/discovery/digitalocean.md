@@ -8,11 +8,13 @@ This plugin does require some configuration in Automatron's master configuration
 discovery:
   plugins:
     digitalocean:
+      url: http://example.com
       api_key: example
       interval: 60
 ```
 
 The `digitalocean` plugin requires two configuration items.
 
-* `api_key` - This is the Digital Ocean API key.
+* `url` - This is the URL of Digital Ocean's API
+* `api_key` - This is the Digital Ocean API key
 * `interval` - This is the frequency to query Digital Ocean's API

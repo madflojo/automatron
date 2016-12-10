@@ -5,7 +5,10 @@ RUN apt-get update --fix-missing && \
     python-pip \
     python-dev \
     nmap \
-    curl
+    curl \
+    libffi-dev \
+    build-essential \
+    libssl-dev
 ADD requirements.txt /
 RUN pip install --upgrade setuptools
 RUN pip install -r /requirements.txt
