@@ -29,7 +29,6 @@ class RunwithGoodData(RenderRunbooksIntegrationTest):
         ''' Execute test '''
         self.assertEqual(render_runbooks(self.runbooks, self.facts), {'yaml': True})
 
-
 class RunwithNoData(RenderRunbooksIntegrationTest):
     ''' Test when given no data '''
     def runTest(self):
@@ -38,7 +37,6 @@ class RunwithNoData(RenderRunbooksIntegrationTest):
         self.facts = ""
         self.assertIsNone(render_runbooks(self.runbooks, self.facts))
 
-
 class RunwithBadData(RenderRunbooksIntegrationTest):
     ''' Test when given bad data '''
     def runTest(self):
@@ -46,3 +44,13 @@ class RunwithBadData(RenderRunbooksIntegrationTest):
         self.runbooks = "notrealyaml"
         # Output should be same as input
         self.assertEqual(render_runbooks(self.runbooks, self.facts), "notrealyaml")
+
+class RunwithBadJinja(RenderRunbooksIntegrationTest):
+    ''' Test when given bad data '''
+    def runTest(self):
+        ''' Execute test '''
+        self.runbooks = """
+            yaml: {{facts['data'}}
+        """
+        # Output should be same as input
+        self.assertEqual(render_runbooks(self.runbooks, self.facts), {})

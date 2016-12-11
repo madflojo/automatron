@@ -65,9 +65,13 @@ def cache_runbooks(config, logger):
 
 def render_runbooks(runbook, facts):
     ''' Render a runbook with given facts and return dictionary '''
-    template = Template(runbook)
-    yml = template.render(facts=facts)
-    return yaml.load(yml)
+    try:
+        template = Template(runbook)
+        yml = template.render(facts=facts)
+        output = yaml.load(yml)
+    except Exception:
+        output = {}
+    return output
 
 def apply_to_targets(runbooks, config, dbc):
     ''' Match hosts with runbooks '''
