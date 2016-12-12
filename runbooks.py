@@ -65,13 +65,9 @@ def cache_runbooks(config, logger):
 
 def render_runbooks(runbook, facts):
     ''' Render a runbook with given facts and return dictionary '''
-    try:
-        template = Template(runbook)
-        yml = template.render(facts=facts)
-        output = yaml.load(yml)
-    except Exception:
-        output = {}
-    return output
+    template = Template(runbook)
+    yml = template.render(facts=facts)
+    return yaml.load(yml)
 
 def apply_to_targets(runbooks, config, dbc):
     ''' Match hosts with runbooks '''
@@ -88,9 +84,16 @@ def apply_to_targets(runbooks, config, dbc):
                 for runbook in runbooks[matcher].keys():
                     logger.debug("Checking if {0} is already applied".format(runbook))
                     if runbook not in targets[target]['runbooks'].keys():
-                        targets[target]['runbooks'][runbook] = render_runbooks(
-                            runbooks[matcher][runbook],
-                            targets[target]['facts'])
+                        try:
+                            targets[target]['runbooks'][runbook] = render_runbooks(
+                                runbooks[matcher][runbook],
+                                targets[target]['facts'])
+                        except Exception as e:
+                            logger.warn("Could not apply runbook {0} to target {1}: {2}".format(
+                                runbook,
+                                targets[target]['hostname'],
+                                e.message
+                            ))
                         dbc.save_target(target=targets[target])
                         msg = {
                             'msg_type' : 'runbook_add',

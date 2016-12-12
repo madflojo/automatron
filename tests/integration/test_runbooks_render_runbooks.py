@@ -44,13 +44,3 @@ class RunwithBadData(RenderRunbooksIntegrationTest):
         self.runbooks = "notrealyaml"
         # Output should be same as input
         self.assertEqual(render_runbooks(self.runbooks, self.facts), "notrealyaml")
-
-class RunwithBadJinja(RenderRunbooksIntegrationTest):
-    ''' Test when given bad data '''
-    def runTest(self):
-        ''' Execute test '''
-        self.runbooks = """
-            yaml: {{facts['data'}}
-        """
-        # Output should be same as input
-        self.assertEqual(render_runbooks(self.runbooks, self.facts), {})
