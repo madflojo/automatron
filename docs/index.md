@@ -90,7 +90,7 @@ actions:
 
 ## Next Steps
 
-* Follow our quick start guide: [Automatron in 10 minutes](Automatron-in-10-minutes)
+* Follow our quick start guide: [Automatron in 10 minutes](automatron-in-10-minutes)
 * Check out [example Runbooks](https://github.com/madflojo/automatron/tree/master/config/runbooks/examples) for automating common tasks
 * Read our [Runbook Reference](Runbooks) documentation to better understand the anatomy of a Runbook
 * Deploy a [Docker container](https://hub.docker.com/r/madflojo/automatron/) instance of Automatron

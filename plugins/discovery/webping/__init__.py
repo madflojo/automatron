@@ -18,14 +18,14 @@ class Discover(BaseDiscover):
         ip = env['REMOTE_ADDR']
         if ip not in up:
             up.append(ip)
-            logger.info("Found new host: {0}".format(ip))
+            logger.debug("Found new host: {0}".format(ip))
             if self.dbc.new_discovery(ip=ip):
                 logger.debug("Added host {0} to discovery queue".format(ip))
             else:
                 logger.debug("Failed to add host {0} to discovery queue".format(ip))
         start_response('200 OK', [('Content-Type', 'text/plain')])
         return ['Success']
-        
+
 
     def start(self):
         ''' Start Discovery '''

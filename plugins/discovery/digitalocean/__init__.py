@@ -14,10 +14,10 @@ class Discover(BaseDiscover):
         logs = core.logs.Logger(config=self.config, proc_name="discovery.digitalocean")
         logger = logs.getLogger()
         logger = logs.clean_handlers(logger)
-        logger.info("Getting hosts from DigitalOcean")
+        logger.debug("Getting hosts from DigitalOcean")
 
         # Define DO information for API Request
-        url = "https://api.digitalocean.com/v2/droplets"
+        url = "{0}/droplets".format(self.config['discovery']['plugins']['digitalocean']['url'])
         headers = {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer {0}'.format(
@@ -49,7 +49,7 @@ class Discover(BaseDiscover):
                         for ip_type in ['v4', 'v6']:
                             for interface in droplet['networks'][ip_type]:
                                 if interface['type'] == "public":
-                                    logger.info("Found host: {0}".format(interface['ip_address']))
+                                    logger.debug("Found host: {0}".format(interface['ip_address']))
                                     ip_addrs.append(interface['ip_address'])
             else:
                 logger.warn("Unable to query DigitalOcean API: HTTP Response {0}".format(r.status_code))
@@ -60,7 +60,7 @@ class Discover(BaseDiscover):
                 else:
                     logger.debug("Failed to add host {0} to discovery queue".format(ip))
 
-            logger.debug("Found {0} hosts".format(len(ip_addrs)))
+            logger.info("Found {0} hosts".format(len(ip_addrs)))
             if "unit_testing" in self.config.keys():
                 # Break out of loop for unit testing
                 break

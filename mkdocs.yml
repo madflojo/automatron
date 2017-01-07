@@ -17,9 +17,12 @@ pages:
   - Plugins:
     - Index: plugins.md
     - Discovery:
-      - nmap: plugins/discovery/nmap.md
-      - Web Ping: plugins/discovery/webping.md
+      - AWS: plugins/discovery/aws.md
       - Digital Ocean: plugins/discovery/digitalocean.md
+      - Linode: plugins/discovery/linode.md
+      - Network Map (nmap): plugins/discovery/nmap.md
+      - Roster file: plugins/discovery/roster.md
+      - Web Ping: plugins/discovery/webping.md
     - Checks:
       - Network:
         - Ping: plugins/checks/network/ping.md

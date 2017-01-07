@@ -78,15 +78,22 @@ def apply_to_targets(runbooks, config, dbc):
         if "runbooks" not in targets[target].keys():
             logger.debug("Creating runbook dictionary in target config")
             targets[target]['runbooks'] = {}
-        logger.info("Identifying runbooks for target {0}".format(target))
+        logger.debug("Identifying runbooks for target {0}".format(target))
         for matcher in runbooks.keys():
             if fnmatch.fnmatch(targets[target]['hostname'], matcher):
                 for runbook in runbooks[matcher].keys():
                     logger.debug("Checking if {0} is already applied".format(runbook))
                     if runbook not in targets[target]['runbooks'].keys():
-                        targets[target]['runbooks'][runbook] = render_runbooks(
-                            runbooks[matcher][runbook],
-                            targets[target]['facts'])
+                        try:
+                            targets[target]['runbooks'][runbook] = render_runbooks(
+                                runbooks[matcher][runbook],
+                                targets[target]['facts'])
+                        except Exception as e:
+                            logger.warn("Could not apply runbook {0} to target {1}: {2}".format(
+                                runbook,
+                                targets[target]['hostname'],
+                                e.message
+                            ))
                         dbc.save_target(target=targets[target])
                         msg = {
                             'msg_type' : 'runbook_add',
@@ -147,6 +154,6 @@ if __name__ == "__main__":
 
     while True:
         # Get new targets and apply runbooks to them
-        logger.info("Applying runbooks to targets")
+        logger.debug("Applying runbooks to targets")
         apply_to_targets(runbooks, config, dbc)
         time.sleep(20)
