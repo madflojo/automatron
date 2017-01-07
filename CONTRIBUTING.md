@@ -2,6 +2,10 @@
 
 Community contributions are essential to the growth of Automatron. Both code and documentation contributions are not only welcomed, they are encouraged. The following guidelines will explain how to get started with contributing to this project.
 
+## Accept our Contributor License Agreement
+
+Before starting to contribute to Automatron please review and accept our [Contributor License Agreement](https://goo.gl/forms/44vauc2jjlNlln2t1)
+
 ## Core vs. Plugins
 
 Contributing to the Core platform and contributing Plugins have two different guidelines and requirements. The below will explain some basic concepts of how to contribute different functionality.
