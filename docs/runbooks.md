@@ -39,7 +39,22 @@ The `name` field is used to provide an arbitrary name to the Runbook. This field
 
 ### `schedule`
 
-The `schedule` field is used to provide a cron formatted schedule for health check execution. The specified cron schedule will be used to establish the frequency for executing the health checks defined within the Runbook.
+The `schedule` field is used to provide a cron formatted schedule for health check execution. The specified cron schedule will be used to establish the frequency to execute the health checks defined within the Runbook.
+
+It is also possible to define the schedule in a key/value based format as well as a cron based format.
+
+```yaml
+schedule:
+  second: */15
+  minute: *
+  hour: *
+  day: *
+  month: *
+  day_of_week: *
+```
+
+For key/value based schedules you may omit fields for default values ('*'); however, cron based schedules requires all 5 columns(`* * * * *`).
+
 
 ### `nodes`
 
