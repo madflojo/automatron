@@ -103,3 +103,36 @@ class TestSpecificSchedule(ScheduleTest):
             day=1,
             month=1,
             day_of_week=1))
+
+class TestNoSchedule(ScheduleTest):
+    ''' Test when a cron based schedule is provided '''
+    @mock.patch('monitoring.CronTrigger')
+    @mock.patch('monitoring.fnmatch.fnmatch', new=mock.MagicMock(return_value=True))
+    def runTest(self, mock_triggered):
+        ''' Execute test '''
+        scheduler = mock.Mock(**{
+            'add_job.return_value' : True
+        })
+        self.target.update({
+            'runbooks' : {
+                'test' : {
+                    'nodes' : [
+                        'tes*'
+                    ]
+                }
+            }
+        })
+        self.assertTrue(schedule(
+            scheduler,
+            "test",
+            self.target,
+            self.config,
+            self.dbc,
+            self.logger))
+        self.assertTrue(mock_triggered.called_with(
+            second=0,
+            minute='*',
+            hour='*',
+            day='*',
+            month='*',
+            day_of_week='*'))

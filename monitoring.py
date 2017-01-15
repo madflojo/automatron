@@ -17,6 +17,7 @@ import sys
 import signal
 import json
 import tempfile
+import types
 import fabric.api
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -100,13 +101,37 @@ def monitor(runbook, target, config, dbc, logger):
 
 def schedule(scheduler, runbook, target, config, dbc, logger):
     ''' Setup schedule for new runbooks and targets '''
-    task_schedule = target['runbooks'][runbook]['schedule'].split(" ")
+    # Default schedule (every minute)
+    task_schedule = {
+        'second' : 0,
+        'minute' : '*',
+        'hour' : '*',
+        'day' : '*',
+        'month' : '*',
+        'day_of_week' : '*'
+    }
+    # If schedule is present override default
+    if 'schedule' in target['runbooks'][runbook].keys():
+        if type(target['runbooks'][runbook]['schedule']) == types.DictType:
+            for key in target['runbooks'][runbook]['schedule'].keys():
+                task_schedule[key] = target['runbooks'][runbook]['schedule'][key]
+        elif type(target['runbooks'][runbook]['schedule']) == types.StringType:
+            breakdown = target['runbooks'][runbook]['schedule'].split(" ")
+            task_schedule = {
+                'second' : 0,
+                'minute' : breakdown[0],
+                'hour' : breakdown[1],
+                'day' : breakdown[2],
+                'month' :  breakdown[3],
+                'day_of_week' : breakdown[4]
+            }
     cron = CronTrigger(
-        minute=task_schedule[0],
-        hour=task_schedule[1],
-        day=task_schedule[2],
-        month=task_schedule[3],
-        day_of_week=task_schedule[4],
+        second=task_schedule['second'],
+        minute=task_schedule['minute'],
+        hour=task_schedule['hour'],
+        day=task_schedule['day'],
+        month=task_schedule['month'],
+        day_of_week=task_schedule['day_of_week'],
     )
     should_schedule = False
     for node in target['runbooks'][runbook]['nodes']:
