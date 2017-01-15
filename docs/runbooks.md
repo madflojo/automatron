@@ -45,12 +45,12 @@ It is also possible to define the schedule in a key/value based format as well a
 
 ```yaml
 schedule:
-  second: */15
-  minute: *
-  hour: *
-  day: *
-  month: *
-  day_of_week: *
+  second: '*/15'
+  minute: '*'
+  hour: '*'
+  day: '*'
+  month: '*'
+  day_of_week: '*'
 ```
 
 For key/value based schedules you may omit fields for default values ('*'); however, cron based schedules requires all 5 columns(`* * * * *`).
