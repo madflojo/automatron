@@ -98,7 +98,7 @@ def monitor(runbook, target, config, dbc, logger):
 
     dbc.notify("check:results", runbook_status)
 
-def schedule(scheduler, runbook, target, config, dbc):
+def schedule(scheduler, runbook, target, config, dbc, logger):
     ''' Setup schedule for new runbooks and targets '''
     task_schedule = target['runbooks'][runbook]['schedule'].split(" ")
     cron = CronTrigger(
@@ -122,7 +122,7 @@ def schedule(scheduler, runbook, target, config, dbc):
     else:
         return False
 
-def listen(scheduler, config, dbc):
+def listen(scheduler, config, dbc, logger):
     ''' Listen for new events and schedule runbooks '''
     logger.info("Starting subscription to monitors channel")
     pubsub = dbc.subscribe("monitors")
@@ -134,7 +134,7 @@ def listen(scheduler, config, dbc):
                 item['msg_type'], item['target']))
             target = dbc.get_target(target_id=item['target'])
             logger.debug("Found target: {0}".format(json.dumps(target)))
-            job = schedule(scheduler, item['runbook'], target, config, dbc)
+            job = schedule(scheduler, item['runbook'], target, config, dbc, logger)
             if job:
                 name = "{0}:{1}".format(
                     target['runbooks'][item['runbook']]['name'],
@@ -145,14 +145,14 @@ def listen(scheduler, config, dbc):
         except Exception as e:
             logger.warn("Unable to process message: {0}".format(e.message))
 
-def initialize(config, dbc, scheduler):
+def initialize(config, dbc, scheduler, logger):
     ''' Grab existing targets and setup monitors '''
     targets = dbc.get_target()
     scheduled = 0
     jobs = {}
     for target in targets.keys():
         for runbook in targets[target]['runbooks'].keys():
-            job = schedule(scheduler, runbook, targets[target], config, dbc)
+            job = schedule(scheduler, runbook, targets[target], config, dbc, logger)
             if job:
                 name = "{0}:{1}".format(
                     targets[target]['runbooks'][runbook]['name'],
@@ -205,8 +205,8 @@ if __name__ == "__main__":
     scheduler.start()
 
     logger.info("Grabbing targets for initial scheduling")
-    jobs, scheduled = initialize(config, dbc, scheduler)
+    jobs, scheduled = initialize(config, dbc, scheduler, logger)
     logger.info("Scheduled {0} checks".format(scheduled))
 
     while True:
-        listen(scheduler, config, dbc)
+        listen(scheduler, config, dbc, logger)
