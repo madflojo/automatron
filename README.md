@@ -24,7 +24,7 @@ The below example is a Runbook that will execute a monitoring plugin to determin
 
 ```yaml
 name: Verify /var/log
-schedule: "*/2 * * * *"
+schedule: "*/5 * * * *"
 nodes:
   - "*"
 checks:
@@ -61,7 +61,8 @@ This example will detect if `nginx` is running and if not, restart it.
 
 ```yaml
 name: Verify nginx is running
-schedule: "*/5 * * * *"
+schedule:
+  second: "*/30"
 nodes:
   - "*web*"
 checks:
@@ -111,7 +112,6 @@ $ sudo docker run -d --link redis:redis -v /path/to/config:/config --restart=alw
 Follow [@Automatronio on Twitter](https://twitter.com/automatronio) for the latest Automatron news and join the community in [#Automatron on Gitter](https://gitter.im/madflojo/automatron).
 
 ## License
-
 
    Copyright 2016 Benjamin Cane
 
