@@ -135,7 +135,8 @@ def schedule(scheduler, runbook, target, config, dbc, logger):
     )
     should_schedule = False
     for node in target['runbooks'][runbook]['nodes']:
-        if fnmatch.fnmatch(os.uname()[1], node):
+        logger.debug("Checking if target {0} is {1} from node list".format(target['hostname'], node))
+        if fnmatch.fnmatch(target['hostname'], node):
             should_schedule = True
 
     if should_schedule:
