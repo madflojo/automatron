@@ -238,7 +238,8 @@ class TestPluginonHostTarget(ExecuteRunbooksTest):
         self.assertFalse(self.logger.warn.called)
         self.assertTrue(mock_run.called)
         self.assertFalse(mock_local.called)
-        self.assertTrue(mock_run.call_count == 1)
+        print mock_run.call_count
+        self.assertTrue(mock_run.call_count == 3)
 
 class TestPluginBadTarget(ExecuteRunbooksTest):
     ''' Test when the action is a Plugin on an invalid target '''

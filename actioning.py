@@ -124,7 +124,6 @@ def get_runbooks_to_exec(item, target, logger):
 def execute_runbook(action, target, config, logger):
     ''' Execute action against target '''
     fabric.api.env = core.fab.set_env(config, fabric.api.env)
-    fabric.api.env.host_string = target['ip']
     results = None
     if "plugin" in action['type']:
         plugin_file = action['plugin']
@@ -133,14 +132,18 @@ def execute_runbook(action, target, config, logger):
         destination = "{0}/{1}".format(config['actioning']['upload_path'], dest_name)
         with fabric.api.hide('output', 'running', 'warnings'):
             try:
-                if action['execute_from'] == "ontarget":
-                    logger.debug("Placing plugin script into {0}".format(destination))
+                if "target" in action['execute_from'] or "host" in action['execute_from']:
+                    if "target" in action['execute_from']:
+                        fabric.api.env.host_string = target['ip']
+                    else:
+                        fabric.api.env.host_string = action['host']
+                    logger.debug("Placing plugin script into {0} on {1}".format(destination, fabric.api.env.host_string))
                     fabric.api.put(plugin_file, destination)
                     fabric.api.run("chmod 700 {0}".format(destination))
                     cmd = "{0} {1}".format(destination, action['args'])
                     results = fabric.api.run(cmd)
                     fabric.api.run("rm {0}".format(destination))
-                elif action['execute_from'] == "remote":
+                elif "remote" in action['execute_from']:
                     # Move file to temporary location and execute
                     shutil.copyfile(plugin_file, "/tmp/{0}".format(dest_name))
                     os.chmod("/tmp/{0}".format(dest_name), 0700)
@@ -158,9 +161,13 @@ def execute_runbook(action, target, config, logger):
         # Perform Check
         with fabric.api.hide('output', 'running', 'warnings'):
             try:
-                if action['execute_from'] == "ontarget":
+                if "target" in action['execute_from'] or "host" in action['execute_from']:
+                    if "target" in action['execute_from']:
+                        fabric.api.env.host_string = target['ip']
+                    else:
+                        fabric.api.env.host_string = action['host']
                     results = fabric.api.run(cmd)
-                elif action['execute_from'] == "remote":
+                elif "remote" in action['execute_from']:
                     results = fabric.api.local(cmd, capture=True)
                 else:
                     logger.warn('Unknown "execute_from" specified in action')

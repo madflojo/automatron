@@ -54,14 +54,14 @@ def monitor(runbook, target, config, dbc, logger):
             destination = "{0}/{1}".format(config['monitoring']['upload_path'], dest_name)
             with fabric.api.hide('output', 'running', 'warnings'):
                 try:
-                    if check["execute_from"] == "ontarget":
+                    if "target" in check["execute_from"]:
                         logger.debug("Placing plugin script into {0}".format(destination))
                         fabric.api.put(plugin_file, destination)
                         fabric.api.run("chmod 700 {0}".format(destination))
                         cmd = "{0} {1}".format(destination, check['args'])
                         results = fabric.api.run(cmd)
                         fabric.api.run("rm {0}".format(destination))
-                    elif check["execute_from"] == "remote":
+                    elif "remote" in check["execute_from"]:
                         cmd = "{0} {1}".format(plugin_file, check['args'])
                         results = fabric.api.local(cmd, capture=True)
                     else:
@@ -75,9 +75,9 @@ def monitor(runbook, target, config, dbc, logger):
             # Perform Check
             with fabric.api.hide('output', 'running', 'warnings'):
                 try:
-                    if check["execute_from"] == "ontarget":
+                    if "target" in check["execute_from"]:
                         results = fabric.api.run(cmd)
-                    elif check["execute_from"] == "remote":
+                    elif "remote" in check["execute_from"]:
                         results = fabric.api.local(cmd, capture=True)
                     else:
                         logger.warn('Unknown "execute_from" specified in check')
@@ -135,7 +135,7 @@ def schedule(scheduler, runbook, target, config, dbc, logger):
     )
     should_schedule = False
     for node in target['runbooks'][runbook]['nodes']:
-        logger.debug("Checking if target {0} is {1} from node list".format(target['hostname'], node))
+        logger.debug("Checking if target {0} is {1} from list".format(target['hostname'], node))
         if fnmatch.fnmatch(target['hostname'], node):
             should_schedule = True
 
