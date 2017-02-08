@@ -221,7 +221,27 @@ actions:
 
 ##### `execute_from`
 
-The `execute_from` field is used to specify where to run the action. Acceptable values for this field are `target` which is used to execute the health check on the node itself and `remote`. The `remote` setting will tell Automatron to execute the action from the system running the `actioning.py` service of Automatron.
+The `execute_from` field is used to specify where to run the action. Acceptable values for this field are `target`, `remote` and `host`.
+
+  * `target` - The `target` value will specify that the action should be executed on the monitored host.
+  * `remote` - This value will specify that the action is executed from the Automatron server running the actioning process.
+  * `host` - This value will specify that the action is executed from another specified host.
+
+The alternative host can be specified via a key named `host`. Below is an example of a `host` based action.
+
+```yaml
+actions:
+  restart_mysql:
+    execute_from: host
+    host: 10.0.0.1
+    trigger: 0
+    frequency: 300
+    call_on:
+      - WARNING
+      - CRITICAL
+    type: cmd
+    cmd: service mysql restart
+```
 
 ##### `trigger`
 
@@ -266,7 +286,27 @@ actions:
 
 ##### `execute_from`
 
-The `execute_from` field is used to specify where to run the action. Acceptable values for this field are `target` which is used to execute the health check on the target node itself and `remote`. The `remote` setting will tell Automatron to execute the action from the system running Automatron's `actioning.py` service.
+The `execute_from` field is used to specify where to run the action. Acceptable values for this field are `target`, `remote` and `host`.
+
+  * `target` - The `target` value will specify that the action should be executed on the monitored host.
+  * `remote` - This value will specify that the action is executed from the Automatron server running the actioning process.
+  * `host` - This value will specify that the action is executed from another specified host.
+
+The alternative host can be specified via a key named `host`. Below is an example of a `host` based action.
+
+```yaml
+actions:
+  restart_mysql:
+    execute_from: host
+    host: 10.0.0.1
+    trigger: 0
+    frequency: 300
+    call_on:
+      - WARNING
+      - CRITICAL
+    type: cmd
+    cmd: service mysql restart
+```
 
 ##### `trigger`
 
