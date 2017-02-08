@@ -16,7 +16,7 @@ The below is an example of the `mem_free` check used within a runbook.
 ```yaml
 checks:
   mem_free:
-    execute_from: ontarget
+    execute_from: target
     type: plugin
     plugin: systems/mem_free.py
     args: --warn=20 --critical=10

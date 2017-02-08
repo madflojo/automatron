@@ -7,13 +7,13 @@ The below is an example of using the `mysql/available` health check in a runbook
 ```yaml
 checks:
   mysql_up:
-    execute_from: ontarget
+    execute_from: target
     type: plugin
     plugin: mysql/available.py
     args: --host=localhost --user=USERNAME --password=YOURPASSWORD
 ```
 
-This plugin can be executed from either `ontarget` or `remote` depending on the MySQL service's configuration.
+This plugin can be executed from either `target` or `remote` depending on the MySQL service's configuration.
 
 ### Required arguments
 

@@ -28,13 +28,13 @@ nodes:
 checks:
   mem_free:
     # Check for the % of disk free create warning with 20% free and critical for 10% free
-    execute_from: ontarget
+    execute_from: target
     type: plugin
     plugin: systems/disk_free.py
     args: --warn=20 --critical=10 --filesystem=/var/log
 actions:
   logrotate_nicely:
-    execute_from: ontarget
+    execute_from: target
     trigger: 0
     frequency: 300
     call_on:
@@ -42,7 +42,7 @@ actions:
     type: cmd
     cmd: bash /etc/cron.daily/logrotate
   logrotate_forced:
-    execute_from: ontarget
+    execute_from: target
     trigger: 5
     frequency: 300
     call_on:
@@ -65,7 +65,7 @@ nodes:
 checks:
   nginx_is_running:
     # Check if nginx is running
-    execute_from: ontarget
+    execute_from: target
     type: cmd
     {% if "Linux" in facts['os'] %}
     cmd: service nginx status
@@ -74,7 +74,7 @@ checks:
     {% endif %}
 actions:
   restart_nginx:
-    execute_from: ontarget
+    execute_from: target
     trigger: 2
     frequency: 300
     call_on:
