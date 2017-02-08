@@ -13,7 +13,7 @@ checks:
     args: -i 10.0.0.1
 ```
 
-This plugin can be executed from either `ontarget` or `remote` depending on the goal of the runbook.
+This plugin can be executed from either `target` or `remote` depending on the goal of the runbook.
 
 ### Required arguments
 

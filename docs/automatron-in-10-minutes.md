@@ -92,12 +92,12 @@ nodes:
 checks:
   nginx_is_running:
     # Check if nginx is running
-    execute_from: ontarget
+    execute_from: target
     type: cmd
     cmd: service nginx status
 actions:
   restart_nginx:
-    execute_from: ontarget
+    execute_from: target
     trigger: 2
     frequency: 300
     call_on:

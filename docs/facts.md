@@ -10,7 +10,7 @@ nodes:
 checks:
   nginx_is_running:
     # Check if nginx is running
-    execute_from: ontarget
+    execute_from: target
     type: cmd
     {% if "Linux" in facts['os'] %}
     cmd: service nginx status
@@ -19,7 +19,7 @@ checks:
     {% endif %}
 actions:
   restart_nginx:
-    execute_from: ontarget
+    execute_from: target
     trigger: 2
     frequency: 300
     call_on:

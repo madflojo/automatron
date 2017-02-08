@@ -7,13 +7,13 @@ The below is an example of using the `status_metrics` health check in a runbook.
 ```yaml
 checks:
   status_metrics:
-    execute_from: ontarget
+    execute_from: target
     type: plugin
     plugin: mysql/status_metrics.py
     args: --warn=20 --critical=10 --metric=slow_queries --host=localhost --user=USERNAME --password=YOURPASSWORD --type=greater
 ```
 
-This plugin can be executed from either `ontarget` or `remote` depending on the MySQL service's configuration.
+This plugin can be executed from either `target` or `remote` depending on the MySQL service's configuration.
 
 ### Required arguments
 

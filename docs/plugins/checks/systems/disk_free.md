@@ -14,7 +14,7 @@ The below is an example of using the `disk_free` health check in a runbook.
 checks:
   disk_free:
     # Check for the % of disk free create warning with 20% free and critical for 10% free
-    execute_from: ontarget
+    execute_from: target
     type: plugin
     plugin: systems/disk_free.py
     args: --warn=20 --critical=10 --filesystem=/var/log
