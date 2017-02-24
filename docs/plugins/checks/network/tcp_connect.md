@@ -7,13 +7,13 @@ The below is an example of using the `network/tcp_connect` health check in a run
 ```yaml
 checks:
   mysql_up:
-    execute_from: ontarget
+    execute_from: target
     type: plugin
     plugin: network/tcp_connect.py
     args: --host=localhost --port 3306
 ```
 
-This plugin can be executed from either `ontarget` or `remote` depending on the target being monitored.
+This plugin can be executed from either `target` or `remote` depending on the target being monitored.
 
 ### Required arguments
 

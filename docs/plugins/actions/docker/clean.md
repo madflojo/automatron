@@ -9,7 +9,7 @@ The Below is an example of using the `docker/clean.sh` action plugin.
 ```yaml
 actions:
   cleanup_docker:
-    execute_from: ontarget
+    execute_from: target
     trigger: 0
     frequency: 300
     call_on:

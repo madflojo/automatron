@@ -12,7 +12,7 @@ The below is an example of using the **systems/services.py** plugin.
 ```yaml
 actions:
   restart_nginx:
-    execute_from: ontarget
+    execute_from: target
     trigger: 0
     frequency: 300
     call_on:

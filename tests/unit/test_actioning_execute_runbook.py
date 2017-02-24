@@ -60,7 +60,7 @@ class TestCMDonRemote(ExecuteRunbooksTest):
         self.assertTrue(mock_local.called)
         mock_local.assert_called_with("bash", capture=True)
 
-class TestCMDonTarget(ExecuteRunbooksTest):
+class TestCMDonHostTarget(ExecuteRunbooksTest):
     ''' Test when the action is a command from Remote '''
     @mock.patch('actioning.core.fab.set_env')
     @mock.patch('actioning.fabric.api.env')
@@ -79,7 +79,8 @@ class TestCMDonTarget(ExecuteRunbooksTest):
         mock_hide = True
         action = {
             'type' : 'cmd',
-            'execute_from' : 'ontarget',
+            'execute_from' : 'host',
+            'host' : '192.168.0.1',
             'cmd' : "bash"
         }
         results = execute_runbook(action, self.target, self.config, self.logger)
@@ -194,6 +195,51 @@ class TestPluginonTarget(ExecuteRunbooksTest):
         self.assertFalse(mock_run.called)
         self.assertTrue(mock_local.called)
         self.assertTrue(mock_local.call_count == 1)
+
+class TestPluginonHostTarget(ExecuteRunbooksTest):
+    ''' Test when the action is a Plugin on Target '''
+    @mock.patch('actioning.core.fab.set_env')
+    @mock.patch('actioning.fabric.api.env')
+    @mock.patch('actioning.fabric.api.hide')
+    @mock.patch('actioning.fabric.api.local')
+    @mock.patch('actioning.fabric.api.put')
+    @mock.patch('actioning.fabric.api.run')
+    @mock.patch('actioning.shutil.copyfile')
+    @mock.patch('actioning.os.chmod')
+    @mock.patch('actioning.os.remove')
+    def runTest(self, mock_remove, mock_chmod, mock_copyfile, mock_run, mock_put, mock_local, mock_hide, mock_env, mock_set_env):
+        ''' Execute test '''
+        # Set mock_env to empty dict
+        mock_env = mock.MagicMock(spec={})
+        mock_set_env.return_value = mock_env
+        mock_local.return_value = mock.MagicMock(**{ 'succeeded': True})
+        mock_run.return_value = mock.MagicMock(**{ 'succeeded': True})
+        mock_put = True
+        mock_hide = True
+        mock_remove = True
+        mock_chmod = True
+        mock_copyfile = True
+        action = {
+            'type' : 'plugin',
+            'plugin' : 'yes.py',
+            'args' : 'arrrrrgs',
+            'execute_from' : 'host',
+            'host': '192.168.0.1'
+        }
+        config = {
+            'plugin_path' : '/some/dir',
+            'actioning' : {
+                'upload_path' : '/some/dir'
+            }
+        }
+        self.config = mock.MagicMock(spec_set=config)
+        results = execute_runbook(action, self.target, self.config, self.logger)
+        self.assertTrue(results)
+        self.assertFalse(self.logger.warn.called)
+        self.assertTrue(mock_run.called)
+        self.assertFalse(mock_local.called)
+        print mock_run.call_count
+        self.assertTrue(mock_run.call_count == 3)
 
 class TestPluginBadTarget(ExecuteRunbooksTest):
     ''' Test when the action is a Plugin on an invalid target '''

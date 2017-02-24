@@ -12,12 +12,12 @@ nodes:
 checks:
   nginx_is_running:
     # Check if nginx is running
-    execute_from: ontarget
+    execute_from: target
     type: cmd
     cmd: service nginx status
 actions:
   restart_nginx:
-    execute_from: ontarget
+    execute_from: target
     trigger: 2
     frequency: 300
     call_on:
@@ -39,7 +39,22 @@ The `name` field is used to provide an arbitrary name to the Runbook. This field
 
 ### `schedule`
 
-The `schedule` field is used to provide a cron formatted schedule for health check execution. The specified cron schedule will be used to establish the frequency for executing the health checks defined within the Runbook.
+The `schedule` field is used to provide a cron formatted schedule for health check execution. The specified cron schedule will be used to establish the frequency to execute the health checks defined within the Runbook.
+
+It is also possible to define the schedule in a key/value based format as well as a cron based format.
+
+```yaml
+schedule:
+  second: '*/15'
+  minute: '*'
+  hour: '*'
+  day: '*'
+  month: '*'
+  day_of_week: '*'
+```
+
+For key/value based schedules you may omit fields for default values ('*'); however, cron based schedules requires all 5 columns(`* * * * *`).
+
 
 ### `nodes`
 
@@ -89,7 +104,7 @@ Below is an example of a `cmd` based health check.
 checks:
   nginx_is_running:
     # Check if nginx is running
-    execute_from: ontarget
+    execute_from: target
     type: cmd
     cmd: service nginx status
 ```
@@ -104,7 +119,7 @@ The `type` field is used to specify what type of health check this check is. Acc
 
 ##### `execute_from`
 
-The `execute_from` field is used to specify where to run the health check. Acceptable values for this field are `ontarget` which is used to execute the health check on the node itself and `remote`. The `remote` setting will tell Automatron to execute the health check from the system running Automatron's `monitoring.py` service.
+The `execute_from` field is used to specify where to run the health check. Acceptable values for this field are `target` which is used to execute the health check on the node itself and `remote`. The `remote` setting will tell Automatron to execute the health check from the system running Automatron's `monitoring.py` service.
 
 ##### `cmd`
 
@@ -128,7 +143,7 @@ The below example shows a `plugin` based health check.
 checks:
   disk_free:
     # Check for the % of disk free create warning with 20% free and critical for 10% free
-    execute_from: ontarget
+    execute_from: target
     type: plugin
     plugin: systems/disk_free.py
     args: --warn=20 --critical=10 --filesystem=/var/log
@@ -144,7 +159,7 @@ The `type` field is used to specify what type of health check this check is. Acc
 
 ##### `execute_from`
 
-The `execute_from` field is used to specify where to run the health check. Acceptable values for this field are `ontarget` which is used to execute the health check on the node itself and `remote`. The `remote` setting will tell Automatron to execute the health check from the system running the `monitoring.py` service of Automatron.
+The `execute_from` field is used to specify where to run the health check. Acceptable values for this field are `target` which is used to execute the health check on the node itself and `remote`. The `remote` setting will tell Automatron to execute the health check from the system running the `monitoring.py` service of Automatron.
 
 ##### `plugin`
 
@@ -194,7 +209,7 @@ The `cmd` action type is designed to execute an arbitrary shell command. The bel
 ```yaml
 actions:
   restart_nginx:
-    execute_from: ontarget
+    execute_from: target
     trigger: 2
     frequency: 300
     call_on:
@@ -206,7 +221,27 @@ actions:
 
 ##### `execute_from`
 
-The `execute_from` field is used to specify where to run the action. Acceptable values for this field are `ontarget` which is used to execute the health check on the node itself and `remote`. The `remote` setting will tell Automatron to execute the action from the system running the `actioning.py` service of Automatron.
+The `execute_from` field is used to specify where to run the action. Acceptable values for this field are `target`, `remote` and `host`.
+
+  * `target` - The `target` value will specify that the action should be executed on the monitored host.
+  * `remote` - This value will specify that the action is executed from the Automatron server running the actioning process.
+  * `host` - This value will specify that the action is executed from another specified host.
+
+The alternative host can be specified via a key named `host`. Below is an example of a `host` based action.
+
+```yaml
+actions:
+  restart_mysql:
+    execute_from: host
+    host: 10.0.0.1
+    trigger: 0
+    frequency: 300
+    call_on:
+      - WARNING
+      - CRITICAL
+    type: cmd
+    cmd: service mysql restart
+```
 
 ##### `trigger`
 
@@ -251,7 +286,27 @@ actions:
 
 ##### `execute_from`
 
-The `execute_from` field is used to specify where to run the action. Acceptable values for this field are `ontarget` which is used to execute the health check on the target node itself and `remote`. The `remote` setting will tell Automatron to execute the action from the system running Automatron's `actioning.py` service.
+The `execute_from` field is used to specify where to run the action. Acceptable values for this field are `target`, `remote` and `host`.
+
+  * `target` - The `target` value will specify that the action should be executed on the monitored host.
+  * `remote` - This value will specify that the action is executed from the Automatron server running the actioning process.
+  * `host` - This value will specify that the action is executed from another specified host.
+
+The alternative host can be specified via a key named `host`. Below is an example of a `host` based action.
+
+```yaml
+actions:
+  restart_mysql:
+    execute_from: host
+    host: 10.0.0.1
+    trigger: 0
+    frequency: 300
+    call_on:
+      - WARNING
+      - CRITICAL
+    type: cmd
+    cmd: service mysql restart
+```
 
 ##### `trigger`
 
@@ -303,7 +358,7 @@ checks:
     cmd: /usr/bin/curl -Lw "Response %{http_code}\\n" http://{{ facts['network']['eth0']['v4'][0] }} -o /dev/null | egrep "Response [200|301]"
 actions:
   restart_http:
-    execute_from: ontarget
+    execute_from: target
     trigger: 0
     frequency: 300
     call_on:
@@ -324,7 +379,7 @@ actions:
     plugin: cloudflare/dns.py
     args: remove someone@example.com 12345 example.com --content {{ facts['network']['eth0']['v4'][0] }}
   reboot:
-    execute_from: ontarget
+    execute_from: target
     trigger: 5
     frequency: 900
     call_on:
@@ -347,13 +402,13 @@ nodes:
 checks:
   disk_free:
     # Check for the % of disk free create warning with 20% free and critical for 10% free
-    execute_from: ontarget
+    execute_from: target
     type: plugin
     plugin: systems/disk_free.py
     args: --warn=20 --critical=10 --filesystem=/var/log
 actions:
   logrotate_nicely:
-    execute_from: ontarget
+    execute_from: target
     trigger: 0
     frequency: 300
     call_on:
@@ -361,7 +416,7 @@ actions:
     type: cmd
     cmd: bash /etc/cron.daily/logrotate
   logrotate_forced:
-    execute_from: ontarget
+    execute_from: target
     trigger: 5
     frequency: 300
     call_on:

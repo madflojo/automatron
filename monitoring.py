@@ -17,6 +17,7 @@ import sys
 import signal
 import json
 import tempfile
+import types
 import fabric.api
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -53,14 +54,14 @@ def monitor(runbook, target, config, dbc, logger):
             destination = "{0}/{1}".format(config['monitoring']['upload_path'], dest_name)
             with fabric.api.hide('output', 'running', 'warnings'):
                 try:
-                    if check["execute_from"] == "ontarget":
+                    if "target" in check["execute_from"]:
                         logger.debug("Placing plugin script into {0}".format(destination))
                         fabric.api.put(plugin_file, destination)
                         fabric.api.run("chmod 700 {0}".format(destination))
                         cmd = "{0} {1}".format(destination, check['args'])
                         results = fabric.api.run(cmd)
                         fabric.api.run("rm {0}".format(destination))
-                    elif check["execute_from"] == "remote":
+                    elif "remote" in check["execute_from"]:
                         cmd = "{0} {1}".format(plugin_file, check['args'])
                         results = fabric.api.local(cmd, capture=True)
                     else:
@@ -74,9 +75,9 @@ def monitor(runbook, target, config, dbc, logger):
             # Perform Check
             with fabric.api.hide('output', 'running', 'warnings'):
                 try:
-                    if check["execute_from"] == "ontarget":
+                    if "target" in check["execute_from"]:
                         results = fabric.api.run(cmd)
-                    elif check["execute_from"] == "remote":
+                    elif "remote" in check["execute_from"]:
                         results = fabric.api.local(cmd, capture=True)
                     else:
                         logger.warn('Unknown "execute_from" specified in check')
@@ -98,19 +99,44 @@ def monitor(runbook, target, config, dbc, logger):
 
     dbc.notify("check:results", runbook_status)
 
-def schedule(scheduler, runbook, target, config, dbc):
+def schedule(scheduler, runbook, target, config, dbc, logger):
     ''' Setup schedule for new runbooks and targets '''
-    task_schedule = target['runbooks'][runbook]['schedule'].split(" ")
+    # Default schedule (every minute)
+    task_schedule = {
+        'second' : 0,
+        'minute' : '*',
+        'hour' : '*',
+        'day' : '*',
+        'month' : '*',
+        'day_of_week' : '*'
+    }
+    # If schedule is present override default
+    if 'schedule' in target['runbooks'][runbook].keys():
+        if type(target['runbooks'][runbook]['schedule']) == types.DictType:
+            for key in target['runbooks'][runbook]['schedule'].keys():
+                task_schedule[key] = target['runbooks'][runbook]['schedule'][key]
+        elif type(target['runbooks'][runbook]['schedule']) == types.StringType:
+            breakdown = target['runbooks'][runbook]['schedule'].split(" ")
+            task_schedule = {
+                'second' : 0,
+                'minute' : breakdown[0],
+                'hour' : breakdown[1],
+                'day' : breakdown[2],
+                'month' :  breakdown[3],
+                'day_of_week' : breakdown[4]
+            }
     cron = CronTrigger(
-        minute=task_schedule[0],
-        hour=task_schedule[1],
-        day=task_schedule[2],
-        month=task_schedule[3],
-        day_of_week=task_schedule[4],
+        second=task_schedule['second'],
+        minute=task_schedule['minute'],
+        hour=task_schedule['hour'],
+        day=task_schedule['day'],
+        month=task_schedule['month'],
+        day_of_week=task_schedule['day_of_week'],
     )
     should_schedule = False
     for node in target['runbooks'][runbook]['nodes']:
-        if fnmatch.fnmatch(os.uname()[1], node):
+        logger.debug("Checking if target {0} is {1} from list".format(target['hostname'], node))
+        if fnmatch.fnmatch(target['hostname'], node):
             should_schedule = True
 
     if should_schedule:
@@ -122,7 +148,7 @@ def schedule(scheduler, runbook, target, config, dbc):
     else:
         return False
 
-def listen(scheduler, config, dbc):
+def listen(scheduler, config, dbc, logger):
     ''' Listen for new events and schedule runbooks '''
     logger.info("Starting subscription to monitors channel")
     pubsub = dbc.subscribe("monitors")
@@ -134,7 +160,7 @@ def listen(scheduler, config, dbc):
                 item['msg_type'], item['target']))
             target = dbc.get_target(target_id=item['target'])
             logger.debug("Found target: {0}".format(json.dumps(target)))
-            job = schedule(scheduler, item['runbook'], target, config, dbc)
+            job = schedule(scheduler, item['runbook'], target, config, dbc, logger)
             if job:
                 name = "{0}:{1}".format(
                     target['runbooks'][item['runbook']]['name'],
@@ -145,14 +171,14 @@ def listen(scheduler, config, dbc):
         except Exception as e:
             logger.warn("Unable to process message: {0}".format(e.message))
 
-def initialize(config, dbc, scheduler):
+def initialize(config, dbc, scheduler, logger):
     ''' Grab existing targets and setup monitors '''
     targets = dbc.get_target()
     scheduled = 0
     jobs = {}
     for target in targets.keys():
         for runbook in targets[target]['runbooks'].keys():
-            job = schedule(scheduler, runbook, targets[target], config, dbc)
+            job = schedule(scheduler, runbook, targets[target], config, dbc, logger)
             if job:
                 name = "{0}:{1}".format(
                     targets[target]['runbooks'][runbook]['name'],
@@ -205,8 +231,8 @@ if __name__ == "__main__":
     scheduler.start()
 
     logger.info("Grabbing targets for initial scheduling")
-    jobs, scheduled = initialize(config, dbc, scheduler)
+    jobs, scheduled = initialize(config, dbc, scheduler, logger)
     logger.info("Scheduled {0} checks".format(scheduled))
 
     while True:
-        listen(scheduler, config, dbc)
+        listen(scheduler, config, dbc, logger)
