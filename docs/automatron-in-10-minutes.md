@@ -2,7 +2,7 @@ With Automatron and a few minutes you can setup a fully autonomous monitoring an
 
 ## Install and Configure Automatron
 
-Automatron is currently available by cloning the [GitHub Repository](https://github.com/madflojo/automatron/). With the first release candidate it will also be available via a Docker image.
+Automatron is currently available by cloning the [GitHub Repository](https://github.com/madflojo/automatron/).
 
 ### Prerequisites
 
@@ -78,8 +78,8 @@ A Runbook is a policy that defines health checks and automated actions to be per
 For this example we will create a new Runbook.
 
 ```sh
-$ mkdir -p config/runbooks/base/check_nginx
-$ vi config/runbooks/base/check_nginx/init.yml
+$ mkdir -p config/runbooks/nginx
+$ vi config/runbooks/nginx/init.yml
 ```
 
 Once the file is open simply paste the following Runbook policy.
@@ -87,8 +87,6 @@ Once the file is open simply paste the following Runbook policy.
 ```yaml
 name: Verify nginx is running
 schedule: "*/5 * * * *"
-nodes:
-  - "*web*"
 checks:
   nginx_is_running:
     # Check if nginx is running
@@ -107,17 +105,15 @@ actions:
     cmd: service nginx restart
 ```
 
-The above policy will run the `service nginx status` command every 5 minutes on any target that has a hostname that matches `*web*`. If that command fails after 2 occurrences the `restart_nginx` action will be "triggered" and executed on the target server.
+The above policy will run the `service nginx status` command every 5 minutes. If that command fails after 2 occurrences the `restart_nginx` action will be "triggered" and executed on the target server.
 
 ## Applying Runbooks to Target hosts
 
-Within the Runbook above we specified the target nodes that the runbook applies to. There is another level of targeting available within the `config/runbooks/init.yml` file. This provides additional granularity to the application of Runbooks.
-
-To get started we will replace the contents of this file with settings specific to our current task.
+To apply a runbook to our webserver targets we will need to edit the `config/runbooks/init.yml` file. This file is used to control which hosts runbooks are applied to. The below will apply the newly created `nginx` runbook to any host whose Hostname contains `web`.
 
 ```yaml
-'*':
-  - base/check_nginx
+'*web*':
+  - nginx
 ```
 
 ## Starting Automatron

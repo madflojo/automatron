@@ -5,8 +5,6 @@ The below is an example runbook that utilizes the Automatron facts system.
 ```yaml+jinja
 name: Verify nginx is running
 schedule: "*/5 * * * *"
-nodes:
-  - "*web*"
 checks:
   nginx_is_running:
     # Check if nginx is running

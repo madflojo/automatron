@@ -1,7 +1,5 @@
 name: Clean up dangling images if they are found
 schedule: "*/2 * * * *"
-nodes:
-  - "*"
 checks:
   find_danglers:
     execute_from: ontarget

@@ -25,8 +25,6 @@ The below example is a Runbook that will execute a monitoring plugin to determin
 ```yaml
 name: Verify /var/log
 schedule: "*/5 * * * *"
-nodes:
-  - "*"
 checks:
   mem_free:
     # Check for the % of disk free create warning with 20% free and critical for 10% free
@@ -63,8 +61,6 @@ This example will detect if `nginx` is running and if not, restart it.
 name: Verify nginx is running
 schedule:
   second: "*/30"
-nodes:
-  - "*web*"
 checks:
   nginx_is_running:
     # Check if nginx is running

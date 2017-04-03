@@ -1,7 +1,5 @@
 name: Clean up dead containers if they are found
 schedule: "*/2 * * * *"
-nodes:
-  - "*"
 checks:
   find_dead_containers:
     execute_from: ontarget
