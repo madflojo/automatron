@@ -1,4 +1,4 @@
-Runbooks within Automatron are used to define the health checks to run on target nodes and the actions to perform based on those health checks. This guide is a reference for the various options used when defining a runbook.
+Runbooks within Automatron are used to define health checks and actions that are performed on monitored targets. This guide serves as a reference for the various options for runbooks.
 
 ## Basic Runbook Example
 
@@ -7,8 +7,6 @@ The below example is a basic Runbook that monitors the status of **nginx** by ex
 ```yaml
 name: Verify nginx is running
 schedule: "*/5 * * * *"
-nodes:
-  - "*web*"
 checks:
   nginx_is_running:
     # Check if nginx is running
@@ -55,28 +53,9 @@ schedule:
 
 For key/value based schedules you may omit fields for default values ('*'); however, cron based schedules requires all 5 columns(`* * * * *`).
 
-
-### `nodes`
-
-The `nodes` field is a YAML list used to specify which target nodes this runbook should be applied to. This list is based on the hostname value of the nodes.
-
-In the example above the value is `*web*`, since Automatron supports globbing for the `nodes` field this would mean this runbook is applied to any hosts that have the word "web" in their hostname.
-
-Hostnames are obtained during the target vetting process from the systems itself. If the hostname changes from vetting time to execution time that change will not be reflected in runbook processing.
-
-As previously mentioned this field is a YAML list which allows for multiple values to be added. The example below shows how to add multiple node targets.
-
-```yaml
-nodes:
-  - "*web*"
-  - "*caching*"
-```
-
 ### `checks`
 
-The `checks` field is a YAML dictionary that contains the health checks to be executed against the specified nodes in the `nodes` list.
-
-The format of `checks` is as follows.
+The `checks` field is a YAML dictionary that contains the health checks to be executed against monitored target hosts. The format of `checks` is as follows.
 
 ```yaml
 checks:
@@ -349,8 +328,6 @@ This Runbook validates an HTTP service is accessible and will restart the system
 ```yaml+jinja
 name: Verify HTTP is responding to GET requests on target system
 schedule: "*/2 * * * *"
-nodes:
-  - "*"
 checks:
   http_is_accessible:
     execute_from: remote
@@ -397,8 +374,6 @@ This example will validate the free space on the `/var/log` filesystem and if ne
 ```yaml+jinja
 name: Verify /var/log
 schedule: "*/2 * * * *"
-nodes:
-  - "*"
 checks:
   disk_free:
     # Check for the % of disk free create warning with 20% free and critical for 10% free

@@ -1,7 +1,5 @@
 name: Verify nginx is running
 schedule: "* * * * *"
-nodes:
-  - "*"
 checks:
   nginx_is_running:
     # Check if nginx is running

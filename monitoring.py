@@ -11,8 +11,6 @@ Automatron: Monitoring
 
 '''
 
-import fnmatch
-import os
 import sys
 import signal
 import json
@@ -133,20 +131,11 @@ def schedule(scheduler, runbook, target, config, dbc, logger):
         month=task_schedule['month'],
         day_of_week=task_schedule['day_of_week'],
     )
-    should_schedule = False
-    for node in target['runbooks'][runbook]['nodes']:
-        logger.debug("Checking if target {0} is {1} from list".format(target['hostname'], node))
-        if fnmatch.fnmatch(target['hostname'], node):
-            should_schedule = True
-
-    if should_schedule:
-        return scheduler.add_job(
-            monitor,
-            trigger=cron,
-            args=[runbook, target, config, dbc, logger]
-        )
-    else:
-        return False
+    return scheduler.add_job(
+        monitor,
+        trigger=cron,
+        args=[runbook, target, config, dbc, logger]
+    )
 
 def listen(scheduler, config, dbc, logger):
     ''' Listen for new events and schedule runbooks '''

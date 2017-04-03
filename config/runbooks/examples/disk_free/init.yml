@@ -1,7 +1,5 @@
 name: Verify /var/log
 schedule: "*/2 * * * *"
-nodes:
-  - "*"
 checks:
   disk_free:
     # Check for the % of disk free create warning with 20% free and critical for 10% free
