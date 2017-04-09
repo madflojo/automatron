@@ -1,8 +1,8 @@
 site_name: Automatron
 site_url: https://automatron.io
 repo_url: https://github.com/madflojo/automatron
-docs_dir: /tmp/mkdocs/docs
-site_dir: /tmp/mkdocs/site
+docs_dir: docs
+site_dir: site
 site_description: A framework for creating self-healing infrastructure. It simply detects system events & takes action.
 site_author: Benjamin Cane
 site_favicon: img/favicon.ico
