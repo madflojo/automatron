@@ -1,0 +1,1322 @@
+
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A framework for creating self-healing infrastructure. It simply detects system events & takes action.">
+      
+      
+        <link rel="canonical" href="https://automatron.io/runbooks/actions/">
+      
+      
+        <meta name="author" content="Benjamin Cane">
+      
+      
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+      
+      <meta name="generator" content="mkdocs-0.16.3, mkdocs-material-1.5.4">
+    
+    
+      
+        <title>Actions - Automatron</title>
+      
+    
+    
+      <script src="../../assets/javascripts/modernizr-56ade86843.js"></script>
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/application-b1a1975878.css">
+      
+    
+    
+      
+        
+        
+        
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    
+    
+  </head>
+  
+  
+  
+  
+    <body>
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+          <svg xmlns="http://www.w3.org/2000/svg" width="416" height="448" viewBox="0 0 416 448" id="github"><path fill="currentColor" d="M160 304q0 10-3.125 20.5t-10.75 19T128 352t-18.125-8.5-10.75-19T96 304t3.125-20.5 10.75-19T128 256t18.125 8.5 10.75 19T160 304zm160 0q0 10-3.125 20.5t-10.75 19T288 352t-18.125-8.5-10.75-19T256 304t3.125-20.5 10.75-19T288 256t18.125 8.5 10.75 19T320 304zm40 0q0-30-17.25-51T296 232q-10.25 0-48.75 5.25Q229.5 240 208 240t-39.25-2.75Q130.75 232 120 232q-29.5 0-46.75 21T56 304q0 22 8 38.375t20.25 25.75 30.5 15 35 7.375 37.25 1.75h42q20.5 0 37.25-1.75t35-7.375 30.5-15 20.25-25.75T360 304zm56-44q0 51.75-15.25 82.75-9.5 19.25-26.375 33.25t-35.25 21.5-42.5 11.875-42.875 5.5T212 416q-19.5 0-35.5-.75t-36.875-3.125-38.125-7.5-34.25-12.875T37 371.5t-21.5-28.75Q0 312 0 260q0-59.25 34-99-6.75-20.5-6.75-42.5 0-29 12.75-54.5 27 0 47.5 9.875t47.25 30.875Q171.5 96 212 96q37 0 70 8 26.25-20.5 46.75-30.25T376 64q12.75 25.5 12.75 54.5 0 21.75-6.75 42 34 40 34 99.5z"/></svg>
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="drawer">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="search">
+    <label class="md-overlay" data-md-component="overlay" for="drawer"></label>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <a href="https://automatron.io" title="Automatron" class="md-logo md-header-nav__button">
+            <img src="../../img/automatron.png" width="24" height="24">
+          </a>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <span class="md-flex__ellipsis md-header-nav__title">
+          
+            
+              
+                <span class="md-header-nav__parent">
+                  Runbooks
+                </span>
+              
+            
+            Actions
+          
+        </span>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="search"></label>
+          
+<div class="md-search" data-md-component="search">
+  <div class="md-search__overlay"></div>
+  <div class="md-search__inner">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" required placeholder="Search" accesskey="s" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query">
+      <label class="md-icon md-search__icon" for="search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset">close</button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta" data-md-lang-result-none="No matching documents" data-md-lang-result-one="1 matching document" data-md-lang-result-other="# matching documents">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <div class="md-header-nav__source">
+          
+            
+
+
+  
+
+
+  <a href="https://github.com/madflojo/automatron" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+          
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="drawer">
+    
+      <i class="md-logo md-nav__button">
+        <img src="../../img/automatron.png">
+      </i>
+    
+    Automatron
+  </label>
+  
+    <div class="md-nav__source">
+      
+
+
+  
+
+
+  <a href="https://github.com/madflojo/automatron" title="Go to repository" class="md-source" data-md-source="github">
+    
+      <div class="md-source__icon">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <use xlink:href="#github" width="24" height="24"></use>
+        </svg>
+      </div>
+    
+    <div class="md-source__repository">
+      GitHub
+    </div>
+  </a>
+
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      Installation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Installation
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../install/" title="Basic Installation" class="md-nav__link">
+      Basic Installation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../install/docker/" title="Deploy with Docker" class="md-nav__link">
+      Deploy with Docker
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../configure/" title="Configuration" class="md-nav__link">
+      Configuration
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      Runbooks
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Runbooks
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../" title="Basics" class="md-nav__link">
+      Basics
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../checks/" title="Checks" class="md-nav__link">
+      Checks
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Actions
+      </label>
+    
+    <a href="./" title="Actions" class="md-nav__link md-nav__link--active">
+      Actions
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-command-based-actions" title="A command based actions" class="md-nav__link">
+    A command based actions
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execute-from" title="Execute from" class="md-nav__link">
+    Execute from
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trigger" title="Trigger" class="md-nav__link">
+    Trigger
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frequecy" title="Frequecy" class="md-nav__link">
+    Frequecy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#call-on" title="Call on" class="md-nav__link">
+    Call on
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type" title="Type" class="md-nav__link">
+    Type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command" title="Command" class="md-nav__link">
+    Command
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-plugin-based-action" title="A plugin based action" class="md-nav__link">
+    A plugin based action
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execute-from-trigger-frequency-call-on-type" title="Execute from, Trigger, Frequency, Call on &amp; Type" class="md-nav__link">
+    Execute from, Trigger, Frequency, Call on &amp; Type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin" title="Plugin" class="md-nav__link">
+    Plugin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-arguments" title="Plugin Arguments" class="md-nav__link">
+    Plugin Arguments
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../facts/" title="Facts" class="md-nav__link">
+      Facts
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Plugins
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Plugins
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/" title="Index" class="md-nav__link">
+      Index
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6-2" type="checkbox" id="nav-6-2">
+    
+    <label class="md-nav__link" for="nav-6-2">
+      Discovery
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-6-2">
+        Discovery
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/discovery/aws/" title="AWS" class="md-nav__link">
+      AWS
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/discovery/digitalocean/" title="Digital Ocean" class="md-nav__link">
+      Digital Ocean
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/discovery/linode/" title="Linode" class="md-nav__link">
+      Linode
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/discovery/nmap/" title="Network Map (nmap)" class="md-nav__link">
+      Network Map (nmap)
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/discovery/roster/" title="Roster file" class="md-nav__link">
+      Roster file
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/discovery/webping/" title="Web Ping" class="md-nav__link">
+      Web Ping
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6-3" type="checkbox" id="nav-6-3">
+    
+    <label class="md-nav__link" for="nav-6-3">
+      Checks
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-6-3">
+        Checks
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6-3-1" type="checkbox" id="nav-6-3-1">
+    
+    <label class="md-nav__link" for="nav-6-3-1">
+      Network
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-6-3-1">
+        Network
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/checks/network/ping/" title="Ping" class="md-nav__link">
+      Ping
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/checks/network/tcp_connect/" title="TCP Connection" class="md-nav__link">
+      TCP Connection
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6-3-2" type="checkbox" id="nav-6-3-2">
+    
+    <label class="md-nav__link" for="nav-6-3-2">
+      MySQL
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-6-3-2">
+        MySQL
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/checks/mysql/available/" title="Available" class="md-nav__link">
+      Available
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/checks/mysql/status_metrics/" title="Status Metrics" class="md-nav__link">
+      Status Metrics
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6-3-3" type="checkbox" id="nav-6-3-3">
+    
+    <label class="md-nav__link" for="nav-6-3-3">
+      Systems
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-6-3-3">
+        Systems
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/checks/systems/disk_free/" title="Disk Free" class="md-nav__link">
+      Disk Free
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/checks/systems/mem_free/" title="Memory Free" class="md-nav__link">
+      Memory Free
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6-4" type="checkbox" id="nav-6-4">
+    
+    <label class="md-nav__link" for="nav-6-4">
+      Actions
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-6-4">
+        Actions
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6-4-1" type="checkbox" id="nav-6-4-1">
+    
+    <label class="md-nav__link" for="nav-6-4-1">
+      CloudFlare
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-6-4-1">
+        CloudFlare
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/actions/cloudflare/dns/" title="DNS" class="md-nav__link">
+      DNS
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6-4-2" type="checkbox" id="nav-6-4-2">
+    
+    <label class="md-nav__link" for="nav-6-4-2">
+      Docker
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-6-4-2">
+        Docker
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/actions/docker/clean/" title="Clean" class="md-nav__link">
+      Clean
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6-4-3" type="checkbox" id="nav-6-4-3">
+    
+    <label class="md-nav__link" for="nav-6-4-3">
+      Systems
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-6-4-3">
+        Systems
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/actions/systems/services/" title="Services" class="md-nav__link">
+      Services
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6-5" type="checkbox" id="nav-6-5">
+    
+    <label class="md-nav__link" for="nav-6-5">
+      Vetting
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-6-5">
+        Vetting
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6-5-1" type="checkbox" id="nav-6-5-1">
+    
+    <label class="md-nav__link" for="nav-6-5-1">
+      On Target
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-6-5-1">
+        On Target
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/vetting/ontarget/services/" title="Services" class="md-nav__link">
+      Services
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/vetting/ontarget/system-info/" title="System Info" class="md-nav__link">
+      System Info
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6-5-2" type="checkbox" id="nav-6-5-2">
+    
+    <label class="md-nav__link" for="nav-6-5-2">
+      Remote
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="3">
+      <label class="md-nav__title" for="nav-6-5-2">
+        Remote
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../plugins/vetting/remote/ping/" title="Ping" class="md-nav__link">
+      Ping
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-command-based-actions" title="A command based actions" class="md-nav__link">
+    A command based actions
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execute-from" title="Execute from" class="md-nav__link">
+    Execute from
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trigger" title="Trigger" class="md-nav__link">
+    Trigger
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frequecy" title="Frequecy" class="md-nav__link">
+    Frequecy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#call-on" title="Call on" class="md-nav__link">
+    Call on
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#type" title="Type" class="md-nav__link">
+    Type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command" title="Command" class="md-nav__link">
+    Command
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-plugin-based-action" title="A plugin based action" class="md-nav__link">
+    A plugin based action
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#execute-from-trigger-frequency-call-on-type" title="Execute from, Trigger, Frequency, Call on &amp; Type" class="md-nav__link">
+    Execute from, Trigger, Frequency, Call on &amp; Type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin" title="Plugin" class="md-nav__link">
+    Plugin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-arguments" title="Plugin Arguments" class="md-nav__link">
+    Plugin Arguments
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/madflojo/automatron/edit/master/docs/runbooks/actions.md" title="Edit this page" class="md-icon md-content__icon">edit</a>
+                
+                
+                  <h1>Actions</h1>
+                
+                <p>When a runbook health check returns a state; Automatron will check the runbooks definition to determine if an action should be taken. Like health checks, actions come in two flavors. <strong>Arbitrary shell commands</strong> and <strong>Plugin executables</strong>. In this guide we will be defining two actions, one of each type.</p>
+<p>During this guide we will be building runbook actions for the below runbook.</p>
+<div class="codehilite"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Check NGINX</span>
+<span class="l l-Scalar l-Scalar-Plain">schedule</span><span class="p p-Indicator">:</span> <span class="s">&quot;*/2</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&quot;</span>
+<span class="l l-Scalar l-Scalar-Plain">checks</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">nginx_is_running</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">execute_from</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">target</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">cmd</span>
+    <span class="l l-Scalar l-Scalar-Plain">cmd</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">service nginx status</span>
+  <span class="l l-Scalar l-Scalar-Plain">port_443_is_up</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">execute_from</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">target</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">plugin</span>
+    <span class="l l-Scalar l-Scalar-Plain">plugin</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">network/tcp_connect.py</span>
+    <span class="l l-Scalar l-Scalar-Plain">args</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">--host=localhost --port 443</span>
+<span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">restart_nginx</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">execute_from</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">target</span>
+    <span class="l l-Scalar l-Scalar-Plain">trigger</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+    <span class="l l-Scalar l-Scalar-Plain">frequency</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">300</span>
+    <span class="l l-Scalar l-Scalar-Plain">call_on</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">CRITICAL</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">UNKNOWN</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">cmd</span>
+    <span class="l l-Scalar l-Scalar-Plain">cmd</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">service nginx restart</span>
+  <span class="l l-Scalar l-Scalar-Plain">remove_from_dns</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">execute_from</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">remote</span>
+    <span class="l l-Scalar l-Scalar-Plain">trigger</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="l l-Scalar l-Scalar-Plain">frequency</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="l l-Scalar l-Scalar-Plain">call_on</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">CRITICAL</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">UNKNOWN</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">plugin</span>
+    <span class="l l-Scalar l-Scalar-Plain">plugin</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">cloudflare/dns.py</span>
+    <span class="l l-Scalar l-Scalar-Plain">args</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">remove test@example.com apikey123 example.com --content 10.0.0.1</span>
+</pre></div>
+
+
+<p>Within this runbook there are two actions; <code>restart_nginx</code> and <code>remove_from_dns</code>. In this guide we will be breaking down these two actions to gain a better understanding of how they work.</p>
+<h2 id="a-command-based-actions">A command based actions<a class="headerlink" href="#a-command-based-actions" title="Permanent link">&para;</a></h2>
+<p>Like health checks, Automatron actions also support arbitrary shell commands. When executing this type of action Automatron simply logs into the target system and executes the defined command.</p>
+<p>The below example is a simple action that logs into the target system and executes the <code>service nginx restart</code> command.</p>
+<div class="codehilite"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">restart_nginx</span><span class="p p-Indicator">:</span>
+ <span class="l l-Scalar l-Scalar-Plain">execute_from</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">target</span>
+ <span class="l l-Scalar l-Scalar-Plain">trigger</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+ <span class="l l-Scalar l-Scalar-Plain">frequency</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">300</span>
+ <span class="l l-Scalar l-Scalar-Plain">call_on</span><span class="p p-Indicator">:</span>
+   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">CRITICAL</span>
+   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">UNKNOWN</span>
+ <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">cmd</span>
+ <span class="l l-Scalar l-Scalar-Plain">cmd</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">service nginx restart</span>
+</pre></div>
+
+
+<p>This action has 6 main fields defined; <code>execute_from</code>, <code>trigger</code>, <code>frequency</code>, <code>call_on</code>, <code>type</code>, and <code>cmd</code>. Let's break down what each of these fields specify and control about action execution.</p>
+<h3 id="execute-from">Execute from<a class="headerlink" href="#execute-from" title="Permanent link">&para;</a></h3>
+<p>The <code>execute_from</code> field is used to specify where to run the action. Acceptable values for this field are <code>target</code>, <code>remote</code> and <code>host</code>.</p>
+<ul>
+<li><code>target</code> - This value will specify that the action should be executed on the monitored host.</li>
+<li><code>remote</code> - This value will specify that the action is executed from the Automatron server.</li>
+<li><code>host</code> - This value will specify that the action is executed from another specified host.</li>
+</ul>
+<p>When using the <code>host</code> value, the alternative host must be specified via a key named <code>host</code>. Below is an example of a <code>host</code> based action.</p>
+<div class="codehilite"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">actions</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">restart_mysql</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">execute_from</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">host</span>
+    <span class="l l-Scalar l-Scalar-Plain">host</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10.0.0.2</span>
+    <span class="l l-Scalar l-Scalar-Plain">trigger</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="l l-Scalar l-Scalar-Plain">frequency</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">300</span>
+    <span class="l l-Scalar l-Scalar-Plain">call_on</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">CRITICAL</span>
+    <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">cmd</span>
+    <span class="l l-Scalar l-Scalar-Plain">cmd</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">service mysql restart</span>
+</pre></div>
+
+
+<p>The above action will result in Automatron logging into <code>10.0.0.2</code> and executing <code>service mysql restart</code>.</p>
+<h3 id="trigger">Trigger<a class="headerlink" href="#trigger" title="Permanent link">&para;</a></h3>
+<p>The <code>trigger</code> field is used to specify the number of times a health check returns the state specified within <code>call_on</code>. This number <strong>must be reached consecutively</strong>. If for example, the health check returns <code>WARNING</code> and then <code>OK</code>; Automatron's internal counter will be reset.</p>
+<h3 id="frequecy">Frequecy<a class="headerlink" href="#frequecy" title="Permanent link">&para;</a></h3>
+<p>The <code>frequency</code> field is used to specify the time (in seconds) between action execution. In the above example the action will be executed every <code>300</code> seconds until either the <code>call_on</code> or <code>trigger</code> conditions are no longer met.</p>
+<p>If you wish to execute an action every time, simply set this value to <code>0</code> seconds.</p>
+<h3 id="call-on">Call on<a class="headerlink" href="#call-on" title="Permanent link">&para;</a></h3>
+<p>The <code>call_on</code> field is a YAML list which is used to list the states that should trigger this action. Valid options are <code>OK</code>, <code>WARNING</code>, <code>CRITICAL</code> &amp; <code>UNKNOWN</code>.</p>
+<h3 id="type">Type<a class="headerlink" href="#type" title="Permanent link">&para;</a></h3>
+<p>The <code>type</code> field is used to specify what type of action will be performed. Acceptable values are <code>cmd</code> or <code>plugin</code>. This field is required for all actions. Since our action above is a command based action we will specify <code>cmd</code>.</p>
+<h3 id="command">Command<a class="headerlink" href="#command" title="Permanent link">&para;</a></h3>
+<p>The <code>cmd</code> field is used to specify the shell command to execute as part of this action. In the example above the command is simply <code>service nginx restart</code>. When this action is executed, Automatron will login to the host specified and execute that command.</p>
+<h2 id="a-plugin-based-action">A plugin based action<a class="headerlink" href="#a-plugin-based-action" title="Permanent link">&para;</a></h2>
+<p>When a command based action is being executed Automatron will login to the target host and execute the command specified. With plugin based actions, Automatron will upload the plugin executable and execute it giving the specified arguments.</p>
+<p>Below is a sample Runbook using a plugin based action.</p>
+<div class="codehilite"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">remove_from_dns</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">execute_from</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">remote</span>
+  <span class="l l-Scalar l-Scalar-Plain">trigger</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+  <span class="l l-Scalar l-Scalar-Plain">frequency</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+  <span class="l l-Scalar l-Scalar-Plain">call_on</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">WARNING</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">CRITICAL</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">UNKNOWN</span>
+  <span class="l l-Scalar l-Scalar-Plain">type</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">plugin</span>
+  <span class="l l-Scalar l-Scalar-Plain">plugin</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">cloudflare/dns.py</span>
+  <span class="l l-Scalar l-Scalar-Plain">args</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">remove test@example.com apikey123 example.com --content 10.0.0.1</span>
+</pre></div>
+
+
+<p>This action has 7 main fields defined; <code>execute_from</code>, <code>trigger</code>, <code>frequency</code>, <code>call_on</code>, <code>type</code>, <code>plugin</code> and <code>args</code>. Let's break down what each of these fields specify and control about action execution.</p>
+<h3 id="execute-from-trigger-frequency-call-on-type">Execute from, Trigger, Frequency, Call on &amp; Type<a class="headerlink" href="#execute-from-trigger-frequency-call-on-type" title="Permanent link">&para;</a></h3>
+<p>As <code>execute_from</code>, <code>trigger</code>, <code>frequency</code>, <code>call_on</code>, and <code>type</code> are common fields for every runbook. The way they are applied for plugin actions is the same as the way they are applied for command based actions. As such we will skip repeating these fields in this section.</p>
+<h3 id="plugin">Plugin<a class="headerlink" href="#plugin" title="Permanent link">&para;</a></h3>
+<p>The <code>plugin</code> field is used to specify the location of the plugin executable. This is a relative file path starting from the value of the <code>plugin_path</code> parameter located within the <code>config/config.yml</code> configuration file.</p>
+<p>For example, a plugin located at <code>/path/to/plugins/actions/myaction/myaction.pl</code> would require the value of <code>myaction/myaction.pl</code>.</p>
+<h3 id="plugin-arguments">Plugin Arguments<a class="headerlink" href="#plugin-arguments" title="Permanent link">&para;</a></h3>
+<p>The <code>args</code> field is used to specify the arguments to provide the plugin executable. In the example above the plugin will be executed as follows by Automatron</p>
+<div class="codehilite"><pre><span></span>$ /path/to/plugins/checks/ncloudflare/dns.py remove test@example.com apikey123 example.com --content <span class="m">10</span>.0.0.1
+</pre></div>
+                
+                  
+                
+              
+              
+                
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../checks/" title="Checks" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Checks
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../../facts/" title="Facts" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Facts
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="http://www.mkdocs.org" title="MkDocs">MkDocs</a>
+        and
+        <a href="http://squidfunk.github.io/mkdocs-material/" title="Material for MkDocs">
+          Material for MkDocs</a>
+      </div>
+      
+        
+  <div class="md-footer-social">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+      <a href="https://twitter.com/automatronio" class="md-footer-social__link fa fa-twitter"></a>
+    
+      <a href="https://github.com/madflojo/automatron" class="md-footer-social__link fa fa-github"></a>
+    
+  </div>
+
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/application-0b7df094bf.js"></script>
+      <script>app.initialize({url:{base:"../.."}})</script>
+      
+    
+    
+      
+    
+  </body>
+</html>

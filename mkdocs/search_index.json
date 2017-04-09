@@ -1,0 +1,589 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "Automatron is a framework for creating self-healing infrastructure. Simply put, it detects system events \n takes action to correct them.\n\n\nThe goal of Automatron is to allow users to automate the execution of common tasks performed during system events. These tasks can be as simple as \nsending an email\n to as complicated as \nrestarting services across multiple hosts\n.\n\n\nFeatures\n\n\n\n\nAutomatically detect and add new systems to monitor\n\n\nMonitoring is executed over SSH and completely \nagent-less\n\n\nPolicy based \nRunbooks\n allow for monitoring policies rather than server specific configurations\n\n\nSupports Nagios compliant health check scripts\n\n\nAllows dead simple \narbitrary shell commands\n for both \nchecks\n and \nactions\n\n\nRunbook flexibility with \nJinja2\n templating support\n\n\nPluggable Architecture that simplifies customization\n\n\n\n\nRunbooks\n\n\nThe core of Automatron is based around \nRunbooks\n. Runbooks are policies that define health checks and actions. You can think of them in the same way you would think of a printed runbook. Except with Automatron, the actions are automated.\n\n\nA simple Runbook example\n\n\nThe below runbook is a very basic example, it will check if NGINX is running (every 2 minutes) and restart it after 2 unsuccessful checks.\n\n\nname\n:\n \nCheck NGINX\n\n\nschedule\n:\n \n*/2\n \n*\n \n*\n \n*\n \n*\n\n\nchecks\n:\n\n  \nnginx_is_running\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx status\n\n\nactions\n:\n\n  \nrestart_nginx\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntrigger\n:\n \n2\n\n    \nfrequency\n:\n \n300\n\n    \ncall_on\n:\n\n      \n-\n \nWARNING\n\n      \n-\n \nCRITICAL\n\n      \n-\n \nUNKNOWN\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx restart\n\n\n\n\n\n\nThe above actions will be performed every 300 seconds (5 minutes) until the health check returns an OK status. This delay allows time for NGINX to restart after each execution.\n\n\nA complex Runbook with Jinja2\n\n\nThis next runbook example is a more complex version of the above. In this example we will use Jinja2 and Automatron's Facts to enhance our runbook further.\n\n\nname\n:\n \nCheck NGINX\n\n\n{%\n \nif\n \nprod\n \nin\n \nfacts\n[\nhostname\n]\n \n%}\n\n\nschedule\n:\n\n  \nsecond\n:\n \n*\n/20\n\n\n{%\n \nelse\n \n%}\n\n\nschedule\n:\n \n*/2\n \n*\n \n*\n \n*\n \n*\n\n\n{%\n \nendif\n \n%}\n\n\nchecks\n:\n\n  \nnginx_is_running\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx status\n\n\nactions\n:\n\n  \nrestart_nginx\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntrigger\n:\n \n2\n\n    \nfrequency\n:\n \n300\n\n    \ncall_on\n:\n\n      \n-\n \nWARNING\n\n      \n-\n \nCRITICAL\n\n      \n-\n \nUNKNOWN\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx restart\n\n  \nremove_from_dns\n:\n\n    \nexecute_from\n:\n \nremote\n\n    \ntrigger\n:\n \n0\n\n    \nfrequency\n:\n \n0\n\n    \ncall_on\n:\n\n      \n-\n \nWARNING\n\n      \n-\n \nCRITICAL\n\n      \n-\n \nUNKNOWN\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \ncloudflare/dns.py\n\n    \nargs\n:\n \nremove test@example.com apikey123 example.com --content\n \n{{\n \nfacts\n[\nnetwork\n][\neth0\n][\nv4\n][\n0\n]\n \n}}\n\n\n\n\n\n\nThe above example uses \nJinja2\n and \nFacts\n to create a conditional schedule. If our target server has a hostname that contains the word \"prod\" within it. The schedule for the health check will be every 20 seconds. If not, it will be every 2 minutes.\n\n\nAnother addition is the \nremove_from_dns\n action, which will remove the target server's DNS entry using the \nCloudFlare DNS\n plugin.\n\n\nBy using \nFacts\n and \nJinja2\n together you can customize a single runbook to cover unique actions for multiple hosts and environments.\n\n\nFollow Automatron", 
+            "title": "Introduction"
+        }, 
+        {
+            "location": "/#features", 
+            "text": "Automatically detect and add new systems to monitor  Monitoring is executed over SSH and completely  agent-less  Policy based  Runbooks  allow for monitoring policies rather than server specific configurations  Supports Nagios compliant health check scripts  Allows dead simple  arbitrary shell commands  for both  checks  and  actions  Runbook flexibility with  Jinja2  templating support  Pluggable Architecture that simplifies customization", 
+            "title": "Features"
+        }, 
+        {
+            "location": "/#runbooks", 
+            "text": "The core of Automatron is based around  Runbooks . Runbooks are policies that define health checks and actions. You can think of them in the same way you would think of a printed runbook. Except with Automatron, the actions are automated.", 
+            "title": "Runbooks"
+        }, 
+        {
+            "location": "/#a-simple-runbook-example", 
+            "text": "The below runbook is a very basic example, it will check if NGINX is running (every 2 minutes) and restart it after 2 unsuccessful checks.  name :   Check NGINX  schedule :   */2   *   *   *   *  checks : \n   nginx_is_running : \n     execute_from :   target \n     type :   cmd \n     cmd :   service nginx status  actions : \n   restart_nginx : \n     execute_from :   target \n     trigger :   2 \n     frequency :   300 \n     call_on : \n       -   WARNING \n       -   CRITICAL \n       -   UNKNOWN \n     type :   cmd \n     cmd :   service nginx restart   The above actions will be performed every 300 seconds (5 minutes) until the health check returns an OK status. This delay allows time for NGINX to restart after each execution.", 
+            "title": "A simple Runbook example"
+        }, 
+        {
+            "location": "/#a-complex-runbook-with-jinja2", 
+            "text": "This next runbook example is a more complex version of the above. In this example we will use Jinja2 and Automatron's Facts to enhance our runbook further.  name :   Check NGINX  {%   if   prod   in   facts [ hostname ]   %}  schedule : \n   second :   * /20  {%   else   %}  schedule :   */2   *   *   *   *  {%   endif   %}  checks : \n   nginx_is_running : \n     execute_from :   target \n     type :   cmd \n     cmd :   service nginx status  actions : \n   restart_nginx : \n     execute_from :   target \n     trigger :   2 \n     frequency :   300 \n     call_on : \n       -   WARNING \n       -   CRITICAL \n       -   UNKNOWN \n     type :   cmd \n     cmd :   service nginx restart \n   remove_from_dns : \n     execute_from :   remote \n     trigger :   0 \n     frequency :   0 \n     call_on : \n       -   WARNING \n       -   CRITICAL \n       -   UNKNOWN \n     type :   plugin \n     plugin :   cloudflare/dns.py \n     args :   remove test@example.com apikey123 example.com --content   {{   facts [ network ][ eth0 ][ v4 ][ 0 ]   }}   The above example uses  Jinja2  and  Facts  to create a conditional schedule. If our target server has a hostname that contains the word \"prod\" within it. The schedule for the health check will be every 20 seconds. If not, it will be every 2 minutes.  Another addition is the  remove_from_dns  action, which will remove the target server's DNS entry using the  CloudFlare DNS  plugin.  By using  Facts  and  Jinja2  together you can customize a single runbook to cover unique actions for multiple hosts and environments.", 
+            "title": "A complex Runbook with Jinja2"
+        }, 
+        {
+            "location": "/#follow-automatron", 
+            "text": "", 
+            "title": "Follow Automatron"
+        }, 
+        {
+            "location": "/install/", 
+            "text": "In this page you will be guided through a basic installation of Automatron. If you wish to deploy Automatron within a container, you can skip this guide and follow the \nDocker deployment\n instructions.\n\n\nBasic Installation\n\n\nCurrently, the simplest method of installing Automatron is by either cloning the \nGitHub Repository\n or \ndownloading\n a specific release and installing dependencies.\n\n\nThis guide will walk through cloning the GitHub repository and starting an Automatron instance.\n\n\nPrerequisites\n\n\nThe below list is a set of base requirements for installing and running an Automatron instance.\n\n\n\n\nPython 2.7 or higher\n\n\nPython-dev Package\n\n\nPip\n\n\nRedis\n\n\nnmap\n\n\ngit\n\n\nlibffi-dev\n\n\nlibssl-dev\n\n\nbuild-essential\n\n\n\n\nOn Ubuntu systems these can be installed with the following command.\n\n\n$ sudo apt-get install python2.7 python-dev \n\\\n\n                       python-pip redis-server \n\\\n\n                       nmap git libffi-dev \n\\\n\n                       build-essential libssl-dev\n\n\n\n\n\nOnce installed we can proceed to Automatron's installation\n\n\nClone from Github\n\n\nThe first installation step is to simply clone the current repository from GitHub using \ngit\n and change to the newly created directory.\n\n\n$ git clone https://github.com/madflojo/automatron.git\n$ \ncd\n automatron\n\n\n\n\n\nThis will place the latest \nmaster\n (production ready) branch into the \nautomatron\n directory.\n\n\nInstall required python modules\n\n\nThe second installation step is to install the required python modules using the \npip\n command.\n\n\n$ sudo pip install -r requirements.txt\n$ sudo pip install honcho\n\n\n\n\n\nWith the above two steps complete, we can now move to \nConfiguration\n.\n\n\nStarting Automatron\n\n\nIn order to start Automatron you can simply execute the command below.\n\n\n$ honcho start\n\n\n\n\n\nTo shut down Automatron you can use the \nkill\n command to send the \nSIGTERM\n signal to the running processes.", 
+            "title": "Basic Installation"
+        }, 
+        {
+            "location": "/install/#basic-installation", 
+            "text": "Currently, the simplest method of installing Automatron is by either cloning the  GitHub Repository  or  downloading  a specific release and installing dependencies.  This guide will walk through cloning the GitHub repository and starting an Automatron instance.", 
+            "title": "Basic Installation"
+        }, 
+        {
+            "location": "/install/#prerequisites", 
+            "text": "The below list is a set of base requirements for installing and running an Automatron instance.   Python 2.7 or higher  Python-dev Package  Pip  Redis  nmap  git  libffi-dev  libssl-dev  build-essential   On Ubuntu systems these can be installed with the following command.  $ sudo apt-get install python2.7 python-dev  \\ \n                       python-pip redis-server  \\ \n                       nmap git libffi-dev  \\ \n                       build-essential libssl-dev  Once installed we can proceed to Automatron's installation", 
+            "title": "Prerequisites"
+        }, 
+        {
+            "location": "/install/#clone-from-github", 
+            "text": "The first installation step is to simply clone the current repository from GitHub using  git  and change to the newly created directory.  $ git clone https://github.com/madflojo/automatron.git\n$  cd  automatron  This will place the latest  master  (production ready) branch into the  automatron  directory.", 
+            "title": "Clone from Github"
+        }, 
+        {
+            "location": "/install/#install-required-python-modules", 
+            "text": "The second installation step is to install the required python modules using the  pip  command.  $ sudo pip install -r requirements.txt\n$ sudo pip install honcho  With the above two steps complete, we can now move to  Configuration .", 
+            "title": "Install required python modules"
+        }, 
+        {
+            "location": "/install/#starting-automatron", 
+            "text": "In order to start Automatron you can simply execute the command below.  $ honcho start  To shut down Automatron you can use the  kill  command to send the  SIGTERM  signal to the running processes.", 
+            "title": "Starting Automatron"
+        }, 
+        {
+            "location": "/install/docker/", 
+            "text": "Deploying Automatron within Docker is quick and easy and can be done with two simple \ndocker\n commands.\n\n\nStarting a Redis container\n\n\nSince Automatron by default uses \nredis\n as a datastore we must first start a \nredis\n container.\n\n\n$ sudo docker run -d --restart\n=\nalways --name redis redis\n\n\n\n\n\nThe above \nredis\n instance will be used as a default datastore for Automatron.\n\n\nStarting the Automatron container\n\n\nOnce the \nredis\n instance is up and running we can start an Automatron instance.\n\n\n$ sudo docker run -d --link redis:redis -p \n8000\n:8000 -v /path/to/config:/config --restart\n=\nalways --name automatron madflojo/automatron\n\n\n\n\n\nIn the above \ndocker run\n command we are using \n-v\n to mount a directory from the host to the container as \n/config\n. This \n/config\n directory will be the home to Automatron's configuration files and Runbooks.\n\n\nWith these steps complete, we can now move to \nConfiguring\n Automatron.\n\n\n\n\nTip\n\n\nA \ndocker-compose.yml\n file is included in the base repository which can be used to quickly stand up environments using \ndocker-compose up automatron\n.", 
+            "title": "Deploy with Docker"
+        }, 
+        {
+            "location": "/install/docker/#starting-a-redis-container", 
+            "text": "Since Automatron by default uses  redis  as a datastore we must first start a  redis  container.  $ sudo docker run -d --restart = always --name redis redis  The above  redis  instance will be used as a default datastore for Automatron.", 
+            "title": "Starting a Redis container"
+        }, 
+        {
+            "location": "/install/docker/#starting-the-automatron-container", 
+            "text": "Once the  redis  instance is up and running we can start an Automatron instance.  $ sudo docker run -d --link redis:redis -p  8000 :8000 -v /path/to/config:/config --restart = always --name automatron madflojo/automatron  In the above  docker run  command we are using  -v  to mount a directory from the host to the container as  /config . This  /config  directory will be the home to Automatron's configuration files and Runbooks.  With these steps complete, we can now move to  Configuring  Automatron.   Tip  A  docker-compose.yml  file is included in the base repository which can be used to quickly stand up environments using  docker-compose up automatron .", 
+            "title": "Starting the Automatron container"
+        }, 
+        {
+            "location": "/configure/", 
+            "text": "Configuration of Automatron is fairly simple and contained within a single file; \nconfig/config.yml\n.\n\n\nThis guide will walk through configuring a basic Automatron instance.\n\n\nCopying the \nconfig.yml.example\n file\n\n\nThe fastest method to configure Automatron is to start with the example configuration file \nconfig/config.yml.example\n. This configuration file contains basic default values which can be used in most implementations of Automatron. To use this file we can simply rename it to the default Automatron configuration file \nconfig/config.yml\n.\n\n\n$ cp config/config.yml.example config/config.yml\n\n\n\n\n\nOnce complete, we can now start customizing our configuration file.\n\n\nSSH Details\n\n\nAutomatron relies on SSH to perform both health checks and actions. Within \nconfig.yml\n there is an SSH section which will allow us to define the necessary SSH details such as; \nuser\n to authenticate as, a \ngateway\n or \"jump server\" for SSH connections and a Private SSH \nkey\n.\n\n\nssh\n:\n \n# SSH Configuration\n\n  \nuser\n:\n \nroot\n\n  \ngateway\n:\n \nFalse\n\n  \nkey\n:\n \n|\n\n        \n-----BEGIN RSA PRIVATE KEY-----\n\n        \nthis is an example\n\n        \n-----END RSA PRIVATE KEY-----\n\n\n\n\n\n\nIf the \ngateway\n setting is left as \nFalse\n Automatron will login to each host directly. To specify a \"jump server\" simply specify the DNS or IP address of the desired server.\n\n\n  \ngateway\n:\n \n10.0.0.1\n\n\n\n\n\n\n\n\nInfo\n\n\nAt this time Automatron does not support using sudo or other privilege escalation tools. Any checks or actions will be performed via the user privileges specified in \nuser\n.\n\n\n\n\nEnable Auto Discovery\n\n\nBy default, Automatron will listen on port \n8000\n for any HTTP requests. When an HTTP request is made to Automatron the IP will be captured and that server will then be identified as a monitoring target.\n\n\nThere are several plugins that enable other methods for host discovery, in this section we will enable the \nnmap\n discovery plugin. This configuration is within the \ndiscovery\n section of the \nconfig.yml\n file.\n\n\ndiscovery\n:\n\n  \nupload_path\n:\n \n/tmp/\n\n  \nvetting_interval\n:\n \n30\n\n  \nplugins\n:\n\n    \n# Web Service for HTTP PINGs\n\n    \nwebping\n:\n\n      \nip\n:\n \n0.0.0.0\n\n      \nport\n:\n \n8000\n\n\n\n\n\n\nTo enable the \nnmap\n plugin we simply need to append the \nnmap\n configuration within the \nplugins\n key.\n\n\ndiscovery\n:\n\n  \nupload_path\n:\n \n/tmp/\n\n  \nvetting_interval\n:\n \n30\n\n  \nplugins\n:\n\n    \n# Web Service for HTTP PINGs\n\n    \nwebping\n:\n\n      \nip\n:\n \n0.0.0.0\n\n      \nport\n:\n \n8000\n\n    \n# NMAP Scanning\n\n    \nnmap\n:\n\n      \ntarget\n:\n \n10.0.0.1/8\n\n      \nflags\n:\n \n-sP\n\n      \ninterval\n:\n \n40\n\n\n\n\n\n\nEach plugin has unique configuration details, the specifics of these plugins can be found in the \nplugin\n documentation.\n\n\nAt this point Automatron has been configured. We can now move on to creating our own \nRunbooks\n.", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/configure/#copying-the-configymlexample-file", 
+            "text": "The fastest method to configure Automatron is to start with the example configuration file  config/config.yml.example . This configuration file contains basic default values which can be used in most implementations of Automatron. To use this file we can simply rename it to the default Automatron configuration file  config/config.yml .  $ cp config/config.yml.example config/config.yml  Once complete, we can now start customizing our configuration file.", 
+            "title": "Copying the config.yml.example file"
+        }, 
+        {
+            "location": "/configure/#ssh-details", 
+            "text": "Automatron relies on SSH to perform both health checks and actions. Within  config.yml  there is an SSH section which will allow us to define the necessary SSH details such as;  user  to authenticate as, a  gateway  or \"jump server\" for SSH connections and a Private SSH  key .  ssh :   # SSH Configuration \n   user :   root \n   gateway :   False \n   key :   | \n         -----BEGIN RSA PRIVATE KEY----- \n         this is an example \n         -----END RSA PRIVATE KEY-----   If the  gateway  setting is left as  False  Automatron will login to each host directly. To specify a \"jump server\" simply specify the DNS or IP address of the desired server.     gateway :   10.0.0.1    Info  At this time Automatron does not support using sudo or other privilege escalation tools. Any checks or actions will be performed via the user privileges specified in  user .", 
+            "title": "SSH Details"
+        }, 
+        {
+            "location": "/configure/#enable-auto-discovery", 
+            "text": "By default, Automatron will listen on port  8000  for any HTTP requests. When an HTTP request is made to Automatron the IP will be captured and that server will then be identified as a monitoring target.  There are several plugins that enable other methods for host discovery, in this section we will enable the  nmap  discovery plugin. This configuration is within the  discovery  section of the  config.yml  file.  discovery : \n   upload_path :   /tmp/ \n   vetting_interval :   30 \n   plugins : \n     # Web Service for HTTP PINGs \n     webping : \n       ip :   0.0.0.0 \n       port :   8000   To enable the  nmap  plugin we simply need to append the  nmap  configuration within the  plugins  key.  discovery : \n   upload_path :   /tmp/ \n   vetting_interval :   30 \n   plugins : \n     # Web Service for HTTP PINGs \n     webping : \n       ip :   0.0.0.0 \n       port :   8000 \n     # NMAP Scanning \n     nmap : \n       target :   10.0.0.1/8 \n       flags :   -sP \n       interval :   40   Each plugin has unique configuration details, the specifics of these plugins can be found in the  plugin  documentation.  At this point Automatron has been configured. We can now move on to creating our own  Runbooks .", 
+            "title": "Enable Auto Discovery"
+        }, 
+        {
+            "location": "/runbooks/", 
+            "text": "The core of Automatron is based around \nRunbooks\n. Runbooks are policies that define health checks and actions. You can think of them in the same way you would think of a printed runbook. Except with Automatron, the actions are automated.\n\n\nBelow is a very simple Runbook example.\n\n\nname\n:\n \nCheck NGINX\n\n\nschedule\n:\n \n*/2\n \n*\n \n*\n \n*\n \n*\n\n\nchecks\n:\n\n  \nnginx_is_running\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx status\n\n\nactions\n:\n\n  \nrestart_nginx\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntrigger\n:\n \n2\n\n    \nfrequency\n:\n \n300\n\n    \ncall_on\n:\n\n      \n-\n \nWARNING\n\n      \n-\n \nCRITICAL\n\n      \n-\n \nUNKNOWN\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx restart\n\n\n\n\n\n\nThis guide will walk through creating the above runbook as well as applying this runbook to all monitored hosts.\n\n\nCreating the Runbook YAML file\n\n\nBy default, Runbooks are specified within the \nconfig/runbooks\n directory. The runbook we will be creating is used to manage the NGINX service. We will want this runbook to be easy to find. An easy way to do that would be to create the runbook with a similar name as the service it manages. We can do so in one of two ways.\n\n\nWe can either create a file \nconfig/runbooks/nginx.yml\n or \nconfig/runbooks/nginx/init.yml\n. Either option are acceptable for the next steps. For this guide we will create the file as \nconfig/runbooks/nginx/init.yml\n.\n\n\n$ mkdir -p config/runbooks/nginx\n$ vi config/runbooks/nginx/init.yml\n\n\n\n\n\nTo get started let's go ahead and create the runbook by inserting our example runbook.\n\n\nname\n:\n \nCheck NGINX\n\n\nschedule\n:\n \n*/2\n \n*\n \n*\n \n*\n \n*\n\n\nchecks\n:\n\n  \nnginx_is_running\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx status\n\n\nactions\n:\n\n  \nrestart_nginx\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntrigger\n:\n \n2\n\n    \nfrequency\n:\n \n300\n\n    \ncall_on\n:\n\n      \n-\n \nWARNING\n\n      \n-\n \nCRITICAL\n\n      \n-\n \nUNKNOWN\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx restart\n\n\n\n\n\n\nThe Anatomy of a Runbook\n\n\nA runbook consists of 4 major parameters; \nname\n, \nschedule\n, \nchecks\n, \n \nactions\n.\n\n\nName\n\n\nThe \nname\n field is used to provide an arbitrary name for the runbook. This field is a required field and must have some value. It is required that this value be unique and not re-used by other runbooks as this name will be referenced internally within Automatron.\n\n\nSchedule\n\n\nThe \nschedule\n field is used to provide a cron formatted schedule for health check execution. A cron formatted schedule of \n*/2 * * * *\n will result in the health checks being executed every 2 minutes.\n\n\n\n\nWarning\n\n\nDue to YAML formatting the cron schedule should be encased in single or double quotes such as \n'*/2 * * * *'\n. Failure to do so will result in a parsing error from YAML.\n\n\n\n\nAlternative schedule format\n\n\nIt is also possible to define a schedule in a key/value based cron format such as the example below.\n\n\nschedule\n:\n\n  \nsecond\n:\n \n*/15\n\n  \nminute\n:\n \n*\n\n  \nhour\n:\n \n*\n\n  \nday\n:\n \n*\n\n  \nmonth\n:\n \n*\n\n  \nday_of_week\n:\n \n*\n\n\n\n\n\n\nUsing this format you may omit keys that have a value of \n*\n as this is the default value. For example, the above schedule could also be represented as the below.\n\n\nschedule\n:\n\n  \nsecond\n:\n \n*/15\n\n\n\n\n\n\n\n\nWarning\n\n\nWhen using the key/value based format it is important to specify the \nsecond\n parameter, as a default value of \n*\n would result in checks being run every second.\n\n\n\n\nChecks\n\n\nThe \nchecks\n field is a YAML dictionary that contains the health checks to be executed against monitored hosts. The format of \nchecks\n is as follows.\n\n\nchecks\n:\n\n  \nname_of_check\n:\n\n    \n# health check options\n\n  \nanother_check\n:\n\n    \n# health check options\n\n\n\n\n\n\nFor more details around required health check parameters please read the \nChecks\n section.\n\n\nActions\n\n\nLike \nchecks\n, the \nactions\n field is a YAML dictionary that contains actions to be executed based on health check status. The \nactions\n field also follows a similar format to the \nchecks\n field.\n\n\nactions\n:\n\n  \nname_of_action\n:\n\n    \n# Action options\n\n  \nanother_action\n:\n\n    \n# Action options\n\n\n\n\n\n\nFor more details around required action parameters please read the \nActions\n section.\n\n\nApplying the Runbook\n\n\nBy creating the \nconfig/runbooks/nginx/init.yml\n we have only defined the runbook itself. This runbook however will not be applied to any monitored hosts until we specify which hosts it should be applied to.\n\n\nTo do this we will need to edit the \nconfig/runbooks/init.yml\n file. This file is a master list of any runbook to host mappings. To apply our runbook to all hosts we can simply insert the following into this file.\n\n\n*\n:\n\n  \n-\n \nnginx\n\n\n\n\n\n\nThe first field \n'*'\n is a Glob based matching used against the target hostname. In this case since the value is \n*\n, all hosts will be matched.\n\n\nIf we wished to limit this runbook to severs with naming scheme of \nweb001.example.com\n we could do so with the following modification.\n\n\nweb*\n:\n\n  \n-\n \nnginx\n\n\n\n\n\n\nSpecifying multiple targets and runbooks\n\n\nIt is possible to specify multiple host and runbook mappings such as the above. The below is an example of what an \nrunbooks/init.yml\n may look like for a environment hosting a two tier web application.\n\n\n*\n:\n\n  \n-\n \ncpu\n\n  \n-\n \nmem_free\n\n  \n-\n \ndisk_free\n\n  \n-\n \nntp\n\n  \n-\n \nssh\n\n\nweb*\n:\n\n  \n-\n \nnginx\n\n  \n-\n \nuwsgi\n\n\ndb*\n:\n\n  \n-\n \nmysql\n\n\n\n\n\n\nAt this point we have a basic runbook that is being applied to all hosts. To make these changes take effect, simply restart Automatron.", 
+            "title": "Basics"
+        }, 
+        {
+            "location": "/runbooks/#creating-the-runbook-yaml-file", 
+            "text": "By default, Runbooks are specified within the  config/runbooks  directory. The runbook we will be creating is used to manage the NGINX service. We will want this runbook to be easy to find. An easy way to do that would be to create the runbook with a similar name as the service it manages. We can do so in one of two ways.  We can either create a file  config/runbooks/nginx.yml  or  config/runbooks/nginx/init.yml . Either option are acceptable for the next steps. For this guide we will create the file as  config/runbooks/nginx/init.yml .  $ mkdir -p config/runbooks/nginx\n$ vi config/runbooks/nginx/init.yml  To get started let's go ahead and create the runbook by inserting our example runbook.  name :   Check NGINX  schedule :   */2   *   *   *   *  checks : \n   nginx_is_running : \n     execute_from :   target \n     type :   cmd \n     cmd :   service nginx status  actions : \n   restart_nginx : \n     execute_from :   target \n     trigger :   2 \n     frequency :   300 \n     call_on : \n       -   WARNING \n       -   CRITICAL \n       -   UNKNOWN \n     type :   cmd \n     cmd :   service nginx restart", 
+            "title": "Creating the Runbook YAML file"
+        }, 
+        {
+            "location": "/runbooks/#the-anatomy-of-a-runbook", 
+            "text": "A runbook consists of 4 major parameters;  name ,  schedule ,  checks ,    actions .", 
+            "title": "The Anatomy of a Runbook"
+        }, 
+        {
+            "location": "/runbooks/#name", 
+            "text": "The  name  field is used to provide an arbitrary name for the runbook. This field is a required field and must have some value. It is required that this value be unique and not re-used by other runbooks as this name will be referenced internally within Automatron.", 
+            "title": "Name"
+        }, 
+        {
+            "location": "/runbooks/#schedule", 
+            "text": "The  schedule  field is used to provide a cron formatted schedule for health check execution. A cron formatted schedule of  */2 * * * *  will result in the health checks being executed every 2 minutes.   Warning  Due to YAML formatting the cron schedule should be encased in single or double quotes such as  '*/2 * * * *' . Failure to do so will result in a parsing error from YAML.", 
+            "title": "Schedule"
+        }, 
+        {
+            "location": "/runbooks/#alternative-schedule-format", 
+            "text": "It is also possible to define a schedule in a key/value based cron format such as the example below.  schedule : \n   second :   */15 \n   minute :   * \n   hour :   * \n   day :   * \n   month :   * \n   day_of_week :   *   Using this format you may omit keys that have a value of  *  as this is the default value. For example, the above schedule could also be represented as the below.  schedule : \n   second :   */15    Warning  When using the key/value based format it is important to specify the  second  parameter, as a default value of  *  would result in checks being run every second.", 
+            "title": "Alternative schedule format"
+        }, 
+        {
+            "location": "/runbooks/#checks", 
+            "text": "The  checks  field is a YAML dictionary that contains the health checks to be executed against monitored hosts. The format of  checks  is as follows.  checks : \n   name_of_check : \n     # health check options \n   another_check : \n     # health check options   For more details around required health check parameters please read the  Checks  section.", 
+            "title": "Checks"
+        }, 
+        {
+            "location": "/runbooks/#actions", 
+            "text": "Like  checks , the  actions  field is a YAML dictionary that contains actions to be executed based on health check status. The  actions  field also follows a similar format to the  checks  field.  actions : \n   name_of_action : \n     # Action options \n   another_action : \n     # Action options   For more details around required action parameters please read the  Actions  section.", 
+            "title": "Actions"
+        }, 
+        {
+            "location": "/runbooks/#applying-the-runbook", 
+            "text": "By creating the  config/runbooks/nginx/init.yml  we have only defined the runbook itself. This runbook however will not be applied to any monitored hosts until we specify which hosts it should be applied to.  To do this we will need to edit the  config/runbooks/init.yml  file. This file is a master list of any runbook to host mappings. To apply our runbook to all hosts we can simply insert the following into this file.  * : \n   -   nginx   The first field  '*'  is a Glob based matching used against the target hostname. In this case since the value is  * , all hosts will be matched.  If we wished to limit this runbook to severs with naming scheme of  web001.example.com  we could do so with the following modification.  web* : \n   -   nginx", 
+            "title": "Applying the Runbook"
+        }, 
+        {
+            "location": "/runbooks/#specifying-multiple-targets-and-runbooks", 
+            "text": "It is possible to specify multiple host and runbook mappings such as the above. The below is an example of what an  runbooks/init.yml  may look like for a environment hosting a two tier web application.  * : \n   -   cpu \n   -   mem_free \n   -   disk_free \n   -   ntp \n   -   ssh  web* : \n   -   nginx \n   -   uwsgi  db* : \n   -   mysql   At this point we have a basic runbook that is being applied to all hosts. To make these changes take effect, simply restart Automatron.", 
+            "title": "Specifying multiple targets and runbooks"
+        }, 
+        {
+            "location": "/runbooks/checks/", 
+            "text": "Automatron determines whether a runbook action should be performed based on the results of a health check. There are two types of health checks within Automatron.  \nArbitrary shell commands\n and \nPlugin executables\n. In this guide we will walk through defining two health checks, one of each type.\n\n\nThe below runbook is a sample that this guide will be based on.\n\n\nname\n:\n \nCheck NGINX\n\n\nschedule\n:\n \n*/2\n \n*\n \n*\n \n*\n \n*\n\n\nchecks\n:\n\n  \nnginx_is_running\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx status\n\n  \nport_443_is_up\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \nnetwork/tcp_connect.py\n\n    \nargs\n:\n \n--host=localhost --port 443\n\n\nactions\n:\n\n  \nrestart_nginx\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntrigger\n:\n \n2\n\n    \nfrequency\n:\n \n300\n\n    \ncall_on\n:\n\n      \n-\n \nWARNING\n\n      \n-\n \nCRITICAL\n\n      \n-\n \nUNKNOWN\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx restart\n\n  \nremove_from_dns\n:\n\n    \nexecute_from\n:\n \nremote\n\n    \ntrigger\n:\n \n0\n\n    \nfrequency\n:\n \n0\n\n    \ncall_on\n:\n\n      \n-\n \nWARNING\n\n      \n-\n \nCRITICAL\n\n      \n-\n \nUNKNOWN\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \ncloudflare/dns.py\n\n    \nargs\n:\n \nremove test@example.com apikey123 example.com --content 10.0.0.1\n\n\n\n\n\n\nIn the above example, there are two health checks defined \nnginx_is_running\n and \nport_443_is_up\n. In the below section we will break down each of these health checks to better understand how health checks are defined.\n\n\nA command based health check\n\n\nCommand based health checks are one of the simplest concepts in Automatron. This type of health check allows users to define a command that is executed to determine the health status of a target.\n\n\nThis is accomplished by Automatron simply logging into the target system over SSH and executing the defined command. The exit code of the executed command is then used to determine the status of the health check.\n\n\nThe below sample is the \nnginx_is_running\n command based health check.\n\n\n  \nnginx_is_running\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx status\n\n\n\n\n\n\nIn this sample we can see that there are 3 values required for command based health checks. Those values are \nexecute_from\n, \ntype\n, and \ncmd\n. Let's go ahead and break down these values to gain a better understanding of what they mean and tell Automatron to do.\n\n\nExecute from\n\n\nThe \nexecute_from\n field is used to specify where to run the health check. Acceptable values for this field are \ntarget\n which is used to execute the health check on the monitored node itself and \nremote\n. The \nremote\n setting will tell Automatron to execute the health check from the system running Automatron itself.\n\n\nIn our case the command we wish to execute can only be executed from the monitored system itself, as such the value of this field will be \ntarget\n.\n\n\nType\n\n\nThe \ntype\n field is used to specify what type of health check this check is. Acceptable values are \ncmd\n or \nplugin\n. In this case, since we are defining a command based health check our value is set to \ncmd\n.\n\n\nCommand\n\n\nThe \ncmd\n field is used to specify the shell command to execute. In our example the command is simply \nservice nginx status\n. However, this field can support much more complicated commands such as the below example.\n\n\ncmd\n:\n \n/usr/bin/curl -Lw \nResponse %{http_code}\\\\n\n http://10.0.0.1 -o /dev/null | egrep \nResponse [200|301]\n\n\n\n\n\n\nIt is not uncommon to use multiple commands connected with output redirection and conditionals within a runbook.\n\n\nA plugin based health check\n\n\nPlugin based health checks are similar to Command Based health checks in that the exit code is used to determine status. Where these checks differ is that Automatron will copy an executable to the target system and then execute that executable with the specified arguments.\n\n\nBelow is an example Plugin health check.\n\n\nport_443_is_up\n:\n\n  \nexecute_from\n:\n \ntarget\n\n  \ntype\n:\n \nplugin\n\n  \nplugin\n:\n \nnetwork/tcp_connect.py\n\n  \nargs\n:\n \n--host=localhost --port 443\n\n\n\n\n\n\nPlugin type health checks have 4 configuration items \nexecute_from\n, \ntype\n, \nplugin\n \n \nargs\n. Let's go ahead and break down these values to gain a better understanding of what they mean and tell Automatron to do.\n\n\nExecute from \n Type\n\n\nThe \nexecute_from\n and \ntype\n fields are common fields for every runbook. The way they are applied for plugin health checks is the same as the way they are applied for command based health checks. As such we will skip repeating these fields in this section.\n\n\nPlugin\n\n\nThe \nplugin\n field is used to specify the location of the plugin executable. This is a relative file path starting from the value of the \nplugin_path\n parameter located within the \nconfig/config.yml\n configuration file.\n\n\nFor example, a plugin located at \n/path/to/plugins/checks/mycheck/mycheck.pl\n would require the value of \nmycheck/mycheck.pl\n.\n\n\nPlugin Arguments\n\n\nThe \nargs\n field is used to specify the arguments to provide the plugin executable. In the example above the plugin will be executed as follows by Automatron\n\n\n$ /path/to/plugins/checks/network/tcp_connect.py --host\n=\nlocalhost --port \n443\n\n\n\n\n\n\nUsing Exit Codes to relay health check status\n\n\nAutomatron follows the \nNagios\n model for health check exit codes. When a health check is executed the exit code is used to inform Automatron of the results. The below list is a map of acceptable exit codes and how they relate to Automatron health check status.\n\n\n\n\nOK\n: Requires a successful exit code of \n0\n\n\nWARNING\n: Is indicated by an exit code of \n1\n\n\nCRITICAL\n: Is indicated by an exit code of \n2\n\n\nUNKNOWN\n: Is indicated by any other exit code\n\n\n\n\n\n\nTip\n\n\nSince Automatron supports the \nNagios\n exit code strategy most Nagios compliant health checks can also be used with Automatron.", 
+            "title": "Checks"
+        }, 
+        {
+            "location": "/runbooks/checks/#a-command-based-health-check", 
+            "text": "Command based health checks are one of the simplest concepts in Automatron. This type of health check allows users to define a command that is executed to determine the health status of a target.  This is accomplished by Automatron simply logging into the target system over SSH and executing the defined command. The exit code of the executed command is then used to determine the status of the health check.  The below sample is the  nginx_is_running  command based health check.     nginx_is_running : \n     execute_from :   target \n     type :   cmd \n     cmd :   service nginx status   In this sample we can see that there are 3 values required for command based health checks. Those values are  execute_from ,  type , and  cmd . Let's go ahead and break down these values to gain a better understanding of what they mean and tell Automatron to do.", 
+            "title": "A command based health check"
+        }, 
+        {
+            "location": "/runbooks/checks/#execute-from", 
+            "text": "The  execute_from  field is used to specify where to run the health check. Acceptable values for this field are  target  which is used to execute the health check on the monitored node itself and  remote . The  remote  setting will tell Automatron to execute the health check from the system running Automatron itself.  In our case the command we wish to execute can only be executed from the monitored system itself, as such the value of this field will be  target .", 
+            "title": "Execute from"
+        }, 
+        {
+            "location": "/runbooks/checks/#type", 
+            "text": "The  type  field is used to specify what type of health check this check is. Acceptable values are  cmd  or  plugin . In this case, since we are defining a command based health check our value is set to  cmd .", 
+            "title": "Type"
+        }, 
+        {
+            "location": "/runbooks/checks/#command", 
+            "text": "The  cmd  field is used to specify the shell command to execute. In our example the command is simply  service nginx status . However, this field can support much more complicated commands such as the below example.  cmd :   /usr/bin/curl -Lw  Response %{http_code}\\\\n  http://10.0.0.1 -o /dev/null | egrep  Response [200|301]   It is not uncommon to use multiple commands connected with output redirection and conditionals within a runbook.", 
+            "title": "Command"
+        }, 
+        {
+            "location": "/runbooks/checks/#a-plugin-based-health-check", 
+            "text": "Plugin based health checks are similar to Command Based health checks in that the exit code is used to determine status. Where these checks differ is that Automatron will copy an executable to the target system and then execute that executable with the specified arguments.  Below is an example Plugin health check.  port_443_is_up : \n   execute_from :   target \n   type :   plugin \n   plugin :   network/tcp_connect.py \n   args :   --host=localhost --port 443   Plugin type health checks have 4 configuration items  execute_from ,  type ,  plugin     args . Let's go ahead and break down these values to gain a better understanding of what they mean and tell Automatron to do.", 
+            "title": "A plugin based health check"
+        }, 
+        {
+            "location": "/runbooks/checks/#execute-from-type", 
+            "text": "The  execute_from  and  type  fields are common fields for every runbook. The way they are applied for plugin health checks is the same as the way they are applied for command based health checks. As such we will skip repeating these fields in this section.", 
+            "title": "Execute from &amp; Type"
+        }, 
+        {
+            "location": "/runbooks/checks/#plugin", 
+            "text": "The  plugin  field is used to specify the location of the plugin executable. This is a relative file path starting from the value of the  plugin_path  parameter located within the  config/config.yml  configuration file.  For example, a plugin located at  /path/to/plugins/checks/mycheck/mycheck.pl  would require the value of  mycheck/mycheck.pl .", 
+            "title": "Plugin"
+        }, 
+        {
+            "location": "/runbooks/checks/#plugin-arguments", 
+            "text": "The  args  field is used to specify the arguments to provide the plugin executable. In the example above the plugin will be executed as follows by Automatron  $ /path/to/plugins/checks/network/tcp_connect.py --host = localhost --port  443", 
+            "title": "Plugin Arguments"
+        }, 
+        {
+            "location": "/runbooks/checks/#using-exit-codes-to-relay-health-check-status", 
+            "text": "Automatron follows the  Nagios  model for health check exit codes. When a health check is executed the exit code is used to inform Automatron of the results. The below list is a map of acceptable exit codes and how they relate to Automatron health check status.   OK : Requires a successful exit code of  0  WARNING : Is indicated by an exit code of  1  CRITICAL : Is indicated by an exit code of  2  UNKNOWN : Is indicated by any other exit code    Tip  Since Automatron supports the  Nagios  exit code strategy most Nagios compliant health checks can also be used with Automatron.", 
+            "title": "Using Exit Codes to relay health check status"
+        }, 
+        {
+            "location": "/runbooks/actions/", 
+            "text": "When a runbook health check returns a state; Automatron will check the runbooks definition to determine if an action should be taken. Like health checks, actions come in two flavors. \nArbitrary shell commands\n and \nPlugin executables\n. In this guide we will be defining two actions, one of each type.\n\n\nDuring this guide we will be building runbook actions for the below runbook.\n\n\nname\n:\n \nCheck NGINX\n\n\nschedule\n:\n \n*/2\n \n*\n \n*\n \n*\n \n*\n\n\nchecks\n:\n\n  \nnginx_is_running\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx status\n\n  \nport_443_is_up\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \nnetwork/tcp_connect.py\n\n    \nargs\n:\n \n--host=localhost --port 443\n\n\nactions\n:\n\n  \nrestart_nginx\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntrigger\n:\n \n2\n\n    \nfrequency\n:\n \n300\n\n    \ncall_on\n:\n\n      \n-\n \nWARNING\n\n      \n-\n \nCRITICAL\n\n      \n-\n \nUNKNOWN\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx restart\n\n  \nremove_from_dns\n:\n\n    \nexecute_from\n:\n \nremote\n\n    \ntrigger\n:\n \n0\n\n    \nfrequency\n:\n \n0\n\n    \ncall_on\n:\n\n      \n-\n \nWARNING\n\n      \n-\n \nCRITICAL\n\n      \n-\n \nUNKNOWN\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \ncloudflare/dns.py\n\n    \nargs\n:\n \nremove test@example.com apikey123 example.com --content 10.0.0.1\n\n\n\n\n\n\nWithin this runbook there are two actions; \nrestart_nginx\n and \nremove_from_dns\n. In this guide we will be breaking down these two actions to gain a better understanding of how they work.\n\n\nA command based actions\n\n\nLike health checks, Automatron actions also support arbitrary shell commands. When executing this type of action Automatron simply logs into the target system and executes the defined command.\n\n\nThe below example is a simple action that logs into the target system and executes the \nservice nginx restart\n command.\n\n\nrestart_nginx\n:\n\n \nexecute_from\n:\n \ntarget\n\n \ntrigger\n:\n \n2\n\n \nfrequency\n:\n \n300\n\n \ncall_on\n:\n\n   \n-\n \nWARNING\n\n   \n-\n \nCRITICAL\n\n   \n-\n \nUNKNOWN\n\n \ntype\n:\n \ncmd\n\n \ncmd\n:\n \nservice nginx restart\n\n\n\n\n\n\nThis action has 6 main fields defined; \nexecute_from\n, \ntrigger\n, \nfrequency\n, \ncall_on\n, \ntype\n, and \ncmd\n. Let's break down what each of these fields specify and control about action execution.\n\n\nExecute from\n\n\nThe \nexecute_from\n field is used to specify where to run the action. Acceptable values for this field are \ntarget\n, \nremote\n and \nhost\n.\n\n\n\n\ntarget\n - This value will specify that the action should be executed on the monitored host.\n\n\nremote\n - This value will specify that the action is executed from the Automatron server.\n\n\nhost\n - This value will specify that the action is executed from another specified host.\n\n\n\n\nWhen using the \nhost\n value, the alternative host must be specified via a key named \nhost\n. Below is an example of a \nhost\n based action.\n\n\nactions\n:\n\n  \nrestart_mysql\n:\n\n    \nexecute_from\n:\n \nhost\n\n    \nhost\n:\n \n10.0.0.2\n\n    \ntrigger\n:\n \n0\n\n    \nfrequency\n:\n \n300\n\n    \ncall_on\n:\n\n      \n-\n \nWARNING\n\n      \n-\n \nCRITICAL\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice mysql restart\n\n\n\n\n\n\nThe above action will result in Automatron logging into \n10.0.0.2\n and executing \nservice mysql restart\n.\n\n\nTrigger\n\n\nThe \ntrigger\n field is used to specify the number of times a health check returns the state specified within \ncall_on\n. This number \nmust be reached consecutively\n. If for example, the health check returns \nWARNING\n and then \nOK\n; Automatron's internal counter will be reset.\n\n\nFrequecy\n\n\nThe \nfrequency\n field is used to specify the time (in seconds) between action execution. In the above example the action will be executed every \n300\n seconds until either the \ncall_on\n or \ntrigger\n conditions are no longer met.\n\n\nIf you wish to execute an action every time, simply set this value to \n0\n seconds.\n\n\nCall on\n\n\nThe \ncall_on\n field is a YAML list which is used to list the states that should trigger this action. Valid options are \nOK\n, \nWARNING\n, \nCRITICAL\n \n \nUNKNOWN\n.\n\n\nType\n\n\nThe \ntype\n field is used to specify what type of action will be performed. Acceptable values are \ncmd\n or \nplugin\n. This field is required for all actions. Since our action above is a command based action we will specify \ncmd\n.\n\n\nCommand\n\n\nThe \ncmd\n field is used to specify the shell command to execute as part of this action. In the example above the command is simply \nservice nginx restart\n. When this action is executed, Automatron will login to the host specified and execute that command.\n\n\nA plugin based action\n\n\nWhen a command based action is being executed Automatron will login to the target host and execute the command specified. With plugin based actions, Automatron will upload the plugin executable and execute it giving the specified arguments.\n\n\nBelow is a sample Runbook using a plugin based action.\n\n\nremove_from_dns\n:\n\n  \nexecute_from\n:\n \nremote\n\n  \ntrigger\n:\n \n0\n\n  \nfrequency\n:\n \n0\n\n  \ncall_on\n:\n\n    \n-\n \nWARNING\n\n    \n-\n \nCRITICAL\n\n    \n-\n \nUNKNOWN\n\n  \ntype\n:\n \nplugin\n\n  \nplugin\n:\n \ncloudflare/dns.py\n\n  \nargs\n:\n \nremove test@example.com apikey123 example.com --content 10.0.0.1\n\n\n\n\n\n\nThis action has 7 main fields defined; \nexecute_from\n, \ntrigger\n, \nfrequency\n, \ncall_on\n, \ntype\n, \nplugin\n and \nargs\n. Let's break down what each of these fields specify and control about action execution.\n\n\nExecute from, Trigger, Frequency, Call on \n Type\n\n\nAs \nexecute_from\n, \ntrigger\n, \nfrequency\n, \ncall_on\n, and \ntype\n are common fields for every runbook. The way they are applied for plugin actions is the same as the way they are applied for command based actions. As such we will skip repeating these fields in this section.\n\n\nPlugin\n\n\nThe \nplugin\n field is used to specify the location of the plugin executable. This is a relative file path starting from the value of the \nplugin_path\n parameter located within the \nconfig/config.yml\n configuration file.\n\n\nFor example, a plugin located at \n/path/to/plugins/actions/myaction/myaction.pl\n would require the value of \nmyaction/myaction.pl\n.\n\n\nPlugin Arguments\n\n\nThe \nargs\n field is used to specify the arguments to provide the plugin executable. In the example above the plugin will be executed as follows by Automatron\n\n\n$ /path/to/plugins/checks/ncloudflare/dns.py remove test@example.com apikey123 example.com --content \n10\n.0.0.1", 
+            "title": "Actions"
+        }, 
+        {
+            "location": "/runbooks/actions/#a-command-based-actions", 
+            "text": "Like health checks, Automatron actions also support arbitrary shell commands. When executing this type of action Automatron simply logs into the target system and executes the defined command.  The below example is a simple action that logs into the target system and executes the  service nginx restart  command.  restart_nginx : \n  execute_from :   target \n  trigger :   2 \n  frequency :   300 \n  call_on : \n    -   WARNING \n    -   CRITICAL \n    -   UNKNOWN \n  type :   cmd \n  cmd :   service nginx restart   This action has 6 main fields defined;  execute_from ,  trigger ,  frequency ,  call_on ,  type , and  cmd . Let's break down what each of these fields specify and control about action execution.", 
+            "title": "A command based actions"
+        }, 
+        {
+            "location": "/runbooks/actions/#execute-from", 
+            "text": "The  execute_from  field is used to specify where to run the action. Acceptable values for this field are  target ,  remote  and  host .   target  - This value will specify that the action should be executed on the monitored host.  remote  - This value will specify that the action is executed from the Automatron server.  host  - This value will specify that the action is executed from another specified host.   When using the  host  value, the alternative host must be specified via a key named  host . Below is an example of a  host  based action.  actions : \n   restart_mysql : \n     execute_from :   host \n     host :   10.0.0.2 \n     trigger :   0 \n     frequency :   300 \n     call_on : \n       -   WARNING \n       -   CRITICAL \n     type :   cmd \n     cmd :   service mysql restart   The above action will result in Automatron logging into  10.0.0.2  and executing  service mysql restart .", 
+            "title": "Execute from"
+        }, 
+        {
+            "location": "/runbooks/actions/#trigger", 
+            "text": "The  trigger  field is used to specify the number of times a health check returns the state specified within  call_on . This number  must be reached consecutively . If for example, the health check returns  WARNING  and then  OK ; Automatron's internal counter will be reset.", 
+            "title": "Trigger"
+        }, 
+        {
+            "location": "/runbooks/actions/#frequecy", 
+            "text": "The  frequency  field is used to specify the time (in seconds) between action execution. In the above example the action will be executed every  300  seconds until either the  call_on  or  trigger  conditions are no longer met.  If you wish to execute an action every time, simply set this value to  0  seconds.", 
+            "title": "Frequecy"
+        }, 
+        {
+            "location": "/runbooks/actions/#call-on", 
+            "text": "The  call_on  field is a YAML list which is used to list the states that should trigger this action. Valid options are  OK ,  WARNING ,  CRITICAL     UNKNOWN .", 
+            "title": "Call on"
+        }, 
+        {
+            "location": "/runbooks/actions/#type", 
+            "text": "The  type  field is used to specify what type of action will be performed. Acceptable values are  cmd  or  plugin . This field is required for all actions. Since our action above is a command based action we will specify  cmd .", 
+            "title": "Type"
+        }, 
+        {
+            "location": "/runbooks/actions/#command", 
+            "text": "The  cmd  field is used to specify the shell command to execute as part of this action. In the example above the command is simply  service nginx restart . When this action is executed, Automatron will login to the host specified and execute that command.", 
+            "title": "Command"
+        }, 
+        {
+            "location": "/runbooks/actions/#a-plugin-based-action", 
+            "text": "When a command based action is being executed Automatron will login to the target host and execute the command specified. With plugin based actions, Automatron will upload the plugin executable and execute it giving the specified arguments.  Below is a sample Runbook using a plugin based action.  remove_from_dns : \n   execute_from :   remote \n   trigger :   0 \n   frequency :   0 \n   call_on : \n     -   WARNING \n     -   CRITICAL \n     -   UNKNOWN \n   type :   plugin \n   plugin :   cloudflare/dns.py \n   args :   remove test@example.com apikey123 example.com --content 10.0.0.1   This action has 7 main fields defined;  execute_from ,  trigger ,  frequency ,  call_on ,  type ,  plugin  and  args . Let's break down what each of these fields specify and control about action execution.", 
+            "title": "A plugin based action"
+        }, 
+        {
+            "location": "/runbooks/actions/#execute-from-trigger-frequency-call-on-type", 
+            "text": "As  execute_from ,  trigger ,  frequency ,  call_on , and  type  are common fields for every runbook. The way they are applied for plugin actions is the same as the way they are applied for command based actions. As such we will skip repeating these fields in this section.", 
+            "title": "Execute from, Trigger, Frequency, Call on &amp; Type"
+        }, 
+        {
+            "location": "/runbooks/actions/#plugin", 
+            "text": "The  plugin  field is used to specify the location of the plugin executable. This is a relative file path starting from the value of the  plugin_path  parameter located within the  config/config.yml  configuration file.  For example, a plugin located at  /path/to/plugins/actions/myaction/myaction.pl  would require the value of  myaction/myaction.pl .", 
+            "title": "Plugin"
+        }, 
+        {
+            "location": "/runbooks/actions/#plugin-arguments", 
+            "text": "The  args  field is used to specify the arguments to provide the plugin executable. In the example above the plugin will be executed as follows by Automatron  $ /path/to/plugins/checks/ncloudflare/dns.py remove test@example.com apikey123 example.com --content  10 .0.0.1", 
+            "title": "Plugin Arguments"
+        }, 
+        {
+            "location": "/facts/", 
+            "text": "Auomatron leverages the power of \nJinja2\n, a popular Python based templating language to enhance how runbooks can be used. The below example is a runbook that leverages Jinja2.\n\n\nname\n:\n \nCheck NGINX\n\n\n{%\n \nif\n \nprod\n \nin\n \nfacts\n[\nhostname\n]\n \n%}\n\n\nschedule\n:\n\n  \nsecond\n:\n \n*\n/20\n\n\n{%\n \nelse\n \n%}\n\n\nschedule\n:\n \n*/2\n \n*\n \n*\n \n*\n \n*\n\n\n{%\n \nendif\n \n%}\n\n\nchecks\n:\n\n  \nnginx_is_running\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx status\n\n  \nport_443_is_up\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \nnetwork/tcp_connect.py\n\n    \nargs\n:\n \n--host=\n{{\n \nfacts\n[\nnetwork\n][\neth0\n][\nv4\n][\n0\n]\n \n}}\n --port 443\n\n\nactions\n:\n\n  \nrestart_nginx\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntrigger\n:\n \n2\n\n    \nfrequency\n:\n \n300\n\n    \ncall_on\n:\n\n      \n-\n \nWARNING\n\n      \n-\n \nCRITICAL\n\n      \n-\n \nUNKNOWN\n\n    \ntype\n:\n \ncmd\n\n    \ncmd\n:\n \nservice nginx restart\n\n  \nremove_from_dns\n:\n\n    \nexecute_from\n:\n \nremote\n\n    \ntrigger\n:\n \n0\n\n    \nfrequency\n:\n \n0\n\n    \ncall_on\n:\n\n      \n-\n \nWARNING\n\n      \n-\n \nCRITICAL\n\n      \n-\n \nUNKNOWN\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \ncloudflare/dns.py\n\n    \nargs\n:\n \nremove test@example.com apikey123 example.com --content\n \n{{\n \nfacts\n[\nnetwork\n][\neth0\n][\nv4\n][\n0\n]\n \n}}\n\n\n\n\n\n\nThe above runbook leverages both Jinja2 and Automatron's internal \nFacts\n. Facts are variables that Automatron has collected during the Vetting process of each monitored system.\n\n\nWhen Automatron discovers a new host it executes \nVetting Plugins\n on the host. Some plugins are executed remotely, others are executed on the host itself. These plugins return information unique to each host.\n\n\nAn example of the type of information can be seen in the \nontarget/system_info.py\n vetting plugin. This plugin creates facts for OS Distribution, Hostname, Kernel version and Network Information.\n\n\nA Deeper Look\n\n\nTo get a better understanding of facts, and how they can be used let's look at the facts used in the above example. The below example is an example of using the \nhostname\n fact to determine if the target is a \"production\" hostname or not.\n\n\n{%\n \nif\n \nprod\n \nin\n \nfacts\n[\nhostname\n]\n \n%}\n\n\nschedule\n:\n\n  \nsecond\n:\n \n*\n/20\n\n\n{%\n \nelse\n \n%}\n\n\nschedule\n:\n \n*/2\n \n*\n \n*\n \n*\n \n*\n\n\n{%\n \nendif\n \n%}\n\n\n\n\n\n\nThis next example uses another fact to determine the IPv4 address of the monitors host. This address is then used as an argument for the \ntcp_connect.py\n plugin.\n\n\nport_443_is_up\n:\n\n  \nexecute_from\n:\n \ntarget\n\n  \ntype\n:\n \nplugin\n\n  \nplugin\n:\n \nnetwork/tcp_connect.py\n\n  \nargs\n:\n \n--host=\n{{\n \nfacts\n[\nnetwork\n][\neth0\n][\nv4\n][\n0\n]\n \n}}\n --port 443\n\n\n\n\n\n\nThe above are simple examples of how Jinja and Facts used together can enable the creation of runbooks that can span multiple hosts and use cases.", 
+            "title": "Facts"
+        }, 
+        {
+            "location": "/facts/#a-deeper-look", 
+            "text": "To get a better understanding of facts, and how they can be used let's look at the facts used in the above example. The below example is an example of using the  hostname  fact to determine if the target is a \"production\" hostname or not.  {%   if   prod   in   facts [ hostname ]   %}  schedule : \n   second :   * /20  {%   else   %}  schedule :   */2   *   *   *   *  {%   endif   %}   This next example uses another fact to determine the IPv4 address of the monitors host. This address is then used as an argument for the  tcp_connect.py  plugin.  port_443_is_up : \n   execute_from :   target \n   type :   plugin \n   plugin :   network/tcp_connect.py \n   args :   --host= {{   facts [ network ][ eth0 ][ v4 ][ 0 ]   }}  --port 443   The above are simple examples of how Jinja and Facts used together can enable the creation of runbooks that can span multiple hosts and use cases.", 
+            "title": "A Deeper Look"
+        }, 
+        {
+            "location": "/plugins/", 
+            "text": "Discovery\n\n\nPlugins for discovering new targets to monitor.\n\n\n\n\nnmap\n - Nmap wrapper for scanning Networks\n\n\nWeb Ping\n - Listen for POST or GET requests to identify new targets\n\n\nDigitalOcean\n - Query DigitalOcean's API\n\n\n\n\nChecks\n\n\nPlugins used to perform health checks.\n\n\n\n\nSystems\n\n\nDisk Free\n - Check file system disk space utilization\n\n\nMemory Free\n - Check memory utilization\n\n\n\n\n\n\n\n\nIt is also possible to import the \nMonitoring Plugins Project\n or plugins from \nNagios Exchange\n into Automatron by copying the plugins into the \nplugins/checks\n directory. Once included the executables can be referenced by Automatron's runbooks.\n\n\nActions\n\n\nPlugins used for Automatron actions.\n\n\n\n\nCloudFlare\n\n\nDNS\n - Modify, Add or Delete CloudFlare hosted DNS entries\n\n\n\n\n\n\nDocker\n\n\nDocker Clean\n - Remove all Docker containers and images\n\n\n\n\n\n\nSystems\n\n\nServices\n - Perform an action on a specified services\n\n\n\n\n\n\n\n\nVetting\n\n\nGather information from targets to populate \nfacts\n values.\n\n\n\n\nOn Target\n\n\nServices\n - Identify system services and their current state\n\n\nSystem Info\n - Identify basic system information (i.e. Hostname, IP Address, etc.)\n\n\n\n\n\n\nRemote\n\n\nPing\n - True or False value to determine if system is ping-able\n\n\n\n\n\n\n\n\nDatastores\n\n\nUse custom datastores to store Automatrons internal data.\n\n\n\n\nRedis - Redis data storage and retrieval\n\n\n\n\nLogging\n\n\nUse custom logging modules for Automatron\n\n\n\n\nSyslog\n - Log to custom Syslog end points\n\n\nConsole\n - Log to the executors console", 
+            "title": "Index"
+        }, 
+        {
+            "location": "/plugins/#discovery", 
+            "text": "Plugins for discovering new targets to monitor.   nmap  - Nmap wrapper for scanning Networks  Web Ping  - Listen for POST or GET requests to identify new targets  DigitalOcean  - Query DigitalOcean's API", 
+            "title": "Discovery"
+        }, 
+        {
+            "location": "/plugins/#checks", 
+            "text": "Plugins used to perform health checks.   Systems  Disk Free  - Check file system disk space utilization  Memory Free  - Check memory utilization     It is also possible to import the  Monitoring Plugins Project  or plugins from  Nagios Exchange  into Automatron by copying the plugins into the  plugins/checks  directory. Once included the executables can be referenced by Automatron's runbooks.", 
+            "title": "Checks"
+        }, 
+        {
+            "location": "/plugins/#actions", 
+            "text": "Plugins used for Automatron actions.   CloudFlare  DNS  - Modify, Add or Delete CloudFlare hosted DNS entries    Docker  Docker Clean  - Remove all Docker containers and images    Systems  Services  - Perform an action on a specified services", 
+            "title": "Actions"
+        }, 
+        {
+            "location": "/plugins/#vetting", 
+            "text": "Gather information from targets to populate  facts  values.   On Target  Services  - Identify system services and their current state  System Info  - Identify basic system information (i.e. Hostname, IP Address, etc.)    Remote  Ping  - True or False value to determine if system is ping-able", 
+            "title": "Vetting"
+        }, 
+        {
+            "location": "/plugins/#datastores", 
+            "text": "Use custom datastores to store Automatrons internal data.   Redis - Redis data storage and retrieval", 
+            "title": "Datastores"
+        }, 
+        {
+            "location": "/plugins/#logging", 
+            "text": "Use custom logging modules for Automatron   Syslog  - Log to custom Syslog end points  Console  - Log to the executors console", 
+            "title": "Logging"
+        }, 
+        {
+            "location": "/plugins/discovery/aws/", 
+            "text": "The \naws\n Discovery plugin is used to discover new instances on Amazon Web Services. This plugin will periodically check AWS and add all identified instances to the \"potential targets\" queue.\n\n\nConfiguration\n\n\nThis plugin does require some configuration in Automatron's master configuration file \nconfig.yml\n.\n\n\ndiscovery\n:\n\n  \nplugins\n:\n\n    \naws\n:\n\n      \naws_access_key_id\n:\n \nexample\n\n      \naws_secret_access_key\n:\n \nexample\n\n      \ninterval\n:\n \n60\n\n      \nfilter\n:\n\n        \n-\n \nPublicIpAddress\n\n        \n-\n \nPrivateIpAddress\n\n\n\n\n\n\nThe \naws\n plugin requires four configuration items.\n\n\n\n\naws_access_key_id\n - This an Key ID for AWS\n\n\naws_secret_access_key\n - This is the secret key used to authenticate with AWS\n\n\ninterval\n - This is the frequency to query Digital Ocean's API\n\n\nfilter\n - This is used to define whether Public or Private IP addresses are used for target identification", 
+            "title": "AWS"
+        }, 
+        {
+            "location": "/plugins/discovery/aws/#configuration", 
+            "text": "This plugin does require some configuration in Automatron's master configuration file  config.yml .  discovery : \n   plugins : \n     aws : \n       aws_access_key_id :   example \n       aws_secret_access_key :   example \n       interval :   60 \n       filter : \n         -   PublicIpAddress \n         -   PrivateIpAddress   The  aws  plugin requires four configuration items.   aws_access_key_id  - This an Key ID for AWS  aws_secret_access_key  - This is the secret key used to authenticate with AWS  interval  - This is the frequency to query Digital Ocean's API  filter  - This is used to define whether Public or Private IP addresses are used for target identification", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/plugins/discovery/digitalocean/", 
+            "text": "The \ndigitalocean\n Discovery plugin is used to discover new Digital Ocean Droplets. This plugin will periodically perform an HTTP GET request against Digital Ocean's API. All droplets identified are then added to the \"potential targets\" queue.\n\n\nConfiguration\n\n\nThis plugin does require some configuration in Automatron's master configuration file \nconfig.yml\n.\n\n\ndiscovery\n:\n\n  \nplugins\n:\n\n    \ndigitalocean\n:\n\n      \nurl\n:\n \nhttp://example.com\n\n      \napi_key\n:\n \nexample\n\n      \ninterval\n:\n \n60\n\n\n\n\n\n\nThe \ndigitalocean\n plugin requires two configuration items.\n\n\n\n\nurl\n - This is the URL of Digital Ocean's API\n\n\napi_key\n - This is the Digital Ocean API key\n\n\ninterval\n - This is the frequency to query Digital Ocean's API", 
+            "title": "Digital Ocean"
+        }, 
+        {
+            "location": "/plugins/discovery/digitalocean/#configuration", 
+            "text": "This plugin does require some configuration in Automatron's master configuration file  config.yml .  discovery : \n   plugins : \n     digitalocean : \n       url :   http://example.com \n       api_key :   example \n       interval :   60   The  digitalocean  plugin requires two configuration items.   url  - This is the URL of Digital Ocean's API  api_key  - This is the Digital Ocean API key  interval  - This is the frequency to query Digital Ocean's API", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/plugins/discovery/linode/", 
+            "text": "The \nlinode\n Discovery plugin is used to discover new Linode servers. This plugin will periodically perform an HTTP GET request against Linode's API. All servers identified are then added to the \"potential targets\" queue.\n\n\nConfiguration\n\n\nThis plugin does require some configuration in Automatron's master configuration file \nconfig.yml\n.\n\n\ndiscovery\n:\n\n  \nplugins\n:\n\n    \nlinode\n:\n\n      \nurl\n:\n \nhttp://example.com\n\n      \napi_key\n:\n \nexample\n\n      \ninterval\n:\n \n60\n\n\n\n\n\n\nThe \nlinode\n plugin requires three configuration items.\n\n\n\n\nurl\n - This is the URL to Linode's API\n\n\napi_key\n - This is the Linode API key\n\n\ninterval\n - This is the frequency to query Linode's API", 
+            "title": "Linode"
+        }, 
+        {
+            "location": "/plugins/discovery/linode/#configuration", 
+            "text": "This plugin does require some configuration in Automatron's master configuration file  config.yml .  discovery : \n   plugins : \n     linode : \n       url :   http://example.com \n       api_key :   example \n       interval :   60   The  linode  plugin requires three configuration items.   url  - This is the URL to Linode's API  api_key  - This is the Linode API key  interval  - This is the frequency to query Linode's API", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/plugins/discovery/nmap/", 
+            "text": "The \nnmap\n Discovery plugin utilizes the \nnmap\n tool to scan a specified network for new target hosts. Each host found to be up will be added as a potential target system for Automatron to monitor. This plugin acts as a simple wrapper around \nnmap\n which is determining if a host is up or down based on the options provided.\n\n\nConfiguration\n\n\nThis plugin does require some configuration in Automatron's master configuration file \nconfig.yml\n.\n\n\ndiscovery\n:\n\n  \nplugins\n:\n\n    \nnmap\n:\n\n      \ntarget\n:\n \n10.0.0.1/8\n\n      \nflags\n:\n \n-sP\n\n      \ninterval\n:\n \n40\n\n\n\n\n\n\nThe above configuration has three main elements.\n\n\n\n\ntarget\n - This is the target to pass on to \nnmap\n.\n\n\n\n\nThe value of \n10.0.0.1/8\n will scan the entire \n10.0.0.0\n class A network.\n\n\n\n\nflags\n - These are flags you would pass to \nnmap\n when run from command line.\n\n\n\n\nThe value of \n-sP\n will perform a Ping based scan.\n\n\n\n\ninterval\n - The specified \"interval\" (in seconds) to wait before performing another scan.", 
+            "title": "Network Map (nmap)"
+        }, 
+        {
+            "location": "/plugins/discovery/nmap/#configuration", 
+            "text": "This plugin does require some configuration in Automatron's master configuration file  config.yml .  discovery : \n   plugins : \n     nmap : \n       target :   10.0.0.1/8 \n       flags :   -sP \n       interval :   40   The above configuration has three main elements.   target  - This is the target to pass on to  nmap .   The value of  10.0.0.1/8  will scan the entire  10.0.0.0  class A network.   flags  - These are flags you would pass to  nmap  when run from command line.   The value of  -sP  will perform a Ping based scan.   interval  - The specified \"interval\" (in seconds) to wait before performing another scan.", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/plugins/discovery/roster/", 
+            "text": "The \nroster\n Discovery plugin is used to discover new hosts via the Automatron base configuration file. This plugin allows users to simply specify hosts within the main configuration file \nconfig/config.yml\n.\n\n\nConfiguration\n\n\nThis plugin requires configuration in Automatron's master configuration file \nconfig.yml\n.\n\n\ndiscovery\n:\n\n  \nplugins\n:\n\n    \nroster\n:\n\n      \nhosts\n:\n\n        \n-\n \n10.0.0.1\n\n        \n-\n \n10.0.0.3\n\n\n\n\n\n\nThe \nroster\n plugin requires one configuration items.\n\n\n\n\nhosts\n - A list of target hosts.", 
+            "title": "Roster file"
+        }, 
+        {
+            "location": "/plugins/discovery/roster/#configuration", 
+            "text": "This plugin requires configuration in Automatron's master configuration file  config.yml .  discovery : \n   plugins : \n     roster : \n       hosts : \n         -   10.0.0.1 \n         -   10.0.0.3   The  roster  plugin requires one configuration items.   hosts  - A list of target hosts.", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/plugins/discovery/webping/", 
+            "text": "The \nwebping\n Discovery plugins will start an HTTP listener and wait for incoming \nGET\n or \nPOST\n requests. Whenever it receives a request, the \nwebping\n plugin will extract the client's IP address and add that system to the \"potential targets\" queue.\n\n\nThis plugin provides an easy way to have targets notify Automatron of their existence.\n\n\nConfiguration\n\n\nThis plugin does require some configuration in Automatron's master configuration file \nconfig.yml\n.\n\n\ndiscovery\n:\n\n  \nplugins\n:\n\n    \nwebping\n:\n\n      \nip\n:\n \n0.0.0.0\n\n      \nport\n:\n \n20000\n\n\n\n\n\n\nThe above configuration has two elements.\n\n\n\n\nip\n - This is the IP address to bind to.\n\n\nport\n - This is the port the HTTP listener should bind and listen to.", 
+            "title": "Web Ping"
+        }, 
+        {
+            "location": "/plugins/discovery/webping/#configuration", 
+            "text": "This plugin does require some configuration in Automatron's master configuration file  config.yml .  discovery : \n   plugins : \n     webping : \n       ip :   0.0.0.0 \n       port :   20000   The above configuration has two elements.   ip  - This is the IP address to bind to.  port  - This is the port the HTTP listener should bind and listen to.", 
+            "title": "Configuration"
+        }, 
+        {
+            "location": "/plugins/checks/network/ping/", 
+            "text": "The \nping\n plugin is used to identify if a \nhost\n is online by sending an ICMP packet. This plugin uses \nbash\n and the \nping\n command, which should work on most Unix and Linux systems.\n\n\nRunbook Example\n\n\nThe below is an example of using the \nnetwork/ping\n health check in a runbook.\n\n\nchecks\n:\n\n  \nhost_up\n:\n\n    \nexecute_from\n:\n \nremote\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \nnetwork/ping.sh\n\n    \nargs\n:\n \n-i 10.0.0.1\n\n\n\n\n\n\nThis plugin can be executed from either \ntarget\n or \nremote\n depending on the goal of the runbook.\n\n\nRequired arguments\n\n\nThe \nnetwork/ping\n plugin requires 1 argument.\n\n\nargs\n:\n \n-i \nip or hostname\n [-t \ntimeout value\n]\n\n\n\n\n\n\nThe second value \n-t\n is an optional value, default is \n3 seconds\n.", 
+            "title": "Ping"
+        }, 
+        {
+            "location": "/plugins/checks/network/ping/#runbook-example", 
+            "text": "The below is an example of using the  network/ping  health check in a runbook.  checks : \n   host_up : \n     execute_from :   remote \n     type :   plugin \n     plugin :   network/ping.sh \n     args :   -i 10.0.0.1   This plugin can be executed from either  target  or  remote  depending on the goal of the runbook.", 
+            "title": "Runbook Example"
+        }, 
+        {
+            "location": "/plugins/checks/network/ping/#required-arguments", 
+            "text": "The  network/ping  plugin requires 1 argument.  args :   -i  ip or hostname  [-t  timeout value ]   The second value  -t  is an optional value, default is  3 seconds .", 
+            "title": "Required arguments"
+        }, 
+        {
+            "location": "/plugins/checks/network/tcp_connect/", 
+            "text": "The \ntcp_connect\n plugin is used to identify if a \nhost\n or \nip\n is listening on a specified \nport\n. This is a simple check that is either \nOK\n for successful connections or \nCRITICAL\n for unsuccessful connections.\n\n\nRunbook Example\n\n\nThe below is an example of using the \nnetwork/tcp_connect\n health check in a runbook.\n\n\nchecks\n:\n\n  \nmysql_up\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \nnetwork/tcp_connect.py\n\n    \nargs\n:\n \n--host=localhost --port 3306\n\n\n\n\n\n\nThis plugin can be executed from either \ntarget\n or \nremote\n depending on the target being monitored.\n\n\nRequired arguments\n\n\nThe \nnetwork/tcp_connect\n plugin requires 2 arguments.\n\n\nargs\n:\n \n-i \nip or hostname\n -p \nport\n [-t \ntimeout value\n]\n\n\n\n\n\n\nThe third value \n-t\n is an optional value, default is \n5 seconds\n.", 
+            "title": "TCP Connection"
+        }, 
+        {
+            "location": "/plugins/checks/network/tcp_connect/#runbook-example", 
+            "text": "The below is an example of using the  network/tcp_connect  health check in a runbook.  checks : \n   mysql_up : \n     execute_from :   target \n     type :   plugin \n     plugin :   network/tcp_connect.py \n     args :   --host=localhost --port 3306   This plugin can be executed from either  target  or  remote  depending on the target being monitored.", 
+            "title": "Runbook Example"
+        }, 
+        {
+            "location": "/plugins/checks/network/tcp_connect/#required-arguments", 
+            "text": "The  network/tcp_connect  plugin requires 2 arguments.  args :   -i  ip or hostname  -p  port  [-t  timeout value ]   The third value  -t  is an optional value, default is  5 seconds .", 
+            "title": "Required arguments"
+        }, 
+        {
+            "location": "/plugins/checks/mysql/available/", 
+            "text": "The \navailable\n plugin is used to query MySQL's internal status system and determine whether the MySQL service is available or not.\n\n\nRunbook Example\n\n\nThe below is an example of using the \nmysql/available\n health check in a runbook.\n\n\nchecks\n:\n\n  \nmysql_up\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \nmysql/available.py\n\n    \nargs\n:\n \n--host=localhost --user=USERNAME --password=YOURPASSWORD\n\n\n\n\n\n\nThis plugin can be executed from either \ntarget\n or \nremote\n depending on the MySQL service's configuration.\n\n\nRequired arguments\n\n\nThe \nmysql/available\n plugin requires 3 arguments.\n\n\nargs\n:\n \n-s \nmysql host\n -u \nmysql user\n -p \nmysql password\n\n\n\n\n\n\nIf the \nshow status\n query is unsuccessful or does not find the key it is looking for the check will return a \nCRITICAL\n status. There is no \nWARNING\n or \nUNKNOWN\n status for this check.", 
+            "title": "Available"
+        }, 
+        {
+            "location": "/plugins/checks/mysql/available/#runbook-example", 
+            "text": "The below is an example of using the  mysql/available  health check in a runbook.  checks : \n   mysql_up : \n     execute_from :   target \n     type :   plugin \n     plugin :   mysql/available.py \n     args :   --host=localhost --user=USERNAME --password=YOURPASSWORD   This plugin can be executed from either  target  or  remote  depending on the MySQL service's configuration.", 
+            "title": "Runbook Example"
+        }, 
+        {
+            "location": "/plugins/checks/mysql/available/#required-arguments", 
+            "text": "The  mysql/available  plugin requires 3 arguments.  args :   -s  mysql host  -u  mysql user  -p  mysql password   If the  show status  query is unsuccessful or does not find the key it is looking for the check will return a  CRITICAL  status. There is no  WARNING  or  UNKNOWN  status for this check.", 
+            "title": "Required arguments"
+        }, 
+        {
+            "location": "/plugins/checks/mysql/status_metrics/", 
+            "text": "The \nstatus_metrics\n plugin is used to query MySQL's internal status system and alert when the defined \nmetric\n exceeds the \nwarning\n and \ncritical\n thresholds.\n\n\nRunbook Example\n\n\nThe below is an example of using the \nstatus_metrics\n health check in a runbook.\n\n\nchecks\n:\n\n  \nstatus_metrics\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \nmysql/status_metrics.py\n\n    \nargs\n:\n \n--warn=20 --critical=10 --metric=slow_queries --host=localhost --user=USERNAME --password=YOURPASSWORD --type=greater\n\n\n\n\n\n\nThis plugin can be executed from either \ntarget\n or \nremote\n depending on the MySQL service's configuration.\n\n\nRequired arguments\n\n\nThe \nmysql/status_metrics\n plugin requires 7 arguments.\n\n\nargs\n:\n \n-w \nwarning value\n -c \ncritical value\n -t {greater, lesser} -m \nmetric\n -s \nmysql host\n -u \nmysql user\n -p \nmysql password\n\n\n\n\n\n\nThe \ntype\n flag is used to define whether or not the alert is triggered when the \nmetric\n value is \"greater\" or \"lesser\" than the values defined as \nwarn\n and \ncritical\n.", 
+            "title": "Status Metrics"
+        }, 
+        {
+            "location": "/plugins/checks/mysql/status_metrics/#runbook-example", 
+            "text": "The below is an example of using the  status_metrics  health check in a runbook.  checks : \n   status_metrics : \n     execute_from :   target \n     type :   plugin \n     plugin :   mysql/status_metrics.py \n     args :   --warn=20 --critical=10 --metric=slow_queries --host=localhost --user=USERNAME --password=YOURPASSWORD --type=greater   This plugin can be executed from either  target  or  remote  depending on the MySQL service's configuration.", 
+            "title": "Runbook Example"
+        }, 
+        {
+            "location": "/plugins/checks/mysql/status_metrics/#required-arguments", 
+            "text": "The  mysql/status_metrics  plugin requires 7 arguments.  args :   -w  warning value  -c  critical value  -t {greater, lesser} -m  metric  -s  mysql host  -u  mysql user  -p  mysql password   The  type  flag is used to define whether or not the alert is triggered when the  metric  value is \"greater\" or \"lesser\" than the values defined as  warn  and  critical .", 
+            "title": "Required arguments"
+        }, 
+        {
+            "location": "/plugins/checks/systems/disk_free/", 
+            "text": "The \ndisk_free\n plugin is used to check the available space on a specified filesystem. If the available disk space is below the specified thresholds this script will exit indicating a \nWARNING\n or \nCRITICAL\n status.\n\n\nOS Support\n\n\n\n\nLinux\n\n\nDebian Base (Debian, Ubuntu, etc.)\n\n\nRedHat Base (RHEL, CentOS)\n\n\n\n\n\n\n\n\nRunbook Example\n\n\nThe below is an example of using the \ndisk_free\n health check in a runbook.\n\n\nchecks\n:\n\n  \ndisk_free\n:\n\n    \n# Check for the % of disk free create warning with 20% free and critical for 10% free\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \nsystems/disk_free.py\n\n    \nargs\n:\n \n--warn=20 --critical=10 --filesystem=/var/log\n\n\n\n\n\n\nRequired Arguments\n\n\nThe \ndisk_free\n check requires 3 arguments.\n\n\nargs\n:\n \n--warn=\nwarning threshold %\n --critical=\ncritical threshold %\n --filesystem=\nfilesystem to check", 
+            "title": "Disk Free"
+        }, 
+        {
+            "location": "/plugins/checks/systems/disk_free/#os-support", 
+            "text": "Linux  Debian Base (Debian, Ubuntu, etc.)  RedHat Base (RHEL, CentOS)", 
+            "title": "OS Support"
+        }, 
+        {
+            "location": "/plugins/checks/systems/disk_free/#runbook-example", 
+            "text": "The below is an example of using the  disk_free  health check in a runbook.  checks : \n   disk_free : \n     # Check for the % of disk free create warning with 20% free and critical for 10% free \n     execute_from :   target \n     type :   plugin \n     plugin :   systems/disk_free.py \n     args :   --warn=20 --critical=10 --filesystem=/var/log", 
+            "title": "Runbook Example"
+        }, 
+        {
+            "location": "/plugins/checks/systems/disk_free/#required-arguments", 
+            "text": "The  disk_free  check requires 3 arguments.  args :   --warn= warning threshold %  --critical= critical threshold %  --filesystem= filesystem to check", 
+            "title": "Required Arguments"
+        }, 
+        {
+            "location": "/plugins/checks/systems/mem_free/", 
+            "text": "The \nmem_free\n health check is used to check whether the available memory on a system is within threshold.\n\n\nOS Support\n\n\n\n\nLinux\n\n\nDebian Base (Debian, Ubuntu, etc.)\n\n\nRedHat Base (RHEL, CentOS)\n\n\n\n\n\n\nFreeBSD\n\n\n\n\nFor Linux systems this check script does take into consideration the memory used for cache and Linux's ability to reclaim that memory.\n\n\nRunbook example\n\n\nThe below is an example of the \nmem_free\n check used within a runbook.\n\n\nchecks\n:\n\n  \nmem_free\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \nsystems/mem_free.py\n\n    \nargs\n:\n \n--warn=20 --critical=10\n\n\n\n\n\n\nIn the above, the health check will return a \nWARNING\n status if the memory is below \n20%\n and return a \nCRITICAL\n status if the memory is below \n10%\n.\n\n\nRequired Arguments\n\n\nThe \nmem_free\n check requires 2 arguments.\n\n\nargs\n:\n \n--warn=\nwarning threshold %\n --critical=\ncritical threshold %", 
+            "title": "Memory Free"
+        }, 
+        {
+            "location": "/plugins/checks/systems/mem_free/#os-support", 
+            "text": "Linux  Debian Base (Debian, Ubuntu, etc.)  RedHat Base (RHEL, CentOS)    FreeBSD   For Linux systems this check script does take into consideration the memory used for cache and Linux's ability to reclaim that memory.", 
+            "title": "OS Support"
+        }, 
+        {
+            "location": "/plugins/checks/systems/mem_free/#runbook-example", 
+            "text": "The below is an example of the  mem_free  check used within a runbook.  checks : \n   mem_free : \n     execute_from :   target \n     type :   plugin \n     plugin :   systems/mem_free.py \n     args :   --warn=20 --critical=10   In the above, the health check will return a  WARNING  status if the memory is below  20%  and return a  CRITICAL  status if the memory is below  10% .", 
+            "title": "Runbook example"
+        }, 
+        {
+            "location": "/plugins/checks/systems/mem_free/#required-arguments", 
+            "text": "The  mem_free  check requires 2 arguments.  args :   --warn= warning threshold %  --critical= critical threshold %", 
+            "title": "Required Arguments"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/", 
+            "text": "This plugin provides the ability to \nadd\n, \nremove\n and \nmodify\n DNS records for CloudFlare protected domains.\n\n\nWith this plugin you could change a DNS record to a failover IP, remove IP's for round-robin DNS load balancing or even add new systems to DNS if services are running.\n\n\nRunbook example for CloudFlare DNS\n\n\nThe below is an example of using the CloudFlare DNS plugin within a Runbook.\n\n\nactions\n:\n\n  \nadd_dns_record\n:\n\n    \nexecute_from\n:\n \nremote\n\n    \ntrigger\n:\n \n0\n\n    \nfrequency\n:\n \n300\n\n    \ncall_on\n:\n\n      \n-\n \nOK\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \ncloudflare/dns.py\n\n    \nargs\n:\n \nadd email@example.com api_key example.com www.example.com A 10.0.0.1\n\n\n\n\n\n\nActions\n\n\nThe CloudFlare DNS Plugin has 3 actions\n\n\n\n\nadd\n - Add a new DNS record\n\n\nremove\n - Remove existing DNS record\n\n\nmodify\n - Modify an existing DNS record\n\n\n\n\nAdd Arguments\n\n\nAdding a new DNS record can be called by specifying the following plugin arguments.\n\n\nSyntax\n\n\nargs\n:\n \nadd \nemail\n \napi_key\n \ndomain\n \nrecord_name\n \nrecord_type\n \nrecord_content\n\n\n\n\n\n\nExample\n\n\nargs\n:\n \nadd email@example.com api_key example.com www.example.com A 10.0.0.1\n\n\n\n\n\n\nSupported record types are: \nA\n, \nAAAA\n, \nCNAME\n, \n \nMX\n\n\nOptional Arguments\n\n\n\n\n--ttl\n - Specify the TTL value (default: 0)\n\n\n--noproxy\n - Disable CloudFlare's proxying\n\n\n\n\nRemove Arguments\n\n\nRemoving a DNS record can be called by specifying the following plugin arguments.\n\n\nSyntax\n\n\nargs\n:\n \nremove \nemail\n \napi_key\n \ndomain\n --name \nrecord_name\n --content \nrecord_content\n\n\n\n\n\n\nExample\n\n\nargs\n:\n \nremove email@example.com api_key example.com --name test.example.com --content 10.0.0.1\n\n\n\n\n\n\nOptional Arguments\n\n\nThe \n--name\n or \n--content\n flags can be used together or on their own to limit the number of records to be deleted. At least one flag must be used or no records will be deleted.\n\n\n\n\n--name\n - Match records with a specified name\n\n\n--content\n - Match records with a specified content\n\n\n\n\nModify Arguments\n\n\nDNS records can be modified using the following plugin Arguments\n\n\nSyntax\n\n\nargs\n:\n \nremove \nemail\n \napi_key\n \ndomain\n \nold_record_content\n \nnew_record_type\n \nnew_record_content\n\n\n\n\n\n\nExample\n\n\nargs\n:\n \nmodify email email@example.com api_key example.com 10.0.0.1 A 10.0.0.2\n\n\n\n\n\n\nOptional Arguments\n\n\nIf no \n--name\n is specified the CloudFlare DNS plugin will modify all records with the matching content. Specifying name will limit the modification to only the named record.\n\n\n\n\n--name\n - Match records with a specified name", 
+            "title": "DNS"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#runbook-example-for-cloudflare-dns", 
+            "text": "The below is an example of using the CloudFlare DNS plugin within a Runbook.  actions : \n   add_dns_record : \n     execute_from :   remote \n     trigger :   0 \n     frequency :   300 \n     call_on : \n       -   OK \n     type :   plugin \n     plugin :   cloudflare/dns.py \n     args :   add email@example.com api_key example.com www.example.com A 10.0.0.1", 
+            "title": "Runbook example for CloudFlare DNS"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#actions", 
+            "text": "The CloudFlare DNS Plugin has 3 actions   add  - Add a new DNS record  remove  - Remove existing DNS record  modify  - Modify an existing DNS record", 
+            "title": "Actions"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#add-arguments", 
+            "text": "Adding a new DNS record can be called by specifying the following plugin arguments.", 
+            "title": "Add Arguments"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#syntax", 
+            "text": "args :   add  email   api_key   domain   record_name   record_type   record_content", 
+            "title": "Syntax"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#example", 
+            "text": "args :   add email@example.com api_key example.com www.example.com A 10.0.0.1   Supported record types are:  A ,  AAAA ,  CNAME ,    MX", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#optional-arguments", 
+            "text": "--ttl  - Specify the TTL value (default: 0)  --noproxy  - Disable CloudFlare's proxying", 
+            "title": "Optional Arguments"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#remove-arguments", 
+            "text": "Removing a DNS record can be called by specifying the following plugin arguments.", 
+            "title": "Remove Arguments"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#syntax_1", 
+            "text": "args :   remove  email   api_key   domain  --name  record_name  --content  record_content", 
+            "title": "Syntax"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#example_1", 
+            "text": "args :   remove email@example.com api_key example.com --name test.example.com --content 10.0.0.1", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#optional-arguments_1", 
+            "text": "The  --name  or  --content  flags can be used together or on their own to limit the number of records to be deleted. At least one flag must be used or no records will be deleted.   --name  - Match records with a specified name  --content  - Match records with a specified content", 
+            "title": "Optional Arguments"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#modify-arguments", 
+            "text": "DNS records can be modified using the following plugin Arguments", 
+            "title": "Modify Arguments"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#syntax_2", 
+            "text": "args :   remove  email   api_key   domain   old_record_content   new_record_type   new_record_content", 
+            "title": "Syntax"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#example_2", 
+            "text": "args :   modify email email@example.com api_key example.com 10.0.0.1 A 10.0.0.2", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/plugins/actions/cloudflare/dns/#optional-arguments_2", 
+            "text": "If no  --name  is specified the CloudFlare DNS plugin will modify all records with the matching content. Specifying name will limit the modification to only the named record.   --name  - Match records with a specified name", 
+            "title": "Optional Arguments"
+        }, 
+        {
+            "location": "/plugins/actions/docker/clean/", 
+            "text": "This plugin provides the ability to remove (\"clean\") all Docker containers and images. This plugin will first gather a list of Docker containers running and stopped, then cycle through that list removing and stopping each container. After the running containers are complete this plugin will then gather a list of container images and remove each image it finds.\n\n\nThis plugin should only be used to completely wipe all Docker containers and images.\n\n\nRunbook example\n\n\nThe Below is an example of using the \ndocker/clean.sh\n action plugin.\n\n\nactions\n:\n\n  \ncleanup_docker\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntrigger\n:\n \n0\n\n    \nfrequency\n:\n \n300\n\n    \ncall_on\n:\n\n      \n-\n \nCRITICAL\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \ndocker/clean.sh\n\n\n\n\n\n\nThis plugin does not require any arguments to be specified.", 
+            "title": "Clean"
+        }, 
+        {
+            "location": "/plugins/actions/docker/clean/#runbook-example", 
+            "text": "The Below is an example of using the  docker/clean.sh  action plugin.  actions : \n   cleanup_docker : \n     execute_from :   target \n     trigger :   0 \n     frequency :   300 \n     call_on : \n       -   CRITICAL \n     type :   plugin \n     plugin :   docker/clean.sh   This plugin does not require any arguments to be specified.", 
+            "title": "Runbook example"
+        }, 
+        {
+            "location": "/plugins/actions/systems/services/", 
+            "text": "The \nsystems/services.py\n plugin is used to perform actions on system services such as \nnginx\n, \ndocker\n or \npostfix\n. You can use this plugin to perform any action supported by the underlying system management utility such as \nSystemd\n. This plugin is useful when you have an environment that has a mix of Linux versions and you wish to use one runbook to interact with system services.\n\n\nOS Support\n\n\n\n\nLinux\n\n\n\n\nRunbook example\n\n\nThe below is an example of using the \nsystems/services.py\n plugin.\n\n\nactions\n:\n\n  \nrestart_nginx\n:\n\n    \nexecute_from\n:\n \ntarget\n\n    \ntrigger\n:\n \n0\n\n    \nfrequency\n:\n \n300\n\n    \ncall_on\n:\n\n      \n-\n \nCRITICAL\n\n    \ntype\n:\n \nplugin\n\n    \nplugin\n:\n \nsystems/services.py\n\n    \nargs\n:\n \n--service nginx --action restart\n\n\n\n\n\n\nThe above would restart \nNginx\n after a \nCRITICAL\n event.\n\n\nRequired Arugments\n\n\nThis plugin requires 2 arguments.\n\n\nargs\n:\n \n--service \nservice name\n --action \naciton to perform", 
+            "title": "Services"
+        }, 
+        {
+            "location": "/plugins/actions/systems/services/#os-support", 
+            "text": "Linux", 
+            "title": "OS Support"
+        }, 
+        {
+            "location": "/plugins/actions/systems/services/#runbook-example", 
+            "text": "The below is an example of using the  systems/services.py  plugin.  actions : \n   restart_nginx : \n     execute_from :   target \n     trigger :   0 \n     frequency :   300 \n     call_on : \n       -   CRITICAL \n     type :   plugin \n     plugin :   systems/services.py \n     args :   --service nginx --action restart   The above would restart  Nginx  after a  CRITICAL  event.", 
+            "title": "Runbook example"
+        }, 
+        {
+            "location": "/plugins/actions/systems/services/#required-arugments", 
+            "text": "This plugin requires 2 arguments.  args :   --service  service name  --action  aciton to perform", 
+            "title": "Required Arugments"
+        }, 
+        {
+            "location": "/plugins/vetting/ontarget/services/", 
+            "text": "The \nservices\n Vetting plugin is used to identify services available on monitoring targets and add those details to the targets \nfacts\n. This plugin works by copying and executing the \nservices.py\n plugin executable.\n\n\nThis plugin will output service status similar to the JSON data below.\n\n\n{\n\n    \nservices\n:\n \n{\n\n        \nacpid\n:\n \nrunning\n,\n\n        \napparmor\n:\n \nstopped\n,\n\n        \napport\n:\n \nrunning\n,\n\n        \natd\n:\n \nrunning\n,\n\n        \nchef-client\n:\n \nrunning\n,\n\n        \nconsole-setup\n:\n \nrunning\n,\n\n        \ncron\n:\n \nrunning\n,\n\n        \ncryptdisks\n:\n \nrunning\n,\n\n        \ncryptdisks-early\n:\n \nstopped\n,\n\n        \ndbus\n:\n \nrunning\n,\n\n        \numountnfs.sh\n:\n \nstopped\n,\n\n        \numountroot\n:\n \nstopped\n,\n\n        \nunattended-upgrades\n:\n \nrunning\n,\n\n        \nurandom\n:\n \nrunning\n,\n\n        \nvirtualbox-guest-utils\n:\n \nrunning\n,\n\n        \nvirtualbox-guest-x11\n:\n \nstopped\n,\n\n        \nx11-common\n:\n \nrunning\n\n    \n}\n\n\n}\n\n\n\n\n\n\nThis data will then be used to populate the \nfacts['services']\n dictionary available within Automatron's facts system.\n\n\nOS Support\n\n\n\n\nLinux", 
+            "title": "Services"
+        }, 
+        {
+            "location": "/plugins/vetting/ontarget/services/#os-support", 
+            "text": "Linux", 
+            "title": "OS Support"
+        }, 
+        {
+            "location": "/plugins/vetting/ontarget/system-info/", 
+            "text": "The \nsystem-info\n Vetting plugin is used to collect basic system information of monitoring targets. This information is then used to feed Automatron's \nfacts\n system. This plugin works by copying the \nsystem_info.py\n executable and executing it on the monitoring target.\n\n\nThe below JSON output shows the expected results.\n\n\n{\n\n    \nhostname\n:\n \nvagrant-ubuntu-trusty-64\n,\n\n    \nkernel\n:\n \n3.13.0-55-generic\n,\n\n    \nnetwork\n:\n \n{\n\n        \ndocker0\n:\n \n{\n\n            \nv4\n:\n \n[\n\n                \n172.17.42.1\n\n            \n],\n\n            \nv6\n:\n \n[]\n\n        \n},\n\n        \neth0\n:\n \n{\n\n            \nv4\n:\n \n[\n\n                \n10.0.2.15\n\n            \n],\n\n            \nv6\n:\n \n[\n\n                \nfe80::a00:27ff:fe3a:b5b\n\n            \n]\n\n        \n},\n\n        \nlo\n:\n \n{\n\n            \nv4\n:\n \n[\n\n                \n127.0.0.1\n\n            \n],\n\n            \nv6\n:\n \n[\n\n                \n::1\n\n            \n]\n\n        \n}\n\n    \n},\n\n    \nos\n:\n \nLinux\n\n\n}\n\n\n\n\n\n\nThis information populates the \nfacts['hostname']\n, \nfacts['kernel']\n, \nfacts['network']\n and \nfacts['os']\n values.", 
+            "title": "System Info"
+        }, 
+        {
+            "location": "/plugins/vetting/remote/ping/", 
+            "text": "The \nping\n Vetting plugin is used to identify whether or not a server is pingable and populate Automatron's \nfacts\n system with that information. This plugin is executed remotely and produces the following JSON output.\n\n\n{\n\n    \nping\n:\n \nfalse\n\n\n}\n\n\n\n\n\n\nThis data is used to populate the \nfacts['ping']\n value.", 
+            "title": "Ping"
+        }
+    ]
+}
