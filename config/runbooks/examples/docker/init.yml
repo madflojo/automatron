@@ -1,7 +1,5 @@
 name: Verify Docker is running
 schedule: "* * * * *"
-nodes:
-  - "*"
 checks:
   docker_running:
     execute_from: ontarget

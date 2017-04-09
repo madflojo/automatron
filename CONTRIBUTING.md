@@ -95,6 +95,5 @@ $ sudo docker-compose up --build mkdocs
 To wipe and reset the `docker-compose` environment simply run the following.
 
 ```console
-$ sudo docker-compose kill automatron redis
-$ sudo docker-compose rm automatron redis tests mkdocs
+$ sudo docker-compose down
 ```

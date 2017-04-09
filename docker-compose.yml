@@ -10,12 +10,13 @@ services:
     build: .
     command: python /tests.py
   mkdocs:
-    image: thinkcube/mkdocs
+    build:
+      context: .
+      dockerfile: docs/Dockerfile
     volumes:
-      - ./:/automatron
+      - ./:/tmp/mkdocs
     ports:
       - 8000:8000
-    working_dir: /automatron
     command: mkdocs serve -a 0.0.0.0:8000
   coverage:
     build: .

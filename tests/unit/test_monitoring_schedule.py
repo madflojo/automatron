@@ -33,7 +33,6 @@ class ScheduleTest(unittest.TestCase):
 class TestCronSchedule(ScheduleTest):
     ''' Test when a cron based schedule is provided '''
     @mock.patch('monitoring.CronTrigger')
-    @mock.patch('monitoring.fnmatch.fnmatch', new=mock.MagicMock(return_value=True))
     def runTest(self, mock_triggered):
         ''' Execute test '''
         scheduler = mock.Mock(**{
@@ -43,9 +42,6 @@ class TestCronSchedule(ScheduleTest):
             'runbooks' : {
                 'test' : {
                     'schedule' : "* * * * *",
-                    'nodes' : [
-                        'tes*'
-                    ]
                 }
             }
         })
@@ -66,7 +62,6 @@ class TestCronSchedule(ScheduleTest):
 class TestSpecificSchedule(ScheduleTest):
     ''' Test when a cron based schedule is provided '''
     @mock.patch('monitoring.CronTrigger')
-    @mock.patch('monitoring.fnmatch.fnmatch', new=mock.MagicMock(return_value=True))
     def runTest(self, mock_triggered):
         ''' Execute test '''
         scheduler = mock.Mock(**{
@@ -83,9 +78,6 @@ class TestSpecificSchedule(ScheduleTest):
                         'month' : 1,
                         'day_of_week' : 1
                     },
-                    'nodes' : [
-                        'tes*'
-                    ]
                 }
             }
         })
@@ -107,7 +99,6 @@ class TestSpecificSchedule(ScheduleTest):
 class TestNoSchedule(ScheduleTest):
     ''' Test when a cron based schedule is provided '''
     @mock.patch('monitoring.CronTrigger')
-    @mock.patch('monitoring.fnmatch.fnmatch', new=mock.MagicMock(return_value=True))
     def runTest(self, mock_triggered):
         ''' Execute test '''
         scheduler = mock.Mock(**{
@@ -116,9 +107,6 @@ class TestNoSchedule(ScheduleTest):
         self.target.update({
             'runbooks' : {
                 'test' : {
-                    'nodes' : [
-                        'tes*'
-                    ]
                 }
             }
         })
