@@ -1,21 +1,39 @@
 site_name: Automatron
-site_url: https://www.automatron.io
+site_url: https://automatron.io
 repo_url: https://github.com/madflojo/automatron
-site_description: Autonomous IT Systems Monitoring and Remediation
+docs_dir: /tmp/mkdocs/docs
+site_dir: /tmp/mkdocs/site
+site_description: A framework for creating self-healing infrastructure. It simply detects system events & takes action.
 site_author: Benjamin Cane
 site_favicon: img/favicon.ico
-theme: readthedocs
+theme: material
+extra:
+  logo: 'img/automatron.png'
+  social:
+    - type: twitter
+      link: 'https://twitter.com/automatronio'
+    - type: github
+      link: 'https://github.com/madflojo/automatron'
+markdown_extensions:
+  - codehilite
+  - admonition
+  - toc:
+      permalink: true
+
 
 pages:
-  - Overview: index.md
-  - Getting Started:
-    - Automatron in 10 Minutes: automatron-in-10-minutes.md
-    - Deploying with Docker: deploying-with-docker.md
+  - Introduction: index.md
+  - Installation:
+    - Basic Installation: install/index.md
+    - Deploy with Docker: install/docker.md
+  - Configuration: configure.md
   - Runbooks:
-    - Overview: runbooks.md
-    - Facts: facts.md
+    - Basics: runbooks/index.md
+    - Checks: runbooks/checks.md
+    - Actions: runbooks/actions.md
+  - Facts: facts.md
   - Plugins:
-    - Index: plugins.md
+    - Index: plugins/index.md
     - Discovery:
       - AWS: plugins/discovery/aws.md
       - Digital Ocean: plugins/discovery/digitalocean.md
@@ -46,3 +64,10 @@ pages:
         - System Info: plugins/vetting/ontarget/system-info.md
       - Remote:
         - Ping: plugins/vetting/remote/ping.md
+#  - Customizing
+#    - Actions
+#    - Checks
+#    - Datastores
+#    - Discovery
+#    - Logging
+#    - Vetting
