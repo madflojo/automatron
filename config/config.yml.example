@@ -2,7 +2,7 @@
 config_path: config
 runbook_path: config/runbooks
 plugin_path: plugins/
-ssh: # SSH Configuration
+ssh:
   user: root
   gateway: False
   key: |
@@ -10,35 +10,43 @@ ssh: # SSH Configuration
         fdlkfjasldjfsaldkjflkasjflkjaflsdlkfjs
         -----END RSA PRIVATE KEY-----
 
-monitoring: # Monitoring configuration
+## Checks
+monitoring:
   upload_path: /tmp
 
-actioning: # Actioning configuration
+## Actions
+actioning:
   upload_path: /tmp
 
-logging: # Logging Configurations
+## Logging
+logging:
   debug: True
   plugins:
     console: True
     syslog:
       facility: local0
 
-discovery: # Discovery Configurations
+## Host Discovery
+discovery:
   upload_path: /tmp/
   vetting_interval: 30
   plugins:
-    webping: # Web Service for HTTP GET or POST requests
+    # Web Service for HTTP PINGs
+    webping:
       ip: 0.0.0.0
-      port: 20000
-#    nmap: # NMAP Scanning for new hosts
+      port: 8000
+#    nmap:
+#      # NMAP Scanning for new hosts
 #      target: 10.0.0.1/8
 #      flags: -sP
 #      interval: 40
-#    digitalocean: # Query DO's API
+#    digitalocean:
+#      # Query DO's API
 #      url: https://api.digitalocean.com/v2
 #      api_key: example
 #      interval: 60
-#    aws: # Query AWS' API
+#    aws:
+#      # Query AWS' API
 #      aws_access_key_id: example
 #      aws_secret_access_key: example
 #      interval: 60
@@ -46,17 +54,18 @@ discovery: # Discovery Configurations
 #        - PublicIpAddress
 #        - PrivateIpAddress
 #    linode:
+#      # Query Linode's API
 #      url: https://api.linode.com
 #      api_key: example
 #      interval: 60
 
-
-datastore: # Datastore Configurations
-## Default Datastore Engine
+## Datastore
+datastore:
+  ## Default Datastore Engine
   engine: redis
   ## Datastore Specific configuration
   plugins:
-    ## Redis
+    # Redis
     redis:
       db: 0
       host: redis
