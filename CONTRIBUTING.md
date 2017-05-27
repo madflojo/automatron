@@ -10,7 +10,7 @@ Before starting to contribute to Automatron please review and accept our [Contri
 
 Contributing to the Core platform and contributing Plugins have two different guidelines and requirements. The below will explain some basic concepts of how to contribute different functionality.
 
-### Core
+### Contributing to Core
 
 Automatron follows a pluggable architecture with the majority of features being provided by plugins located within the `plugins/` directory. This allows us to keep the Core framework minimal and simple.
 
@@ -23,9 +23,11 @@ At this time there are 4 primary core components of Automatron.
 
 These components are written in Python and as such should follow basic Python development practices.
 
-### Plugins
+### Contributing Plugins
 
 Where the Automatron Core provides a monitoring and actioning framework, the functional features are all provided by Automatron Plugins. Plugins, are the fastest way to add features to Automatron. As such it is suggested that new contributors start by adding a plugin before adding core functionality.
+
+Plugin contributions have been migrated to the [Automatron Plugins](https://github.com/Automatron-Plugins) project. Pull Requests for existing plugins should be opened against the appropriate repository in that project. Requests for new plugin repositories can be made via [Gitter](https://gitter.im/madflojo/automatron).
 
 #### Executable Plugins
 
@@ -39,7 +41,7 @@ At this time there are 6 types of Plugins.
   * `vetting` - Executables used to identify `facts` for discovered monitoring targets.
 
 While `datastores`, `logging`, and `discovery` plugins are Python modules; `actions`, `checks` and `vetting` are simply executables.
-Python is the preferred approach however, these plugins may also be written in Perl or BASH. While other languages are accepted it is important to ensure capabilities are available across as many platforms as possible. When writing plugins do consider the availability of functionality on generic systems.
+These plugins may be written in Python, Perl, BASH or any language that results in a standalone executable.
 
 ## Contribution Workflow & Requirements
 
@@ -58,17 +60,15 @@ When opening a Pull Request for a bug fix, if the fix is for the current release
 
 If the bug fix should also be incorporated with the `develop` branch a second Pull Request should be opened to the `develop` branch.
 
-### Tests are required for Core and some Plugins
+### Tests are required for Core
 
 Any Pull Requests for the Automatron core code base should include applicable `unit`, `integration` and `functional` tests. Automatron uses Coveralls to ensure code coverage does not decrease with each Pull Request.
 
-While not strictly enforced, plugins should also include tests where applicable. In some cases it may not be possible to provide `unit` or `integration` tests for plugins. In these cases it is recommended to create `functional` tests.
-
 ### Documentation is required
 
-Documentation of new functionality is important to increase the adoption of Automatron. As such, you may be asked to provide documentation for new functionality created by your Pull Request. This is especially true for new plugins being submitted as plugins must be documented in order for users to adopt the plugin.
+Documentation of new functionality is important to increase the adoption of Automatron. As such, you may be asked to provide documentation for new functionality created by your Pull Request. This is especially true for major feature changes.
 
-Documentation is just as important as new functionality, as such documentation based pull requests are encouraged. For idea's on current gaps please reference our [documentation board](https://github.com/madflojo/automatron/projects/1).
+Documentation is just as important as new functionality, as such documentation based pull requests are encouraged.
 
 ## Developer environment
 

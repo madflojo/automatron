@@ -44,7 +44,7 @@ actions:
 
 The above runbook leverages both Jinja2 and Automatron's internal **Facts**. Facts are variables that Automatron has collected during the Vetting process of each monitored system.
 
-When Automatron discovers a new host it executes [Vetting Plugins](plugins/#Vetting) on the host. Some plugins are executed remotely, others are executed on the host itself. These plugins return information unique to each host.
+When Automatron discovers a new host it executes Vetting Plugins on the host. Some plugins are executed remotely, others are executed on the host itself. These plugins return information unique to each host.
 
 An example of the type of information can be seen in the `ontarget/system_info.py` vetting plugin. This plugin creates facts for OS Distribution, Hostname, Kernel version and Network Information.
 

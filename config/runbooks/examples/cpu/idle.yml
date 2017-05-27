@@ -1,0 +1,29 @@
+name: Check CPU Idle
+schedule:
+  seconds: "*/30"
+checks:
+  cpu_idle:
+    execute_from: target
+    type: cmd
+    cmd: test $(sar -u 1 1 | tail -n 1 | awk '{print $8}' | cut -d. -f1) -gt 10
+actions:
+  logger:
+    execute_from: target
+    type: cmd
+    cmd: echo "CPU Idle at critical threshold: `sar -u 1 1 | tail -n 1 | awk '{print $8}' | cut -d. -f1`" | logger -t automatron
+    trigger: 0
+    frequency: 120
+    call_on:
+      - CRITICAL
+      - WARNING
+      - UNKNOWN
+  reboot:
+    execute_from: target
+    type: cmd
+    cmd: reboot
+    trigger: 20
+    frequency: 900
+    call_on:
+      - WARNING
+      - CRITICAL
+      - UNKNOWN

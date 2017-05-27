@@ -35,29 +35,9 @@ discovery:
     webping:
       ip: 0.0.0.0
       port: 8000
-#    nmap:
-#      # NMAP Scanning for new hosts
-#      target: 10.0.0.1/8
-#      flags: -sP
-#      interval: 40
-#    digitalocean:
-#      # Query DO's API
-#      url: https://api.digitalocean.com/v2
-#      api_key: example
-#      interval: 60
-#    aws:
-#      # Query AWS' API
-#      aws_access_key_id: example
-#      aws_secret_access_key: example
-#      interval: 60
-#      filter:
-#        - PublicIpAddress
-#        - PrivateIpAddress
-#    linode:
-#      # Query Linode's API
-#      url: https://api.linode.com
-#      api_key: example
-#      interval: 60
+#    roster:
+#      hosts:
+#        - 10.0.0.1
 
 ## Datastore
 datastore:

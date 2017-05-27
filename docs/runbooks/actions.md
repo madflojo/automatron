@@ -147,5 +147,5 @@ For example, a plugin located at `/path/to/plugins/actions/myaction/myaction.pl`
 The `args` field is used to specify the arguments to provide the plugin executable. In the example above the plugin will be executed as follows by Automatron
 
 ```sh
-$ /path/to/plugins/checks/ncloudflare/dns.py remove test@example.com apikey123 example.com --content 10.0.0.1
+$ /path/to/plugins/checks/cloudflare/dns.py remove test@example.com apikey123 example.com --content 10.0.0.1
 ```
