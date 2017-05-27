@@ -39,7 +39,7 @@ If the `gateway` setting is left as `False` Automatron will login to each host d
 
 By default, Automatron will listen on port `8000` for any HTTP requests. When an HTTP request is made to Automatron the IP will be captured and that server will then be identified as a monitoring target.
 
-There are several plugins that enable other methods for host discovery, in this section we will enable the `nmap` discovery plugin. This configuration is within the `discovery` section of the `config.yml` file.
+There are several plugins that enable other methods for host discovery, in this section we will also enable the `roster` discovery plugin. This configuration is within the `discovery` section of the `config.yml` file.
 
 ```yaml+jinja
 discovery:
@@ -52,7 +52,7 @@ discovery:
       port: 8000
 ```
 
-To enable the `nmap` plugin we simply need to append the `nmap` configuration within the `plugins` key.
+To enable the `roster` plugin we simply need to append the `roster` configuration within the `plugins` key.
 
 ```yaml+jinja
 discovery:
@@ -64,12 +64,11 @@ discovery:
       ip: 0.0.0.0
       port: 8000
     # NMAP Scanning
-    nmap:
-      target: 10.0.0.1/8
-      flags: -sP
-      interval: 40
+    roster:
+      hosts:
+        - 10.0.0.1
 ```
 
-Each plugin has unique configuration details, the specifics of these plugins can be found in the [plugin](plugins/index.md) documentation.
+Each plugin has unique configuration details, additional discovery plugins can be found in the [Automatron Plugins](https://github.com/Automatron-Plugins) project.
 
 At this point Automatron has been configured. We can now move on to creating our own [Runbooks](runbooks/index.md).

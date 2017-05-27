@@ -19,8 +19,6 @@ markdown_extensions:
   - admonition
   - toc:
       permalink: true
-
-
 pages:
   - Introduction: index.md
   - Installation:
@@ -32,42 +30,10 @@ pages:
     - Checks: runbooks/checks.md
     - Actions: runbooks/actions.md
   - Facts: facts.md
-  - Plugins:
-    - Index: plugins/index.md
-    - Discovery:
-      - AWS: plugins/discovery/aws.md
-      - Digital Ocean: plugins/discovery/digitalocean.md
-      - Linode: plugins/discovery/linode.md
-      - Network Map (nmap): plugins/discovery/nmap.md
-      - Roster file: plugins/discovery/roster.md
-      - Web Ping: plugins/discovery/webping.md
-    - Checks:
-      - Network:
-        - Ping: plugins/checks/network/ping.md
-        - TCP Connection: plugins/checks/network/tcp_connect.md
-      - MySQL:
-        - Available: plugins/checks/mysql/available.md
-        - Status Metrics: plugins/checks/mysql/status_metrics.md
-      - Systems:
-        - Disk Free: plugins/checks/systems/disk_free.md
-        - Memory Free: plugins/checks/systems/mem_free.md
-    - Actions:
-      - CloudFlare:
-        - DNS: plugins/actions/cloudflare/dns.md
-      - Docker:
-        - Clean: plugins/actions/docker/clean.md
-      - Systems:
-        - Services: plugins/actions/systems/services.md
-    - Vetting:
-      - On Target:
-        - Services: plugins/vetting/ontarget/services.md
-        - System Info: plugins/vetting/ontarget/system-info.md
-      - Remote:
-        - Ping: plugins/vetting/remote/ping.md
-#  - Customizing
-#    - Actions
-#    - Checks
-#    - Datastores
-#    - Discovery
-#    - Logging
-#    - Vetting
+#  - Customizing with Plugins: plugins/index.md
+#    - Actions: plugins/actions.md
+#    - Checks: plugins/checks.md
+#    - Datastores: plugins/datastores.md
+#    - Discovery: plugins/discovery.md
+#    - Logging: plugins/logging.md
+#    - Vetting: plugins/vetting.md
