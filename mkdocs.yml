@@ -33,4 +33,5 @@ pages:
   - Customizing:
     - Checks: plugins/checks.md
     - Actions: plugins/actions.md
+    - Discovery: plugins/discovery.md
     - Vetting: plugins/vetting.md
