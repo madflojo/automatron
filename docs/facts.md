@@ -1,4 +1,4 @@
-Auomatron leverages the power of [Jinja2](http://jinja.pocoo.org/docs/2.9/), a popular Python based templating language to enhance how runbooks can be used. The below example is a runbook that leverages Jinja2.
+Automatron leverages the power of [Jinja2](http://jinja.pocoo.org/docs/2.9/), a popular Python based templating language to enhance how runbooks can be used. The below example is a runbook that leverages Jinja2.
 
 ```yaml+jinja
 name: Check NGINX
