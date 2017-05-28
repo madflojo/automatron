@@ -32,3 +32,4 @@ pages:
   - Facts: facts.md
   - Customizing:
     - Checks: plugins/checks.md
+    - Actions: plugins/actions.md
