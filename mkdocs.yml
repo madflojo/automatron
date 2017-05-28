@@ -30,3 +30,5 @@ pages:
     - Checks: runbooks/checks.md
     - Actions: runbooks/actions.md
   - Facts: facts.md
+  - Customizing:
+    - Checks: plugins/checks.md
