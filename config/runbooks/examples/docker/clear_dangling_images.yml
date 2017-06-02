@@ -1,5 +1,5 @@
 name: Clean up dangling images if they are found
-schedule: "*/2 * * * *"
+schedule: "0 */2 * * *"
 checks:
   find_danglers:
     execute_from: ontarget

@@ -1,4 +1,4 @@
-Auomatron leverages the power of [Jinja2](http://jinja.pocoo.org/docs/2.9/), a popular Python based templating language to enhance how runbooks can be used. The below example is a runbook that leverages Jinja2.
+Automatron leverages the power of [Jinja2](http://jinja.pocoo.org/docs/2.9/), a popular Python based templating language to enhance how runbooks can be used. The below example is a runbook that leverages Jinja2.
 
 ```yaml+jinja
 name: Check NGINX
@@ -44,7 +44,7 @@ actions:
 
 The above runbook leverages both Jinja2 and Automatron's internal **Facts**. Facts are variables that Automatron has collected during the Vetting process of each monitored system.
 
-When Automatron discovers a new host it executes [Vetting Plugins](plugins/#Vetting) on the host. Some plugins are executed remotely, others are executed on the host itself. These plugins return information unique to each host.
+When Automatron discovers a new host it executes Vetting Plugins on the host. Some plugins are executed remotely, others are executed on the host itself. These plugins return information unique to each host.
 
 An example of the type of information can be seen in the `ontarget/system_info.py` vetting plugin. This plugin creates facts for OS Distribution, Hostname, Kernel version and Network Information.
 
