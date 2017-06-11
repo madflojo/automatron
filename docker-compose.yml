@@ -13,7 +13,7 @@ services:
     image: redis
   test:
     build: .
-    command: python /tests.py
+    command: python /tests.py -i -f
     depends_on:
       - redis
       - automatron
