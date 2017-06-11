@@ -1,8 +1,8 @@
-![Automatron](https://raw.githubusercontent.com/madflojo/automatron/master/docs/img/logo_huge.png)
-
 Automatron is a framework for creating self-healing infrastructure. Simply put, it detects system events & takes action to correct them.
 
 The goal of Automatron is to allow users to automate the execution of common tasks performed during system events. These tasks can be as simple as **sending an email** to as complicated as **restarting services across multiple hosts**.
+
+![Automatron Dashboard](/img/dashboard.png)
 
 ## Features
 
@@ -13,6 +13,8 @@ The goal of Automatron is to allow users to automate the execution of common tas
   * Allows dead simple **arbitrary shell commands** for both [checks](runbooks/checks.md) and [actions](runbooks/actions.md)
   * Runbook flexibility with **Jinja2** templating support
   * Pluggable Architecture that simplifies customization
+  * Bootstrap based dashboard showing real-time events
+
 
 ## Runbooks
 
@@ -94,4 +96,4 @@ By using **Facts** and **Jinja2** together you can customize a single runbook to
 
 ## Follow Automatron
 
-[![Twitter Follow](https://img.shields.io/twitter/follow/automatronio.svg?style=flat-square)](https://twitter.com/automatronio) [![Gitter](https://badges.gitter.im/madflojo/automatron.svg)](https://gitter.im/madflojo/automatron?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![GitHub forks](https://img.shields.io/github/forks/madflojo/automatron.svg?style=social&label=Fork)](https://github.com/madflojo/automatron) [![GitHub stars](https://img.shields.io/github/stars/madflojo/automatron.svg?style=social&label=Star)](https://github.com/madflojo/automatron)
+[![Twitter Follow](https://img.shields.io/twitter/follow/automatronio.svg?style=flat-square)](https://twitter.com/automatronio) [![Gitter](https://badges.gitter.im/madflojo/automatron.svg)](https://gitter.im/madflojo/automatron?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) [![GitHub stars](https://img.shields.io/github/stars/madflojo/automatron.svg?style=social&label=Star)](https://github.com/madflojo/automatron)
