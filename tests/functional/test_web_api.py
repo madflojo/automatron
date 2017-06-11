@@ -1,5 +1,5 @@
 '''
-Test Web API Functions
+Test API Functionality
 '''
 
 import mock
