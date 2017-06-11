@@ -33,7 +33,8 @@ def before_request():
 @app.teardown_request
 def teardown_request(exc=None):
     ''' Post request handler '''
-    g.dbc.disconnect()
+    if hasattr(g, 'dbc'):
+        g.dbc.disconnect()
 
 # Web UI Routes
 @app.route('/', methods=['GET'])

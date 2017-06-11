@@ -6,6 +6,7 @@ services:
   - docker
 
 install:
+  - cp config/config.yml.example config/config.yml
   - docker build -t automatron .
   - docker run -d -p 127.0.0.1:6378:6378 --name redis redis
   - docker run -d --link redis:redis --name automatron automatron
@@ -19,7 +20,7 @@ before_script:
 
 script:
   - docker ps
-  - python tests.py
+  - docker run --rm=True --link automatron:automatron automatron python tests.py
   - coverage run tests.py
 
 after_success:
