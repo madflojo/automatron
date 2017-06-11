@@ -20,6 +20,7 @@ before_script:
 
 script:
   - docker ps
+  - docker logs automatron
   - docker run --rm=True --link automatron:automatron automatron python tests.py
   - coverage run tests.py
 
