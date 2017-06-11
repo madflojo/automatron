@@ -34,7 +34,7 @@ discovery:
     # Web Service for HTTP PINGs
     webping:
       ip: 0.0.0.0
-      port: 8000
+      port: 9000
 #    roster:
 #      hosts:
 #        - 10.0.0.1
