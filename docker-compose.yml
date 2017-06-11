@@ -2,6 +2,11 @@ version: '2'
 services:
   automatron:
     build: .
+    ports:
+      - 8000:8000
+    volumes:
+      - ./templates:/templates
+      - ./static:/static
     depends_on:
       - redis
   redis:
@@ -16,8 +21,8 @@ services:
     volumes:
       - ./:/tmp/mkdocs
     ports:
-      - 8000:8000
-    command: mkdocs serve -a 0.0.0.0:8000
+      - 8080:8080
+    command: mkdocs serve -a 0.0.0.0:8080
   coverage:
     build: .
     command: coverage run tests.py && coverage report

@@ -50,3 +50,8 @@ datastore:
       db: 0
       host: redis
       port: 6379
+
+## Web UI & API
+web:
+  listen: 0.0.0.0
+  port: 8000
