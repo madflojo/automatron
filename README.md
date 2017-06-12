@@ -7,6 +7,8 @@ Automatron is a framework for creating self-healing infrastructure. Simply put, 
 
 The goal of Automatron is to allow users to automate the execution of common tasks performed during system events. These tasks can be as simple as **sending an email** to as complicated as **restarting services across multiple hosts**.
 
+![Automatron Dashboard](https://raw.githubusercontent.com/madflojo/automatron/develop/docs/img/dashboard.png)
+
 ## Features
 
   * Automatically detect and add new systems to monitor
