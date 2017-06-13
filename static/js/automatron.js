@@ -88,7 +88,7 @@ function addEvent(value) {
     if (value.status === "CRITICAL") {
         $("ul.status-group").append("<li class=\"list-group-item list-group-item-danger status-item\"><span class=\"badge\">" + value.status + "</span><b>" + hostname[0] + "</b>: " + value.runbook + "</li>").fadeIn("slow");
     }
-    if (value.status === "OK" && value.count <= 5) {
+    if (value.status === "OK" && value.count <= 1) {
         $("ul.status-group").append("<li class=\"list-group-item list-group-item-success status-item\"><span class=\"badge\">" + value.status + "</span><b>" + hostname[0] + "</b>: " + value.runbook + "</li>").fadeIn("slow");
     }
     if (value.status === "WARNING") {
@@ -120,6 +120,9 @@ function getStatus() {
                 if ($("li.status-item").length === 0) {
                     $("ul.status-group").append("<li class=\"list-group-item list-group-item-default status-item\">No events found</li>");
                 }
+            } else {
+                $("ul.status-group").empty();
+                $("ul.status-group").append("<li class=\"list-group-item list-group-item-default status-item\">No events found</li>");
             }
         }
     });
