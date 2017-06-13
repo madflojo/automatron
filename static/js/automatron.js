@@ -23,20 +23,22 @@ function updateTargets(target) {
 
     $.each(target.runbooks, function (key, value) {
         // Check status and set bootstrap class accordingly
-        if (value.status.OK > 0 && status === "default") {
-            status = "success";
-        }
-        if (value.status.WARNING > 0) {
-            status = "warning";
-        }
-        if (value.status.CRITICAL > 0) {
-            status = "danger";
-        }
-        $.each(value.status, function (k, v) {
-            if (v > 0) {
-                counts[k] = counts[k] + 1;
+        if (value.hasOwnProperty('status')) {
+            if (value.status.OK > 0 && status === "default") {
+                status = "success";
             }
-        });
+            if (value.status.WARNING > 0) {
+                status = "warning";
+            }
+            if (value.status.CRITICAL > 0) {
+                status = "danger";
+            }
+            $.each(value.status, function (k, v) {
+                if (v > 0) {
+                    counts[k] = counts[k] + 1;
+                }
+            });
+        }
     });
 
     $("div.servers-group").append("<div class=\"col-md-4\"><div class=\"panel panel-default\"><div class=\"panel-body\"> \
