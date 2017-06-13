@@ -40,7 +40,12 @@ def teardown_request(exc=None):
 @app.route('/', methods=['GET'])
 def get_index():
     ''' Returns dashboard '''
-    data = {}
+    data = {
+        'theme': 'slate'
+    }
+    # Set Bootswatch theme
+    if 'theme' in app.config['web']:
+        data['theme'] = app.config['web']['theme']
     return render_template("index.html", data=data), 200
 
 # API Routes
