@@ -42,7 +42,7 @@ function updateTargets(target) {
     });
 
     $("div.servers-group").append("<div class=\"col-md-4\"><div class=\"panel panel-default\"><div class=\"panel-body\"> \
-    <h2>" + hostname[0] + " <i class=\"fa fa-server text-" + status + " pull-right\" aria-hidden=\"true\"></i></h2><hr> \
+    <h2><a href=\"#\" class=\"server-info\" data-target=\".server-modal-lg\" data-toggle=\"modal\" data-hostname=\"" + target.hostname + "\">" + hostname[0] + "</a> <i class=\"fa fa-server text-" + status + " pull-right\" aria-hidden=\"true\"></i></h2><hr> \
     <p class=\"text-muted lead\">" + target.hostname + " <span class=\"label label-primary\">" + target.facts.os + "</span></p><hr> \
     <span class=\"label label-success\">" + counts.OK + " OK</span> \
     <span class=\"label label-warning\">" + counts.WARNING + " WARNING</span> \
@@ -150,12 +150,52 @@ function getTargets() {
     });
 }
 
+
+$(document).on("click", ".server-info", function() {
+    "use strict";
+    var name = $(this).data().hostname;
+    $("h4.modal-title").text(name);
+    $.ajax({
+        url: "/api/targets/" + name,
+        dataType: "json",
+        success: function (json) {
+            // Update Server info
+            $("div.server-panel-info").html("<div class=\"row\">" +
+            "<div class=\"col-md-6\"><b>Name:</b> " + json.hostname + "</div><div class=\"col-md-6\"><b>Operating System:</b> " + json.facts.os + "</div>" +
+            "<div class=\"col-md-6\"><b>Address:</b> " + json.ip + " </div><div class=\"col-md-6\"><b>Kernel:</b> " + json.facts.kernel + "</div>" +
+            "</div>")
+
+            // Update Runbook status
+            $("ul.server-runbooks-group").empty();
+            $.each(json.runbooks, function (key, value) {
+                if (value.last_status === "CRITICAL") {
+                    $("ul.server-runbooks-group").append("<li class=\"list-group-item list-group-item-danger status-item\"><span class=\"badge\">" + value.last_status + "</span><b>" + value.name + "</b></li>");
+                }
+                if (value.last_status === "OK") {
+                    $("ul.server-runbooks-group").append("<li class=\"list-group-item list-group-item-success status-item\"><span class=\"badge\">" + value.last_status + "</span><b>" + value.name + "</b></li>");
+                }
+                if (value.last_status === "WARNING") {
+                    $("ul.server-runbooks-group").append("<li class=\"list-group-item list-group-item-warning status-item\"><span class=\"badge\">" + value.last_status + "</span><b>" + value.name + "</b></li>");
+                }
+                if (value.last_status === "UNKNOWN") {
+                    $("ul.server-runbooks-group").append("<li class=\"list-group-item list-group-item-info status-item\"><span class=\"badge\">" + value.last_status + "</span><b>" + value.name + "</b></li>");
+                }
+            });
+            if (json.runbooks.length < 0) {
+                $("ul.server-runbooks-group").append("<li class=\"list-group-item list-group-item-default status-item\">No Runbooks found</li>")
+            }
+        }
+    });
+});
+
+
 // Wrapper run function
 function run() {
     "use strict";
     getStatus();
     getTargets();
 }
+
 
 // Run run() on load and every 10 seconds
 window.onload = run();

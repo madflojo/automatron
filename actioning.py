@@ -72,11 +72,16 @@ def update_target_status(item, target):
             'CRITICAL' : 0,
             'UNKNOWN' : 0
         }
+        target['runbooks'][item['runbook']]['last_status'] = None
     # Increase counts of status'
     for check in item['checks'].keys():
+        # Update Status Counter
         target['runbooks'][item['runbook']]['status'][item['checks'][check]] = (
             target['runbooks'][item['runbook']]['status'][item['checks'][check]] + 1)
-        not_found.discard(item['checks'][check]) # Removes status from list of not found status'
+        # Update last_status with return
+        target['runbooks'][item['runbook']]['last_status'] = item['checks'][check]
+        # Removes status from list of not found status'
+        not_found.discard(item['checks'][check])
 
     # Reset count to 0 for missing status'
     for missing_status in not_found:
