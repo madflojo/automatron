@@ -68,6 +68,7 @@ class TestWith1CriticalFail(UpdateTargetStatusTest):
         })
         returned_target = update_target_status(self.item, self.target)
         self.assertTrue(returned_target['runbooks']['book1']['status']['CRITICAL'] == 1)
+        self.assertTrue(returned_target['runbooks']['book1']['last_status'] == "CRITICAL")
         self.assertTrue(returned_target['runbooks']['book1']['status']['OK'] == 0)
         self.assertTrue(returned_target['runbooks']['book1']['status']['WARNING'] == 0)
         self.assertTrue(returned_target['runbooks']['book1']['status']['UNKNOWN'] == 0)
@@ -85,3 +86,4 @@ class TestWith1OK(UpdateTargetStatusTest):
         self.assertTrue(returned_target['runbooks']['book1']['status']['CRITICAL'] == 0)
         self.assertTrue(returned_target['runbooks']['book1']['status']['WARNING'] == 0)
         self.assertTrue(returned_target['runbooks']['book1']['status']['UNKNOWN'] == 0)
+        self.assertTrue(returned_target['runbooks']['book1']['last_status'] == "OK")
