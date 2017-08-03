@@ -51,16 +51,19 @@ def cache_runbooks(config, logger):
         if runbooks:
             for target in runbooks:
                 all_books[target] = {}
-                for books in runbooks[target]:
-                    logger.debug("Processing book: {0}".format(books))
-                    book_path = "{0}/{1}".format(config['runbook_path'], books)
-                    if os.path.isdir(book_path):
-                        book_path = book_path + "/init.yml"
-                    if os.path.isfile(book_path) is False:
-                        logger.warn("Runbook File Error: {0} is not a file".format(book_path))
-                    else:
-                        with open(book_path) as bh:
-                            all_books[target][books] = bh.read()
+                if runbooks[target]:
+                    for books in runbooks[target]:
+                        logger.debug("Processing book: {0}".format(books))
+                        book_path = "{0}/{1}".format(config['runbook_path'], books)
+                        if os.path.isdir(book_path):
+                            book_path = book_path + "/init.yml"
+                        if os.path.isfile(book_path) is False:
+                            logger.warn("Runbook File Error: {0} is not a file".format(book_path))
+                        else:
+                            with open(book_path) as bh:
+                                all_books[target][books] = bh.read()
+                else:
+                    logger.warn("Error: No runbooks specified under {0}".format(target))
     return all_books
 
 def render_runbooks(runbook, facts):

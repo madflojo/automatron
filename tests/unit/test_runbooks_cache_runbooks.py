@@ -51,8 +51,27 @@ class RunwithEmptyFile(CacheRunbooksTest):
         self.config = mock.MagicMock(spec_set={'runbook_path' : '/path/'})
         mock_isfile.return_value = True
         mock_yaml.return_value = None
-        mock_Template = mock.MagicMock(**{
+        mock_template = mock.MagicMock(**{
             'render.return_value' : ""
+        })
+        mock_open.return_value = mock.MagicMock(spec=file)
+        self.assertEqual(cache_runbooks(self.config, self.logger), {})
+        self.assertTrue(mock_open.called)
+        self.assertTrue(mock_yaml.called)
+
+class RunwithNoBooks(CacheRunbooksTest):
+    ''' Test with a partially created init.yml file '''
+    @mock.patch('runbooks.open', create=True)
+    @mock.patch('runbooks.os.path.isfile')
+    @mock.patch('runbooks.yaml.load')
+    @mock.patch('runbooks.Template')
+    def runTest(self, mock_template, mock_yaml, mock_isfile, mock_open):
+        ''' Execute test '''
+        self.config = mock.MagicMock(spec_set={'runbook_path' : '/path/'})
+        mock_isfile.return_value = True
+        mock_yaml.return_value = None
+        mock_template = mock.MagicMock(**{
+            'render.return_value' : { '*': None }
         })
         mock_open.return_value = mock.MagicMock(spec=file)
         self.assertEqual(cache_runbooks(self.config, self.logger), {})
@@ -66,12 +85,12 @@ class RunwithYMLFile(CacheRunbooksTest):
     @mock.patch('runbooks.os.path.isdir')
     @mock.patch('runbooks.yaml.load')
     @mock.patch('runbooks.Template')
-    def runTest(self, mock_Template, mock_yaml, mock_isdir, mock_isfile, mock_open):
+    def runTest(self, mock_template, mock_yaml, mock_isdir, mock_isfile, mock_open):
         ''' Execute test '''
         self.config = mock.MagicMock(spec_set={'runbook_path' : '/path/'})
         mock_isfile.return_value = True
         mock_isdir.return_value = True
-        mock_Template = mock.MagicMock(**{
+        mock_template = mock.MagicMock(**{
             'render.return_value' : """
                 '*':
                   - book

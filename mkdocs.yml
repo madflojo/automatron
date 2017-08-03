@@ -7,6 +7,9 @@ site_description: A framework for creating self-healing infrastructure. It simpl
 site_author: Benjamin Cane
 site_favicon: img/favicon.ico
 theme: material
+google_analytics:
+  - "UA-3378969-14"
+  - "auto"
 extra:
   logo: 'img/automatron.png'
   social:
