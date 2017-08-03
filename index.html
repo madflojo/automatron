@@ -544,9 +544,9 @@
                 
                   <h1>Introduction</h1>
                 
-                <p><img alt="Automatron" src="https://raw.githubusercontent.com/madflojo/automatron/master/docs/img/logo_huge.png" /></p>
-<p>Automatron is a framework for creating self-healing infrastructure. Simply put, it detects system events &amp; takes action to correct them.</p>
+                <p>Automatron is a framework for creating self-healing infrastructure. Simply put, it detects system events &amp; takes action to correct them.</p>
 <p>The goal of Automatron is to allow users to automate the execution of common tasks performed during system events. These tasks can be as simple as <strong>sending an email</strong> to as complicated as <strong>restarting services across multiple hosts</strong>.</p>
+<p><img alt="Automatron Dashboard" src="./img/dashboard.png" /></p>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Automatically detect and add new systems to monitor</li>
@@ -556,6 +556,7 @@
 <li>Allows dead simple <strong>arbitrary shell commands</strong> for both <a href="runbooks/checks/">checks</a> and <a href="runbooks/actions/">actions</a></li>
 <li>Runbook flexibility with <strong>Jinja2</strong> templating support</li>
 <li>Pluggable Architecture that simplifies customization</li>
+<li>Bootstrap based dashboard showing real-time events</li>
 </ul>
 <h2 id="runbooks">Runbooks<a class="headerlink" href="#runbooks" title="Permanent link">&para;</a></h2>
 <p>The core of Automatron is based around <strong>Runbooks</strong>. Runbooks are policies that define health checks and actions. You can think of them in the same way you would think of a printed runbook. Except with Automatron, the actions are automated.</p>
@@ -626,7 +627,7 @@
 <p>Another addition is the <code>remove_from_dns</code> action, which will remove the target server's DNS entry using the <strong>CloudFlare DNS</strong> plugin.</p>
 <p>By using <strong>Facts</strong> and <strong>Jinja2</strong> together you can customize a single runbook to cover unique actions for multiple hosts and environments.</p>
 <h2 id="follow-automatron">Follow Automatron<a class="headerlink" href="#follow-automatron" title="Permanent link">&para;</a></h2>
-<p><a href="https://twitter.com/automatronio"><img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/automatronio.svg?style=flat-square" /></a> <a href="https://gitter.im/madflojo/automatron?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img alt="Gitter" src="https://badges.gitter.im/madflojo/automatron.svg" /></a> <a href="https://github.com/madflojo/automatron"><img alt="GitHub forks" src="https://img.shields.io/github/forks/madflojo/automatron.svg?style=social&amp;label=Fork" /></a> <a href="https://github.com/madflojo/automatron"><img alt="GitHub stars" src="https://img.shields.io/github/stars/madflojo/automatron.svg?style=social&amp;label=Star" /></a></p>
+<p><a href="https://twitter.com/automatronio"><img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/automatronio.svg?style=flat-square" /></a> <a href="https://gitter.im/madflojo/automatron?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img alt="Gitter" src="https://badges.gitter.im/madflojo/automatron.svg" /></a> <a href="https://github.com/madflojo/automatron"><img alt="GitHub stars" src="https://img.shields.io/github/stars/madflojo/automatron.svg?style=social&amp;label=Star" /></a></p>
                 
                   
                 
@@ -697,6 +698,8 @@
       
     
     
+      
+      <script>!function(e,t,a,n,o,c,i){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,c=t.createElement(a),i=t.getElementsByTagName(a)[0],c.async=1,c.src=n,i.parentNode.insertBefore(c,i)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-3378969-14","auto"),ga("set","anonymizeIp",!0),ga("send","pageview");var links=document.getElementsByTagName("a");Array.prototype.map.call(links,function(e){e.host!=document.location.host&&e.addEventListener("click",function(){var t=e.getAttribute("data-md-action")||"follow";ga("send","event","outbound",t,e.href)})});var query=document.forms.search.query;query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})</script>
       
     
   </body>

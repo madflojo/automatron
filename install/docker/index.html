@@ -275,6 +275,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#dashboard" title="Dashboard" class="md-nav__link">
+    Dashboard
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -477,6 +484,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#dashboard" title="Dashboard" class="md-nav__link">
+    Dashboard
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -506,11 +520,13 @@
 <p>The above <code>redis</code> instance will be used as a default datastore for Automatron.</p>
 <h2 id="starting-the-automatron-container">Starting the Automatron container<a class="headerlink" href="#starting-the-automatron-container" title="Permanent link">&para;</a></h2>
 <p>Once the <code>redis</code> instance is up and running we can start an Automatron instance.</p>
-<div class="codehilite"><pre><span></span>$ sudo docker run -d --link redis:redis -p <span class="m">8000</span>:8000 -v /path/to/config:/config --restart<span class="o">=</span>always --name automatron madflojo/automatron
+<div class="codehilite"><pre><span></span>$ sudo docker run -d --link redis:redis -p <span class="m">8000</span>:8000 -p <span class="m">9000</span>:9000 -v /path/to/config:/config --restart<span class="o">=</span>always --name automatron madflojo/automatron
 </pre></div>
 
 
 <p>In the above <code>docker run</code> command we are using <code>-v</code> to mount a directory from the host to the container as <code>/config</code>. This <code>/config</code> directory will be the home to Automatron's configuration files and Runbooks.</p>
+<h2 id="dashboard">Dashboard<a class="headerlink" href="#dashboard" title="Permanent link">&para;</a></h2>
+<p>To view the Automatron dashboard simply open up <code>http://&lt;host ip&gt;:8080</code> in your favorite browser. As target nodes are identified and runbooks are executed, events will start to be reflected on the dashboard.</p>
 <p>With these steps complete, we can now move to <a href="../../configure/">Configuring</a> Automatron.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
@@ -600,6 +616,8 @@
       
     
     
+      
+      <script>!function(e,t,a,n,o,c,i){e.GoogleAnalyticsObject=o,e[o]=e[o]||function(){(e[o].q=e[o].q||[]).push(arguments)},e[o].l=1*new Date,c=t.createElement(a),i=t.getElementsByTagName(a)[0],c.async=1,c.src=n,i.parentNode.insertBefore(c,i)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-3378969-14","auto"),ga("set","anonymizeIp",!0),ga("send","pageview");var links=document.getElementsByTagName("a");Array.prototype.map.call(links,function(e){e.host!=document.location.host&&e.addEventListener("click",function(){var t=e.getAttribute("data-md-action")||"follow";ga("send","event","outbound",t,e.href)})});var query=document.forms.search.query;query.addEventListener("blur",function(){if(this.value){var e=document.location.pathname;ga("send","pageview",e+"?q="+this.value)}})</script>
       
     
   </body>
