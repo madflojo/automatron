@@ -2,13 +2,23 @@
 config_path: config
 runbook_path: config/runbooks
 plugin_path: plugins/
-ssh:
-  user: root
-  gateway: False
-  key: |
-        -----BEGIN RSA PRIVATE KEY-----
-        fdlkfjasldjfsaldkjflkasjflkjaflsdlkfjs
-        -----END RSA PRIVATE KEY-----
+
+## Credentials store for SSH logins
+credentials:
+  default: # Default is required
+    user: root
+    gateway: False
+    key: |
+          -----BEGIN RSA PRIVATE KEY-----
+          fdlkfjasldjfsaldkjflkasjflkjaflsdlkfjs
+          -----END RSA PRIVATE KEY-----
+  example1:
+    user: notroot
+    gateway: 10.0.0.1
+    key: |
+          -----BEGIN RSA PRIVATE KEY-----
+          fdlkfjasldjfsaldkjflkasjflkjaflsdlkfjs
+          -----END RSA PRIVATE KEY-----
 
 ## Checks
 monitoring:

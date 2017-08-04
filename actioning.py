@@ -128,8 +128,15 @@ def get_runbooks_to_exec(item, target, logger):
 
 def execute_runbook(action, target, config, logger):
     ''' Execute action against target '''
+    # Setup default fabric environment
     fabric.api.env = core.fab.set_env(config, fabric.api.env)
+    # Check need for override
+    if "credentials" in action:
+        fabric.api.env = core.fab.set_env(config, fabric.api.env, override=action['credentials'])
+
     results = None
+
+    # Start plugin based action
     if "plugin" in action['type']:
         plugin_file = action['plugin']
         plugin_file = '{0}/actions/{1}'.format(config['plugin_path'], plugin_file)
@@ -161,6 +168,8 @@ def execute_runbook(action, target, config, logger):
             except Exception as e:
                 logger.debug("Could not execute plugin {0} for target {1}: {2}".format(
                     plugin_file, target['ip'], e.message))
+
+    # Start command based action
     else:
         cmd = action['cmd']
         # Perform Check
@@ -179,6 +188,8 @@ def execute_runbook(action, target, config, logger):
                     return False
             except Exception as e:
                 logger.debug("Could not execute command {0}".format(cmd))
+
+    # Check results
     if results:
         if results.succeeded is True:
             return True
