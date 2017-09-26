@@ -37,7 +37,7 @@ If the `gateway` setting is left as `False` Automatron will login to each host d
 
 ## Enable Auto Discovery
 
-By default, Automatron will listen on port `8000` for any HTTP requests. When an HTTP request is made to Automatron the IP will be captured and that server will then be identified as a monitoring target.
+By default, Automatron will listen on port `9000` for any HTTP requests. When an HTTP request is made to Automatron the IP will be captured and that server will then be identified as a monitoring target.
 
 There are several plugins that enable other methods for host discovery, in this section we will also enable the `roster` discovery plugin. This configuration is within the `discovery` section of the `config.yml` file.
 
@@ -49,7 +49,7 @@ discovery:
     # Web Service for HTTP PINGs
     webping:
       ip: 0.0.0.0
-      port: 8000
+      port: 9000
 ```
 
 To enable the `roster` plugin we simply need to append the `roster` configuration within the `plugins` key.
@@ -62,8 +62,8 @@ discovery:
     # Web Service for HTTP PINGs
     webping:
       ip: 0.0.0.0
-      port: 8000
-    # NMAP Scanning
+      port: 9000
+    # Roster Discovery
     roster:
       hosts:
         - 10.0.0.1
