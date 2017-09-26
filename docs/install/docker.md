@@ -22,7 +22,7 @@ In the above `docker run` command we are using `-v` to mount a directory from th
 
 ## Dashboard
 
-To view the Automatron dashboard simply open up `http://<host ip>:8080` in your favorite browser. As target nodes are identified and runbooks are executed, events will start to be reflected on the dashboard.
+To view the Automatron dashboard simply open up `http://<host ip>:8000` in your favorite browser. As target nodes are identified and runbooks are executed, events will start to be reflected on the dashboard.
 
 With these steps complete, we can now move to [Configuring](/configure.md) Automatron.
 
