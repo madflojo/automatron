@@ -1,0 +1,152 @@
+# Web UI & API Configuration
+# --------------------------
+# web: Is the start of the Web UI and API configurations area
+web:
+
+# listen: Is the listen address, by default this is 0.0.0.0
+  listen: 0.0.0.0
+
+# port: Is the port to bind along with the listen address
+  port: 8000
+
+# theme: Allows users to specify a bootswatch theme to apply the the UI. For more options and information about 
+#        BootSwatch checkout https://bootswatch.com/
+  theme: slate
+
+
+# Datastore Configuration
+# --------------------------
+# datastore: Is the start of the Datastore configuration area
+datastore:
+
+# engine: Is the datastore plugin to use, by default this should be set to `redis`
+  engine: redis
+
+# plugins: This key is the start of the plugin configuration area for datastores
+  plugins:
+
+# redis: Is used only if the datastore engine is set to `redis`. This key contains the connection details for `redis`. 
+#        The details below will work with a default Redis container. 
+    redis:
+      db: 0
+      host: redis
+      port: 6379
+#     password: example
+
+
+# Credentials for SSH logins
+# --------------------------
+# credentials: Is the start of the configuration area that stores SSH login credentials
+credentials:
+
+# default: The `default` credential is required, as this is used during the vetting and discovery process to login and 
+#          identify hosts. The details below are example details and this section must be replaced with information for your 
+#          environment.
+  default:
+    user: root
+    gateway: False
+    key: |
+          -----BEGIN RSA PRIVATE KEY-----
+          fdlkfjasldjfsaldkjflkasjflkjaflsdlkfjs
+          -----END RSA PRIVATE KEY-----
+
+# Other credentials can also be specified in this section such as the `example` entry below. Runbook checks and actions 
+# by default will use the `default` credentials but can specify which credentials to use with the `credentials` key.
+#  example:
+#    user: notroot
+#    gateway: 10.0.0.1
+#    key: |
+#          -----BEGIN RSA PRIVATE KEY-----
+#          fdlkfjasldjfsaldkjflkasjflkjaflsdlkfjs
+#          -----END RSA PRIVATE KEY-----
+
+# Acceptable credentials fields
+#     user:       This field containers the username to use when SSH'ing to the remote host
+#     gateway:    The gateway field specifies a host to use as a jump server for the final destination host
+#     key:        This field should contain the SSH key associated with the specified user
+
+
+# Host Discovery
+# --------------------------
+# discovery: Is the start of the configuration area that defines how monitored hosts are auto discovered.
+discovery:
+
+# upload_path: Defines the location on the remote host where vetting scripts will be placed during the vetting 
+#              execution process.
+  upload_path: /tmp/
+
+# vetting_interval: Drives how often (in seconds) the vetting process is initiated for new hosts
+  vetting_interval: 30
+
+# plugins: Is the configuration area that drives which auto discovery method is enabled and how they operate.
+  plugins:
+
+# webping: WebPing is one of the default auto discovery plugins. This plugin works by starting an HTTP listener on the 
+#          specified IP and Port. When an HTTP request is made against that listener the plugin will add the remote host to the 
+#          auto discovery target queue. This will start the vetting process against that host.
+    webping:
+      ip: 0.0.0.0
+      port: 9000
+
+# roster: Is another default auto discovery plugins. This plugin works by specifying hosts within this configuration 
+#         file. The below example shows adding the host `10.0.0.1` to the target queue. This list is only read once, on startup 
+#         of the discovery process. When adding new hosts to this list, the discovery process will need to be restarted in order 
+#         for the changes to take effect.
+#    roster:
+#      hosts:
+#        - 10.0.0.1
+
+# For more auto discovery plugins checkout the Automatron Plugins organization: https://github.com/Automatron-Plugins
+
+
+# Checks
+# --------------------------
+# monitoring: Starts the monitoring checks configuration area
+monitoring:
+
+# upload_path: Defines the location on the target machine to upload the monitoring scripts during execution
+  upload_path: /tmp
+
+
+# Actions
+# --------------------------
+# actioning: Starts the actioning configuration area
+actioning:
+
+# upload_path: Defines the location on the target machine to upload the monitoring scripts during execution
+  upload_path: /tmp
+
+
+# Logging
+# --------------------------
+# logging: Starts the logging configuration area
+logging:
+
+# debug: This true or false bool key will enable or disable debug logging. Debug logging can be very verbose and should 
+#        only be enabled when necessary.
+  debug: True
+
+# plugins: Starts the logging plugin configuration area. In this section we will find configurations unique to each 
+#          logging plugin.
+  plugins:
+
+# console: Console is one of the default logging plugins available. This simply outputs logging to the console. To 
+#          enable set to True.
+    console: True
+
+# syslog: Syslog is also one of the default logging plugins available. This plugin leverages the syslog functionality 
+#         of Unix and Linux systems.
+    syslog:
+      facility: local0
+
+
+# Misc. Configuration Area
+# --------------------------
+# config_path: Defines the location for configurations.. i.e. this configuration file.
+config_path: config
+
+# runbook_path: Defines the location for Runbooks. By default this is also stored within the config_path area.
+runbook_path: config/runbooks
+
+# plugins_path: Defines the location for Plugins.
+plugin_path: plugins/
