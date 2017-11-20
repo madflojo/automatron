@@ -65,4 +65,4 @@ To shut down Automatron you can use the `kill` command to send the `SIGTERM` sig
 
 ## Dashboard
 
-To view the Automatron dashboard simply open up `http://<instance ip>:8080` in your favorite browser. As target nodes are identified and runbooks are executed, events will start to be reflected on the dashboard.
+To view the Automatron dashboard simply open up `http://<instance ip>:8000` in your favorite browser. As target nodes are identified and runbooks are executed, events will start to be reflected on the dashboard.

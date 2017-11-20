@@ -8,7 +8,8 @@ RUN apt-get update --fix-missing && \
     curl \
     libffi-dev \
     build-essential \
-    libssl-dev
+    libssl-dev && \
+    rm -rf /var/lib/apt/lists/*
 ADD requirements.txt /
 RUN pip install --upgrade setuptools
 RUN pip install -r /requirements.txt

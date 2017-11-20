@@ -40,11 +40,18 @@ def monitor(runbook, target, config, dbc, logger):
 
     logger.debug("Executing runbook {0} against target {1}".format(runbook, target['hostname']))
 
+    # Setup default fabric environment
     fabric.api.env = core.fab.set_env(config, fabric.api.env)
     fabric.api.env.host_string = target['ip']
 
     for check_name in target['runbooks'][runbook]['checks'].keys():
         check = target['runbooks'][runbook]['checks'][check_name]
+
+        # Check for Credentials override
+        if "credentials" in check:
+            fabric.api.env = core.fab.set_env(config, fabric.api.env, override=check['credentials'])
+
+        # Start Execution for plugin type
         if "plugin" in check['type']:
             plugin_file = check['plugin']
             plugin_file = '{0}/checks/{1}'.format(config['plugin_path'], plugin_file)
@@ -68,6 +75,8 @@ def monitor(runbook, target, config, dbc, logger):
                 except Exception as e:
                     logger.debug("Could not put plugin file {0} on remote host {1}".format(
                         plugin_file, target['ip']))
+
+        # Start Executing command type
         else:
             cmd = check['cmd']
             # Perform Check
@@ -82,6 +91,8 @@ def monitor(runbook, target, config, dbc, logger):
                         return False
                 except Exception as e:
                     logger.debug("Could not execute command {0}".format(cmd))
+
+        # Check results
         if results.return_code == 0:
             check_return = "OK"
         elif results.return_code == 1:
