@@ -4,7 +4,7 @@
     
     <url>
      <loc>https://automatron.io/</loc>
-     <lastmod>2017-08-02</lastmod>
+     <lastmod>2017-11-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -13,13 +13,13 @@
         
     <url>
      <loc>https://automatron.io/install/</loc>
-     <lastmod>2017-08-02</lastmod>
+     <lastmod>2017-11-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://automatron.io/install/docker/</loc>
-     <lastmod>2017-08-02</lastmod>
+     <lastmod>2017-11-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -28,7 +28,7 @@
     
     <url>
      <loc>https://automatron.io/configure/</loc>
-     <lastmod>2017-08-02</lastmod>
+     <lastmod>2017-11-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -37,19 +37,19 @@
         
     <url>
      <loc>https://automatron.io/runbooks/</loc>
-     <lastmod>2017-08-02</lastmod>
+     <lastmod>2017-11-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://automatron.io/runbooks/checks/</loc>
-     <lastmod>2017-08-02</lastmod>
+     <lastmod>2017-11-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://automatron.io/runbooks/actions/</loc>
-     <lastmod>2017-08-02</lastmod>
+     <lastmod>2017-11-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
@@ -58,7 +58,7 @@
     
     <url>
      <loc>https://automatron.io/facts/</loc>
-     <lastmod>2017-08-02</lastmod>
+     <lastmod>2017-11-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -67,25 +67,25 @@
         
     <url>
      <loc>https://automatron.io/plugins/checks/</loc>
-     <lastmod>2017-08-02</lastmod>
+     <lastmod>2017-11-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://automatron.io/plugins/actions/</loc>
-     <lastmod>2017-08-02</lastmod>
+     <lastmod>2017-11-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://automatron.io/plugins/discovery/</loc>
-     <lastmod>2017-08-02</lastmod>
+     <lastmod>2017-11-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
     <url>
      <loc>https://automatron.io/plugins/vetting/</loc>
-     <lastmod>2017-08-02</lastmod>
+     <lastmod>2017-11-20</lastmod>
      <changefreq>daily</changefreq>
     </url>
         
