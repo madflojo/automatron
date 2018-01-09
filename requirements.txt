@@ -12,3 +12,4 @@ coverage
 boto3
 flask
 enum
+requests
