@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:latest
 RUN apt-get update --fix-missing && \
     apt-get -y upgrade && \
     apt-get -y install \
@@ -11,7 +11,7 @@ RUN apt-get update --fix-missing && \
     libssl-dev && \
     rm -rf /var/lib/apt/lists/*
 ADD requirements.txt /
-RUN pip install --upgrade setuptools
+RUN pip install --upgrade setuptools pip
 RUN pip install -r /requirements.txt
 RUN pip install honcho
 ADD . /
