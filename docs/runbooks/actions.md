@@ -79,6 +79,7 @@ actions:
     host: 10.0.0.2
     trigger: 0
     frequency: 300
+    run_once: False
     call_on:
       - WARNING
       - CRITICAL
@@ -97,6 +98,14 @@ The `trigger` field is used to specify the number of times a health check return
 The `frequency` field is used to specify the time (in seconds) between action execution. In the above example the action will be executed every `300` seconds until either the `call_on` or `trigger` conditions are no longer met.
 
 If you wish to execute an action every time, simply set this value to `0` seconds.
+
+### Run Once (OPTIONAL)
+
+The optional `run_once` field is a boolean used to determine if the action will run only once. If set to `True`, the action will run only the first time the `trigger` condition is met and will not run again until it's back to its normal state.
+
+Defaults to `False`.
+
+Note: the action will run once everytime the health check fails and the `trigger` condition is met. For example, if the check returns `WARNING`, then `OK` and then `WARNING` again, the `run_once` action will run one time for each failure.
 
 ### Call on
 
