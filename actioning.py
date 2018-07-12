@@ -100,6 +100,7 @@ def get_runbooks_to_exec(item, target, logger):
         trigger = target['runbooks'][item['runbook']]['actions'][action]['trigger']
         frequency = target['runbooks'][item['runbook']]['actions'][action]['frequency']
         last_run = 0
+        run_once = False
         if "last_run" in target['runbooks'][item['runbook']]['actions'][action]:
             last_run = target['runbooks'][item['runbook']]['actions'][action]['last_run']
         if "run_once" in target['runbooks'][item['runbook']]['actions'][action]:
