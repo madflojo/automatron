@@ -198,13 +198,7 @@ def execute_runbook(action, target, config, logger):
                 logger.debug("Could not execute command {0}".format(cmd))
 
     # Check results
-    if results:
-        if results.succeeded is True:
-            return True
-        else:
-            return False
-    else:
-        return False
+    return results.succeeded
 
 def shutdown(signum, frame):
     ''' Shutdown this process '''
