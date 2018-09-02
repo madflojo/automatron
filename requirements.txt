@@ -3,7 +3,7 @@ python-libnmap
 gevent-websocket
 redis
 apscheduler
-fabric
+fabric<2
 pyYAML
 jinja2
 mock

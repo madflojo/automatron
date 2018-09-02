@@ -100,8 +100,11 @@ def get_runbooks_to_exec(item, target, logger):
         trigger = target['runbooks'][item['runbook']]['actions'][action]['trigger']
         frequency = target['runbooks'][item['runbook']]['actions'][action]['frequency']
         last_run = 0
+        run_once = False
         if "last_run" in target['runbooks'][item['runbook']]['actions'][action]:
             last_run = target['runbooks'][item['runbook']]['actions'][action]['last_run']
+        if "run_once" in target['runbooks'][item['runbook']]['actions'][action]:
+            run_once = target['runbooks'][item['runbook']]['actions'][action]['run_once']
 
         # see if we are beyond or equal to trigger threshold
         for status in call_on:
@@ -121,6 +124,11 @@ def get_runbooks_to_exec(item, target, logger):
         for check in item['checks'].keys():
             if item['checks'][check] not in call_on:
                 run_me = False
+
+        # checking if run_once action was already run
+        if last_run != 0 and run_once:
+            logger.debug("Action {} was already run once and will not run again".format(action))
+            run_me = False # turns False as action has already run
 
         if run_me is True:
             run_these[item['runbook']].add(action)
@@ -190,13 +198,7 @@ def execute_runbook(action, target, config, logger):
                 logger.debug("Could not execute command {0}".format(cmd))
 
     # Check results
-    if results:
-        if results.succeeded is True:
-            return True
-        else:
-            return False
-    else:
-        return False
+    return results.succeeded
 
 def shutdown(signum, frame):
     ''' Shutdown this process '''
@@ -213,7 +215,7 @@ def shutdown(signum, frame):
 if __name__ == "__main__":
     config = core.common.get_config(description="Automatron: Actioning")
     if config is False:
-        print "Could not get configuration"
+        print("Could not get configuration")
         sys.exit(1)
 
     # Setup Logging

@@ -1,7 +1,7 @@
 FROM ubuntu:latest
-RUN apt-get update --fix-missing && \
-    apt-get -y upgrade && \
-    apt-get -y install \
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get upgrade -y && apt-get -y install \
+    tzdata \
     python-pip \
     python-dev \
     nmap \
@@ -10,6 +10,7 @@ RUN apt-get update --fix-missing && \
     build-essential \
     libssl-dev && \
     rm -rf /var/lib/apt/lists/*
+RUN ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
 ADD requirements.txt /
 RUN pip install --upgrade setuptools pip
 RUN pip install -r /requirements.txt

@@ -126,7 +126,7 @@ def shutdown(signum, frame):
 if __name__ == "__main__":
     config = core.common.get_config(description="Automatron: Runbooks")
     if config is False:
-        print "Could not get configuration"
+        print("Could not get configuration")
         sys.exit(1)
 
     # Setup Logging
